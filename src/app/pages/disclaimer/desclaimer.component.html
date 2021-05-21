@@ -1,0 +1,70 @@
+ <!-- <ng-template > -->
+<div class="d-flex align-items-center font-weight-bold my-2 ">
+    <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;"
+            class="flaticon2-gear"></i></span> &nbsp;&nbsp;
+            <a   class="navi-text" routerLink="/settings">Back To Settings</a > </div>
+<div class="modal-content">
+
+
+    <div class="modal-header  ">
+        <div class="modal-title h4" id="example-modal-sizes-title-lg">
+            <!-- <ng-container *ngIf="customer">
+                <ng-container *ngIf="customer.id">Edit</ng-container>
+                <ng-container *ngIf="!customer.id">Create</ng-container>
+             
+                <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+              </ng-container> -->
+            <span> Edit Disclaimer</span>
+
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+        <!-- <ng-container *ngIf="isLoading$ | async">
+            <div class="overlay-layer bg-transparent">
+                <div class="spinner spinner-lg spinner-success"></div>
+            </div>
+        </ng-container> -->
+
+        <ng-container>
+            <form action="#"  [formGroup]="formGroup">
+                <!-- <div class="form-group"> -->
+                    <div class="row">
+
+                   
+                    <div class="col-lg-1">
+
+                    </div>
+                <div class="col-lg-10">
+                    <!-- <div class="col-lg-6" style="float: left;"> -->
+                        <label class="form-label h5" style=" padding: 1%;"><b> Disclaimer Message </b></label>
+                        <br>
+                    <div class="form-group cust-height"> 
+
+                            <!-- <textarea class="form-control form-control-lg " name="disclaimer"
+                                placeholder="Enter Disclaimer"
+                                autocomplete="off" formControlName="disclaimer" cols="3" rows="5"></textarea> -->
+                            <!-- <div class="invalid-feedback" *ngIf="controlHasError('required', 'quantity')">Quantity is required</div> -->
+                       
+                    </div>
+
+                    <angular-editor formControlName="disclaimer" name="disclaimer"  [config]="config"></angular-editor>
+
+                    <!-- </div>  -->
+
+                </div>
+                </div>
+
+            </form>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button> -->
+        <ng-container>
+
+            <button type="submit" (click)="onSubmit()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'7%'}"
+                class="btn btn-custom btn-elevate">Save <span [ngClass]="{spinner:isLoading$ == true}"
+                    style="margin: 7%;"></span></button>
+        </ng-container>
+    </div>
+</div>
+<!-- </ng-template> -->

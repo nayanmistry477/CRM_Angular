@@ -1,0 +1,158 @@
+.btn-custom{
+
+    background: #1f4fcc;
+    color: mintcream;
+}
+
+.cust-color{
+    background: darkslateblue;
+}
+
+.cust-txt{
+    height:25px;
+    width: 40px;
+    text-align: center;
+    font-size: 14px;
+    border:1px solid #ddd;
+    border-radius:4px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 5px;
+ }
+
+ .minus, .plus{
+    width:20px;
+    height:20px;
+    background:#f2f2f2;
+    border-radius:4px;
+    padding:0px 0px 0px 0px;
+    border:1px solid #ddd;
+display: inline-block;
+vertical-align: middle;
+text-align: center;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+input[type="file"] {
+    display: none;
+}
+.cust-plus{
+
+    font-size: 10px;
+    position: relative;
+    bottom: 2px;
+    color: black;
+}
+.cust-minus{
+
+    font-size: 10px;
+    position: relative;
+    bottom: 2px;
+    color: black;
+}
+
+.img-wrap {
+    position: relative; 
+}
+.img-wrap .close {
+    
+    position: absolute;
+    /* top: -15px; */
+    bottom: 195px;
+    /* right: 0px; */
+    left: 190px;
+    float: inline-start;
+    z-index: 100;
+    color: red;
+    font-size: 25px;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 40px;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.view-container {
+    width: 100%;
+    float: left;
+    border: 1px solid #d0d0d0;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.sidebar-title-nmt {
+    margin-top: 0px !important;
+    width: 100%;
+}
+
+.cust-contact{
+    width: 100%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.inputWithIcon i {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    padding: 9px 8px;
+    color: #aaa;
+    transition: 0.3s;
+  }
+  .inputWithIcon.inputIconBg i {
+    background-color: #aaa;
+    color: #fff;
+    padding: 9px 4px;
+    border-radius: 4px 0 0 4px;
+  }
+
+  input[type="text"]:focus {
+    border-color: dodgerBlue;
+    box-shadow: 0 0 8px 0 dodgerBlue;
+  }
+
+  textarea[type="text"]:focus {
+    border-color: dodgerBlue;
+    box-shadow: 0 0 8px 0 dodgerBlue;
+  }
+
+  textarea[type="text"] {
+    width: 100%;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin: 8px 0;
+    outline: none;
+    padding: 8px;
+    box-sizing: border-box;
+    transition: 0.3s;
+  }
+  
+  .inputWithIcon input[type="text"] {
+    padding-left: 50px;
+  }
+  
+  .inputWithIcon {
+    position: relative;
+  }

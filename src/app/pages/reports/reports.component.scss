@@ -1,0 +1,39 @@
+.cust-height{
+
+    height: 70px;
+}
+.cust-color{
+    background: darkslateblue;
+}
+
+.btn-custom{
+
+    background: #1f4fcc;
+    color: mintcream;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 40px;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.view-container {
+    width: 100%;
+    float: left;
+    border: 1px solid #d0d0d0;
+    padding: 10px;
+    margin-left: 5%;
+    margin-top: 5%;
+    margin-bottom: 20px;
+}

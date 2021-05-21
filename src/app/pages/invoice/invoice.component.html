@@ -1,0 +1,1688 @@
+<div class="card card-custom gutter-b" *ngIf="isShow != true ">
+  <!-- <ng-container *ngIf="isMailSent">
+    <div class="progress progress-modal">
+      <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+        style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+  </ng-container> -->
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Invoice</h3>
+    </div>
+    <div class="card-title">
+      <div class=" row">
+        <div class="col-8" [formGroup]="searchGroup">
+          <div class="card-toolbar">
+            <div class="form-group has-search">
+              <span class="fa fa-search form-control-feedback"></span>
+              <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+                formControlName="searchTerm" />
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card-toolbar">
+            <button type="button" class="btn btn-primary" (click)="editModal()">+ New Invoice</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- <div class="card-toolbar">
+        <button type="button" class="btn btn-primary" (click)="editModal()">Add</button>  
+      </div> -->
+  </div>
+  <div class="card-body">
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            INVOICE NUMBER
+            <!-- <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+                    (sort)="sort($event)"></app-sort-icon> -->
+          </th>
+          <th>
+            CUSTOMER NAME
+            <app-sort-icon column="invoiceTo" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+
+          </th>
+          <th>
+            STATUS
+          </th>
+          <th>
+            JOB
+          </th>
+          <th>
+            PRICE
+          </th>
+          <th>
+            CREATED AT
+          </th>
+          <th>
+            DUE AT
+          </th>
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let invoice of invoiceService.items$ | async">
+            <!-- <td class="selection-cell">
+                    <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
+                        [checked]="grouping.isRowSelected(customer.id)" />
+                      <span></span>
+                    </label>
+                  </td> -->
+            <td>{{invoice.invoiceID}}</td>
+            <td>{{invoice.invoiceTo}}</td>
+            <td>
+              <span *ngFor="let statusVal of jobStatusList">
+                <p *ngIf="statusVal.statusType === invoice.paymentStatus ">
+                  <span [ngStyle]="{'color':statusVal.statusColor}"
+                    style="text-transform: capitalize; padding: 5px; border-radius: 10px;">
+                    <b> {{invoice.paymentStatus}}</b>
+                  </span>
+                </p>
+              </span>
+            </td>
+
+            <td>{{invoice.jobId}}</td>
+            <td> £{{invoice.subTotal}}</td>
+            <td>{{invoice.createdDate | date:'dd/MM/yyyy'}}</td>
+            <td>{{invoice.dueDate | date:'dd/MM/yyyy'}}</td>
+            <!-- <td>
+                    <span class="label label-dot label-primary mr-2" [class.label-success]="customer.type === 1"
+                      [class.label-primary]="customer.type === 2"></span>&nbsp;<span class="font-bold font-primary">
+                      <ng-container *ngIf="customer.type === 1">Business</ng-container>
+                      <ng-container *ngIf="customer.type === 2">Individual</ng-container>
+                    </span>
+                  </td> -->
+            <td>
+              <a title="Send Invoice" tooltip="Generate Invoice" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="getInvoiceValues(invoice)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+              <a title="Mail Invoice" (click)="getValues(invoice)" tooltip="Mail Invoice"
+                class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Mail.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+              <a title="Edit Invoice" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                (click)="editInvoice(invoice)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+
+              <a title="Delete Invoice" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="editdeleteInvoice(invoice)">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <!-- <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator> -->
+  </div>
+</div>
+
+
+<div *ngIf="isShow == true">
+  <button type="button" (click)="backToMain()" class="btn btn-sm btn-primary  "><i class="fa fa-arrow-left"
+      aria-hidden="true"></i></button>
+</div>
+<mat-card *ngIf="isShow == true">
+  <mat-card-content>
+    <!-- <h5 class="example-h2">Tabs with text labels</h5> -->
+    <mat-tab-group class="demo-tab-group" [formGroup]="InvoiceForm" [selectedIndex]="selectedIndex">
+      <mat-tab label="Invoice Information">
+        <div class="col-12">
+          <ng-container *ngIf="isMailSent">
+            <div class="progress progress-modal">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </ng-container>
+          <div class="row">
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-6">
+
+                </div>
+                <div class="col-3" style="padding: 1%;">
+                  <button type="button" (click)="sendMail()" class="btn btn-sm btn-primary  ">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Mail.svg'" cacheSVG="true"
+                      class="svg-icon svg-icon-md ">
+                    </span> Email Invoice
+                  </button>
+                </div>
+                <div class="col-3" style="padding: 1%;">
+                  <button type="button" (click)="generateInvoice()" class="btn btn-sm btn-primary  ">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                      class="svg-icon svg-icon-md ">
+                    </span> Generate Invoice
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-header cust-color" style="padding:1%; ">
+            <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+              <span style="color:aliceblue; text-align: justify;"> Invoice Details</span>
+            </div>
+          </div>
+          <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+            <div class="row">
+              <div class="col-8">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label class="form-label h3"><strong>Invoice: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                      <label class="form-label h3">{{invoiceData.invoiceID}} </label>
+                      <!-- <div class="form-group ">
+                          <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                            placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                        </div> -->
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <div class="col-5">
+                    <label for=""><strong>Payment Status:</strong></label>
+                    <!-- <b> {{invoiceData.paymentStatus}}</b> -->
+                  </div>
+                  <div class="col-4">
+                    <span *ngFor="let statusVal of jobStatusList">
+                      <p *ngIf="statusVal.statusType ===  invoiceData.paymentStatus ">
+                        <span [ngStyle]="{'color':statusVal.statusColor}"
+                          style="text-transform: capitalize; padding: 5px; border-radius: 10px;">
+                          <b> {{invoiceData.paymentStatus}}</b>
+                        </span>
+                      </p>
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-md-3">
+                <div class="form-group">
+                  <label for="" class="h5"><strong>Invoice To:</strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                  <label class="form-label h5 "> {{invoiceData.invoiceTo}} </label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-md-4">
+                <div class="view-container">
+                  <div class="form-group row">
+                    <div class="col-12">
+                      <label class="form-label h6"><strong>Invoice Date: </strong></label>
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <!-- </div>
+                    <div class="col-7"> -->
+                      <!-- <input type="date" class="form-control form-label " autocomplete="off"
+                        [ngModel]="invoiceData.invoiceDate | date:'y-MM-dd'" formControlName="invoiceDate"
+                        name="invoiceDate" /> -->
+
+                      <mat-form-field class="col-12">
+                        <input matInput [matDatepicker]="picker1" [ngModel]="invoiceData.invoiceDate"
+                          formControlName="invoiceDate" name="invoiceDate" [min]="minDate" placeholder="Choose a date">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-12">
+                      <label class="form-label h6"><strong>Due Date: </strong></label>
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <!-- </div> -->
+                      <!-- <div class="col-7"> -->
+                      <!-- <input type="date" class="form-control form-label" name="dueDate" autocomplete="off"
+                        formControlName="dueDate" [ngModel]="invoiceData.dueDate | date:'y-MM-dd'" /> -->
+                      <br>
+                      <mat-form-field class="col-12">
+                        <input matInput [matDatepicker]="picker" [ngModel]="invoiceData.dueDate"
+                          formControlName="dueDate" name="dueDate" [min]="minDate" placeholder="Choose a date">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xs-12 col-md-4">
+                <div class="view-container">
+                  <div class="form-group row">
+                    <div class="col-12" style="margin-bottom: -10%;">
+                      <!-- <div class="card">
+                      <div class="card-body"> -->
+                      <label for="" class=" sidebar-title-nmt h5"><strong>Contact Details</strong></label>
+                      <hr>
+                      <ul style="list-style-type:none; padding: 1%;">
+                        <div class="inputWithIcon">
+                          
+                          <div class="inputWithIcon">
+                            <div class="form-group ">
+                            <input type="text" class="cust-contact form-control" placeholder="Enter Email" name="customerEmail"
+                              [class.is-invalid]="isFormControlInvalid('customerEmail')" formControlName="customerEmail"
+                              [(ngModel)]="invoiceData.customerEmail">
+                            <i class="fa fa-envelope fa-lg fa-fw" aria-hidden="true"></i>
+                          </div> 
+                              <p style="color: red;" *ngIf="isFormcontrolHasError('email', 'customerEmail')">Email format is
+                                incorrect</p>
+                          </div>
+
+                          <div class="inputWithIcon">
+                            <div class="form-group ">
+                            <input type="text" class="cust-contact form-control" placeholder="Enter Phone Number"
+                              [class.is-invalid]="isFormControlInvalid('customerContact')" (keypress)="keyPress($event)"
+                              formControlName="customerContact" pattern="^((\\+0?)|0)?[0-9]{10}$" maxlength=11
+                              minlength=11 name="customerContact" [(ngModel)]="invoiceData.customerContact">
+                            <i class="fa fa-phone fa-lg fa-fw" aria-hidden="true"></i>
+                          </div>
+                          <p style="color: red;" *ngIf="isFormcontrolHasError('minlength', 'customerContact')">Contact No
+                            should have at
+                            least 11 digits</p>
+                          <p style="color: red;" *ngIf="isFormcontrolHasError('maxLength', 'customerContact')">Contact No
+                            should have at
+                            least 11 digits</p> 
+                          </div>
+                          <div class="inputWithIcon">
+                            <textarea type="text" class="cust-contact" name="address" [(ngModel)]="invoiceData.address"
+                              formControlName="address" placeholder="Enter Address" id="" cols="48" rows="4"></textarea>
+                          </div>
+
+                        </div>
+                        <!-- <li>-{{invoiceData.address}}</li>
+                        <li>-{{invoiceData.customerEmail}}</li>
+                        <li>-{{invoiceData.customerContact}}</li> -->
+                      </ul>
+                    </div>
+                    <!-- </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-12 col-md-4">
+                <div class="view-container" *ngIf="jobObj.id != undefined">
+                  <div class="form-group">
+                    <!-- <div class="card">
+                      <div class="card-body"> -->
+                    <label for="" class=" h5"><strong>Job Details</strong></label>
+                    <hr>
+                    <div class="row">
+                      <div class="col-4">
+                        <b>Job ID:-</b>
+                        <br>
+                        <b>Item Type:-</b>
+                        <br>
+                        <b>Brand:-</b>
+                        <br>
+                        <b>Serial No:-</b>
+                      </div>
+                      <div class="col-8">
+                        {{jobObj.id}}
+                        <br>
+                        {{jobObj.itemType}}
+                        <br>
+                        {{jobObj.brand}}
+                        <br>
+                        {{jobObj.serialNo}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- </div>
+                  </div> -->
+              </div>
+            </div>
+
+          </div>
+
+          <div class="demo-tab-content">
+
+            <div class="modal-header cust-color" style="padding:1%; ">
+              <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+
+                <span style="color:aliceblue; text-align: justify;"> Invoice Items</span>
+
+              </div>
+            </div>
+
+            <div class="col-12"> 
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-10" style="padding-left: 5%;">
+                        <div class="table-responsive angular-bootstrap-table" style="padding-right: 10%;">
+                          <table class="table table-head-custom table-vertical-center">
+                            <thead>
+                              <th>
+                                NAME
+                              </th>
+                              <th>
+                                QUANTITY
+                              </th>
+                              <th>
+                                UNIT PRICE
+                              </th>
+                              <th>
+                                TOTAL PRICE
+                              </th>
+
+                              <!-- <th>ACTIONS</th> -->
+                            </thead>
+                            <tbody>
+                              <tr
+                                *ngFor="let item of dataList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
+
+                                <td>{{item.name}}</td>
+
+                                <td>
+                                  <div class="cust-div" *ngIf="item.service !=1;else service">
+                                    <!-- <span [hidden]="item.quantity <= 1" (click)="decrement(item)"
+                                              class="minus "><i class="fa fa-minus cust-minus"
+                                                aria-hidden="true"></i></span> -->
+                                    <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" /> -->
+                                    <!-- <span (click)="increment(item,i)" class="plus "><i
+                                                class="fa fa-plus cust-plus"></i></span> -->
+                                    <label class="form-label"> {{item.quantity}}</label>
+                                  </div>
+                                  <ng-template #service>
+                                    <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" />  -->
+                                    <label class="form-label"> {{item.quantity}}</label>
+                                    <!-- <input disabled class="cust-txt" type="text" value="1" /> -->
+                                  </ng-template>
+                                </td>
+                                <td *ngIf="item.unitPrice!=null && item.unitPrice!=undefined;else showPrice">
+                                  £{{item.unitPrice}}</td>
+                                <ng-template #showPrice>
+                                  <td style=" padding-top: 2%; width: 30%;">
+                                    <div class="input-group">
+                                      <label class="form-label"> £{{item.price}}</label>
+                                    </div>
+                                  </td>
+                                </ng-template>
+                                <td style=" padding-top: 2%; width: 30%;">
+
+                                  <div class="input-group">
+                                    <!-- <input type="number" class="form-control" (input)="priceVal=$event.target.value"
+                                      [(value)]="item.price" (keyup.enter)="editPrice(item,$event.target.value)"
+                                      [disabled]="indexOfelement != editMode" [name]="item.price"> -->
+                                    <label class="form-label"> £{{item.price}}</label>
+
+                                    <!-- <span class="">
+                                      <div class="col-sm-8" *ngIf="indexOfelement != editMode">
+                                        <button class="btn btn-default"
+                                          (click)="editModeCheck(i,indexOfelement,item)">
+                                          <span class="material-icons">
+                                            create
+                                          </span>
+                                        </button>
+                                      </div>
+                                      <div class="col-sm-4" *ngIf="indexOfelement == editMode">
+                                        <button class="btn btn-default"
+                                          (click)="editModeSave(i,indexOfelement,item)">
+                                          <span class="material-icons">
+                                            done
+                                          </span>
+                                        </button>
+                                      </div>
+                                    </span> -->
+                                  </div>
+                                </td>
+                                <!-- <td> 
+                                  <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                    (click)="deleteData(item)">
+                                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                      class="svg-icon svg-icon-md svg-icon-danger">
+                                    </span>
+                                  </a>
+                                </td> -->
+                              </tr>
+                              <tr *ngFor="let item of dataList1">
+                                <td>{{item.name}}</td>
+                                <td>
+                                  <div class="cust-div">
+                                    <label class="form-label"> {{item.quantity}}</label>
+                                  </div>
+                                </td>
+                                <td *ngIf="item.unitPrice!=null && item.unitPrice!=undefined;else showPrice1">
+                                  £{{item.unitPrice}}</td>
+                                <ng-template #showPrice1>
+                                  <td style=" padding-top: 2%; width: 30%;">
+                                    <div class="input-group">
+                                      <label class="form-label"> £{{item.price}}</label>
+                                    </div>
+                                  </td>
+                                </ng-template> 
+                                <td style=" padding-top: 2%; width: 30%;">
+                                  <div class="input-group">
+                                    <label class="form-label"> £{{item.price}}</label>
+                                  </div>
+                                </td>
+                                <!-- <td> 
+                                <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                  (click)="deleteData(item)">
+                                  <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-danger">
+                                  </span>
+                                </a>
+                              </td> -->
+                              </tr>
+                            </tbody>
+                            <tfoot *ngIf="dataList.length > 5 || dataList1.length > 5">
+                              <pagination-controls (pageChange)="p = $event"
+                                class="d-flex justify-content-between align-items-center flex-wrap">
+                              </pagination-controls>
+                            </tfoot>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-tab-content">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-8"> 
+                </div>
+                <div class="col-4">
+                  <div class="row">
+                    <div class="col-6" *ngIf="isPercentageBox == true">
+                      <input type="number" class="form-control" name="percentage" formControlName="percentage"
+                        (keyup)="keyFunc1($event)" placeholder="Enter percentage" [(ngModel)]="invoiceData.percentage"
+                        aria-label="price" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="col-6" *ngIf="isAmountBox == true">
+                      <input type="number" class="form-control" name="exactAmount" formControlName="exactAmount"
+                        placeholder="Enter amount" (keyup)="keyFunc($event)" [(ngModel)]="invoiceData.exactAmount"
+                        aria-label="price" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="col-6" *ngIf="isPercentageBox == false && isAmountBox == false">
+                    </div>
+                    <div class="col-6">
+                      <select class="form-control" name="cars" id="cars" (change)="changeOption($event.target.value)">
+                        <optgroup label="Select">
+                          <option value="">Select discount type</option>
+                          <option value="percentage">Percentage</option>
+                          <option value="exactAmount">Exact Amount</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <!-- <div class="view-container"> -->
+                  <div class="form-group row">
+                    <div class="col-8">
+                      <!-- <div class="card">
+                      <div class="card-body"> -->
+                      <label for="" class=" sidebar-title-nmt h6"><strong>Payment Details</strong></label>
+                      <textarea class="form-control form-control-lg " name="paymentDetails"
+                        placeholder="Enter Payment Details." autocomplete="off" formControlName="paymentDetails"
+                        cols="8" rows="5"></textarea>
+                    </div>
+                    <!-- </div>
+                    </div> -->
+                  </div>
+                  <!-- </div> -->
+                </div>
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group" style="display: inline;">
+                        <label class="form-label"><strong>Sub-Total Price </strong></label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                          </div>
+                          <input type="number" class="form-control" name="price" formControlName="price" disabled
+                            aria-label="price" aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group" style="display: inline;">
+                        <label class="form-label"><strong>Discount Total </strong></label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                          </div>
+                          <input type="number" disabled class="form-control" name="discount" formControlName="discount"
+                            aria-label="price" [(ngModel)]="invoiceData.discount" aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+              
+                </div> -->
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group" style="display: inline;">
+                        <label class="form-label"><strong>Invoice Total </strong></label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                          </div>
+                          <input type="number" class="form-control" name="totalPrice" formControlName="totalPrice"
+                            disabled aria-label="price" aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group" style="display: inline;">
+                        <label class="form-label"><strong>Total Paid </strong></label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                          </div>
+                          <input type="number" class="form-control" name="deposit" formControlName="deposit" disabled
+                            aria-label="price" [(ngModel)]="invoiceData.deposit" aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+               
+                </div> -->
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group" style="display: inline;">
+                        <label class="form-label"><strong>Total Due </strong></label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                          </div>
+                          <input type="number" class="form-control" name="pendingPrice" formControlName="pendingPrice"
+                            disabled aria-label="price" [(ngModel)]="invoiceData.pendingPrice"
+                            aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-6" *ngIf="invoiceData.extraDeposit !=null && invoiceData.extraDeposit !=0">
+                      <div class="form-group" style="display: inline;">
+                        <label class="form-label"><strong>Extra Deposit </strong></label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                          </div>
+                          <input type="number" class="form-control" name="extraDeposit" formControlName="extraDeposit"
+                            disabled aria-label="price" aria-describedby="basic-addon1">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-tab-content">
+            <div class="card-header">
+              <div class="card-title">
+                <h3 class="card-label">Invoice Payments</h3>
+              </div>
+              <div class="card-title" *ngIf=" invoiceData.paymentStatus != 'completed'">
+                <div class=" row">
+
+                  <div class="col-5">
+                    <div class="card-toolbar">
+                      <button type="button" class="btn btn-primary" (click)="editPaymentModal()">+ Add Payment</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-10" style="padding-left: 5%;">
+                        <div class="table-responsive angular-bootstrap-table">
+                          <table class="table table-head-custom table-vertical-center">
+                            <thead>
+                              <th>
+                                DATE
+                              </th>
+                              <th>
+                                ADDED BY
+                              </th>
+                              <th>
+                                PAYMENT TYPE
+                              </th>
+                              <th>
+                                PAYMENT REFERENCE
+                              </th>
+                              <th>
+                                PAYMENT AMOUNT
+                              </th>
+                              <!-- <th>ACTIONS</th> -->
+                            </thead>
+                            <tbody>
+                              <tr
+                                *ngFor="let items of paymentList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
+
+                                <td>{{items.createdDate | date:'dd/MM/yyyy'}}</td>
+                                <td>{{items.addedBy}}</td>
+                                <td>{{items.paymentType}}</td>
+                                <td>{{items.paymentReference}}</td>
+                                <td>£{{items.amount}}</td>
+
+                                <td>
+                                  <a title="Edit Payment" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                    (click)="editPayment(items)">
+                                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                      cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                                    </span>
+                                  </a>
+                                  <!-- <a title="Delete Payment" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="editDeletePayment(items)">
+                                  <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-danger">
+                                  </span>
+                                </a> -->
+                                </td>
+
+                              </tr>
+                            </tbody>
+                            <tfoot *ngIf="paymentList.length > 5">
+                              <pagination-controls (pageChange)="p = $event"
+                                class="d-flex justify-content-between align-items-center flex-wrap">
+                              </pagination-controls>
+                            </tfoot>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <ng-container>
+              <button type="submit" (click)="updateInvoice(1)" [ngStyle]=" {'width':isLoading$ == true ? '10%':'7%'}"
+                class="btn btn-custom btn-elevate">Update
+                <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 10%;"></span>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Invoice Items">
+        <div class="card">
+          <div class="card-body">
+            <div class="demo-tab-content">
+
+              <div class="modal-header cust-color" style="padding:1%;">
+                <div class="modal-title h4" id="example-modal-sizes-title-lg">
+                  <div class="row">
+                    <!-- <div class="col-9">
+                      <span>Customer Details</span>
+                    </div> -->
+                    <div class="col-lg-12 ">
+                      <!-- <h5 class="font-weight-bold">Customer Details</h5> -->
+                      <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Repair
+                        Details</span>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="form-group">
+                          <div class="row" *ngIf="this.invoiceData.paymentStatus != 'completed'">
+                            <div class="col-6">
+                              <label class="form-label">Product </label>
+                              <div class="row">
+                                <div class="col-8">
+                                  <mat-form-field class="col-10">
+                                    <mat-select (selectionChange)="selectProduct($event.value)"
+                                      formControlName="product" name="product" [(ngModel)]="jobObj.product"
+                                      placeholder="Select Product">
+                                      <mat-option>
+                                        <ngx-mat-select-search [formControl]="productMultiFilterCtrl"
+                                          [searching]="searching">
+                                        </ngx-mat-select-search>
+                                      </mat-option>
+                                      <mat-option>None</mat-option>
+                                      <mat-option *ngFor="let item of filteredProductMulti | async"
+                                        [value]="item.product">
+                                        {{item.product}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-4" style="right: 10%;">
+                                  <div class="row">
+                                    <div class="col-4">
+                                      <button type="button" tooltip="Add Product in Job" placement="top"
+                                        show-delay="100" (click)="addProductInGrid()" style="padding: 12px;"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+                                      </button>
+                                    </div>
+                                    <div class="col-4">
+                                      <button type="button" tooltip="Add Product" placement="top" show-delay="100"
+                                        (click)="editProductModal()" style="padding: 12px;"
+                                        class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
+                                      </button>
+                                    </div>
+                                    <div class="col-4">
+                                      <button type="button" tooltip="Add One Time Product" placement="top" show-delay="100"
+                                        (click)="addProductManualModal()" style="padding: 12px;"
+                                        class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <label class="form-label">Service </label>
+                              <div class="row">
+                                <div class="col-8">
+                                  <mat-form-field class="col-10">
+                                    <mat-select (selectionChange)="selectService($event.value)"
+                                      formControlName="service" name="service" placeholder="Select Service"
+                                      [(ngModel)]="jobObj.service">
+                                      <mat-option>
+                                        <ngx-mat-select-search [formControl]="serviceMultiFilterCtrl"
+                                          [searching]="searching">
+                                        </ngx-mat-select-search>
+                                      </mat-option>
+                                      <mat-option>None</mat-option>
+                                      <mat-option *ngFor="let item of filteredServiceMulti | async"
+                                        [value]="item.service">
+                                        {{item.service}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-4" style="right: 10%;">
+                                  <div class="row">
+                                    <div class="col-4">
+                                      <button type="button" tooltip="Add Service in Job" placement="top"
+                                        show-delay="100" (click)="addServiceInGrid()" style="padding: 12px;"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+                                      </button>
+                                    </div>
+                                    <div class="col-6">
+                                      <button type="button" tooltip="Add Service" placement="top" show-delay="100"
+                                        (click)="editServiceModal()" style="padding: 12px;"
+                                        class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-10">
+                              <div class="table-responsive angular-bootstrap-table">
+                                <table class="table table-head-custom table-vertical-center">
+                                  <thead>
+                                    <th>
+                                      NAME
+                                    </th>
+                                    <th>
+                                      PRICE
+                                    </th>
+                                    <th>
+                                      QUANTITY
+                                    </th> 
+                                    <th *ngIf="this.invoiceData.paymentStatus != 'completed'">ACTIONS</th>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let item of dataList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index">
+
+                                      <td>{{item.name}}</td>
+                                      <td style=" padding-top: 2%; width: 30%;">
+
+                                        <div class="input-group">
+                                          <input type="number" class="form-control"
+                                            (input)="priceVal=$event.target.value" [(value)]="item.price"
+                                            (keyup.enter)="editPrice(item,$event.target.value)"
+                                            [disabled]="indexOfelement != editMode" [name]="item.price">
+
+                                          <span class="" *ngIf="this.invoiceData.paymentStatus != 'completed'">
+                                            <div class="col-sm-8" *ngIf="indexOfelement != editMode">
+                                              <button class="btn btn-default"
+                                                (click)="editModeCheck(i,indexOfelement,item)">
+                                                <span class="material-icons">
+                                                  create
+                                                </span>
+                                              </button>
+                                            </div>
+                                            <div class="col-sm-4" *ngIf="indexOfelement == editMode">
+                                              <button class="btn btn-default"
+                                                (click)="editModeSave(i,indexOfelement,item)">
+                                                <span class="material-icons">
+                                                  done
+                                                </span>
+                                              </button>
+                                            </div>
+                                          </span>
+                                        </div>
+                                      </td>
+                                      <td>
+                                        <div class="cust-div" *ngIf="item.service !=1;else service">
+                                          <span [hidden]="item.quantity <= 1"
+                                            *ngIf="this.invoiceData.paymentStatus != 'completed'"
+                                            (click)="decrement(item)" class="minus "><i class="fa fa-minus cust-minus"
+                                              aria-hidden="true"></i></span>
+                                          <input disabled class="cust-txt" type="text" [value]="item.quantity" />
+                                          <span (click)="increment(item,i)"
+                                            *ngIf="this.invoiceData.paymentStatus != 'completed'" class="plus "><i
+                                              class="fa fa-plus cust-plus"></i></span>
+                                        </div>
+                                        <ng-template #service> 
+                                          <input disabled class="cust-txt" type="text" [value]="item.quantity" /> 
+                                        </ng-template>
+
+                                        <!-- {{job.quantity}} -->
+                                      </td>
+                                      <td *ngIf="this.invoiceData.paymentStatus != 'completed'">
+
+                                        <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                          (click)="deleteData(item)">
+                                          <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                            cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                                          </span>
+                                        </a>
+                                      </td>
+                                    </tr>
+                                    
+                                    <tr *ngFor="let product of dataList1 | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index"> 
+                                      <!-- <td *ngIf="product.productID == null && product.serviceID == null">{{ product.name }}</td>
+                                      <td *ngIf="product.productID == null && product.serviceID == null">£{{ product.price }}</td>
+                                      <td *ngIf="product.productID == null && product.serviceID == null">{{ product.quantity }}</td>
+  
+                                      <td  *ngIf="product.productID == null && product.serviceID == null">
+                                        <a title="Edit Product"
+                                          class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                          (click)="editProductManualModal(product)">
+                                          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                            cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                                          </span>
+                                        </a>
+  
+                                        <a title="Delete Product" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                          (click)="editDeletemodalManual(product)">
+                                          <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                            cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                                          </span>
+                                        </a>
+                                      </td> -->
+                                      <td *ngIf="product.productID == null && product.serviceID == null">{{product.name}}
+  
+                                      </td>
+                                      <td *ngIf="product.productID == null && product.serviceID == null" style=" padding-top: 2%; width: 30%;">
+  
+                                        <div class="input-group">
+                                          <input type="number" class="form-control"
+                                            (input)="priceVal1=$event.target.value" [(value)]="product.price"
+                                            (keyup.enter)="editPrice1(product,$event.target.value)"
+                                            [disabled]="indexOfelement != editMode1" [name]="product.price">
+  
+                                          <span class="" *ngIf="this.invoiceData.paymentStatus != 'completed'">
+                                            <div class="col-sm-8" *ngIf="indexOfelement != editMode1">
+                                              <button class="btn btn-default"
+                                                (click)="editModeCheck1(i,indexOfelement,product)">
+                                                <span class="material-icons">
+                                                  create
+                                                </span>
+                                              </button>
+                                            </div>
+                                            <div class="col-sm-4" *ngIf="indexOfelement == editMode1">
+                                              <button class="btn btn-default"
+                                                (click)="editModeSave1(i,indexOfelement,product)">
+                                                <span class="material-icons">
+                                                  done
+                                                </span>
+                                              </button>
+                                            </div>
+                                          </span>
+                                        </div>
+                                      </td>
+                                      <td *ngIf="product.productID == null && product.serviceID == null">
+                                        <div class="cust-div"  >
+                                          <span [hidden]="product.quantity <= 1"  *ngIf="this.invoiceData.paymentStatus != 'completed'"
+                                            (click)="decrementManualProduct(product)" class="minus "><i class="fa fa-minus cust-minus"
+                                              aria-hidden="true"></i></span>
+                                          <input disabled class="cust-txt" type="text" [value]="product.quantity" />
+                                          <span (click)="incrementManualProduct(product,i)" *ngIf="this.invoiceData.paymentStatus != 'completed'" class="plus "><i
+                                              class="fa fa-plus cust-plus"></i></span>
+                                        </div>
+                                     
+                                      </td>
+                                      <td *ngIf="product.productID == null && product.serviceID == null">
+  
+                                        <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm" *ngIf="this.invoiceData.paymentStatus != 'completed'"
+                                          (click)="editDeletemodalManual(product)">
+                                          <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                            cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                                          </span>
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                  <tfoot *ngIf="dataList.length > 5 || dataList1.length > 5">
+                                    <pagination-controls (pageChange)="p = $event"
+                                      class="d-flex justify-content-between align-items-center flex-wrap">
+                                    </pagination-controls> 
+                                  </tfoot>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+
+            </div>
+            <!-- <div class="demo-tab-content">
+              <div class="modal-header cust-color" style="padding:1%;">
+                <div class="modal-title h4" id="example-modal-sizes-title-lg">
+                  <div class="row"> 
+                    <div class="col-lg-12 "> 
+                      <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Add
+                       Product Manually</span> 
+                    </div>
+                  </div> 
+                </div>
+              </div>
+               <div class="row" *ngIf="this.invoiceData.paymentStatus != 'completed'">
+                  <div class="col-8"> 
+                  </div> 
+                  <div class="col-4" style="margin-left: 90%;"> 
+                      <div class="card-toolbar">
+                        <button type="button" class="btn btn-primary" (click)="addProductManualModal()">+ Add
+                            </button>
+                      </div> 
+                  </div>
+                </div> 
+              <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="form-group"> 
+                          <div class="row">
+                            <div class="col-10">
+                              <div class="table-responsive angular-bootstrap-table">
+                                <table class="table table-head-custom table-vertical-center">
+                                  <thead>
+                                    <th>
+                                      NAME
+                                    </th>
+                                    <th>
+                                      PRICE
+                                    </th>
+                                    <th>
+                                      QUANTITY
+                                    </th> 
+                                    <th *ngIf="this.invoiceData.paymentStatus != 'completed'">ACTIONS</th>
+                                  </thead>
+                                  <tbody>
+                                    <tr
+                                      *ngFor="let product of dataList1 | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index"> 
+                                      <td>{{ product.name }}</td>
+                                      <td>£{{ product.price }}</td>
+                                      <td>{{ product.quantity }}</td> 
+                                      <td *ngIf="this.invoiceData.paymentStatus != 'completed'">
+                                        <a title="Edit Product"
+                                          class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                          (click)="editProductManualModal(product)">
+                                          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                            cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                                          </span>
+                                        </a>
+
+                                        <a title="Delete Product" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                          (click)="editDeletemodalManual(product)">
+                                          <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                            cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                                          </span>
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                  <tfoot *ngIf="dataList1.length > 5">
+                                    <pagination-controls (pageChange)="p = $event"
+                                      class="d-flex justify-content-between align-items-center flex-wrap">
+                                    </pagination-controls> 
+                                  </tfoot>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>  -->
+          </div> 
+
+          <div class="modal-footer" *ngIf="this.invoiceData.paymentStatus != 'completed'">
+            <ng-container>
+              <button type="submit" (click)="updateRepairDetails()"
+                [ngStyle]=" {'width':isLoading$ == true ? '10%':'7%'}" class="btn btn-custom btn-elevate">Update
+                <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 10%;"></span>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+
+
+
+
+
+
+<!-- Add Storage Location Modal -->
+<ng-template #openModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+         <ng-container *ngIf="customer.id">Edit</ng-container>
+         <ng-container *ngIf="!customer.id">Create</ng-container>
+      
+         <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+       </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Invoice</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="invoiceGroup">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <label class="form-label">Customer</label>
+            <div class="form-group cust-height">
+              <mat-form-field class="col-12">
+                <mat-select (selectionChange)="selectCustomer($event.value)"
+                  [class.is-invalid]="isControlInvalid('customer')" formControlName="customer" name="customer"
+                  placeholder="Select Customer">
+                  <mat-option>
+                    <ngx-mat-select-search [formControl]="customerMultiFilterCtrl" [searching]="searching">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let cust of filteredCustomerMulti | async" [value]="cust">
+                    {{cust.customer}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'customer')">Customer is required </div>
+
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <label class="form-label">Job</label>
+            <div class="form-group cust-height">
+              <mat-form-field class="col-12">
+                <mat-select (selectionChange)="selectJob($event.value)" formControlName="job" name="job"
+                  placeholder="Select Job">
+                  <mat-option>
+                    <ngx-mat-select-search [formControl]="jobMultiFilterCtrl" [searching]="searching">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor="let item of filteredJobMulti | async" [value]="item">
+                    {{item.id}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- <div class="invalid-feedback" *ngIf="controlHasError('required', 'job')">Job is required</div> -->
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button>
+          <!-- <ng-container>
+            <button type="submit" (click)="createInvoice()" class="btn btn-primary btn-elevate"
+              [disabled]="invoiceGroup.invalid">Save</button>
+          </ng-container> -->
+          <ng-container>
+            <button type="submit" (click)="createInvoice()" [ngStyle]=" {'width':isInvoice$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isInvoice$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Storage Location Modal -->
+
+
+<!-- Add Payment Modal -->
+
+<ng-template #openPaymentModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+          <ng-container *ngIf="customer.id">Edit</ng-container>
+          <ng-container *ngIf="!customer.id">Create</ng-container>
+       
+          <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+        </ng-container> -->
+
+      <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+        Payment</span>
+      <span *ngIf="isFlag == 2" style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update
+        Payment</span>
+
+    </div>
+  </div>
+  <div class="demo-tab-content">
+    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+      <!-- <ng-container *ngIf="isLoading$ | async">
+              <div class="overlay-layer bg-transparent">
+                  <div class="spinner spinner-lg spinner-success"></div>
+              </div>
+          </ng-container> -->
+
+      <ng-container>
+        <form action="#" class="form form-label-right" [formGroup]="paymentForm">
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label"><strong> Payment Type </strong></label>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="col-10">
+                      <mat-select (selectionChange)="selectpaymentType($event.value)" formControlName="paymentType"
+                        name="paymentType" [(ngModel)]="paymentObj.paymentType" placeholder="Select Payment Type">
+                        <mat-option>
+                          <ngx-mat-select-search [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
+                          </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let item of filteredpaymentTypeMulti | async" [value]="item.paymentType">
+                          {{item.paymentType}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'bookedBy')">
+                              Booked By is required
+                            </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label">Payment Reference</label>
+                <input type="text" class="form-control form-control-lg form-control-solid" name="paymentReference"
+                  placeholder="Enter Payment Reference" autocomplete="off" formControlName="paymentReference" />
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label">Amount Due</label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="dueAmount" disabled
+                  autocomplete="off" formControlName="dueAmount" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label">Payment Amount</label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="amount"
+                  placeholder="Enter Payment Amount" autocomplete="off"
+                  [class.is-invalid]="PaymentControlInvalid('amount')" formControlName="amount" />
+                <!-- <div class="valid-feedback" *ngIf="isControlValid('jobTitle')">Job Title was entered
+                        correct</div> -->
+                <div class="invalid-feedback" *ngIf="PaymentcontrolHasError('required', 'amount')">Payment Amount
+                  is required</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button>
+
+    <ng-container *ngIf="isFlag == 1">
+      <button type="submit" (click)="addPayment()" [ngStyle]=" {'width':isPayment$ == true ? '25%':'17%'}"
+        class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isPayment$ == true}"
+          style="margin: 17%;"></span></button>
+
+    </ng-container>
+    <ng-container *ngIf="isFlag == 2">
+      <button type="submit" (click)="updatePayment()" [ngStyle]=" {'width':isPayment$ == true ? '25%':'17%'}"
+        class="btn btn-custom btn-elevate">Save <span [ngClass]="{spinner:isPayment$ == true}"
+          style="margin: 17%;"></span></button>
+
+    </ng-container>
+  </div>
+
+</ng-template>
+<!--  Add Payment Modal -->
+<!-- Product Modal -->
+
+<ng-template #productopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+        <ng-container *ngIf="customer.id">Edit</ng-container>
+        <ng-container *ngIf="!customer.id">Create</ng-container>
+     
+        <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+      </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Product</span>
+
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 340px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+     <div class="overlay-layer bg-transparent">
+       <div class="spinner spinner-lg spinner-success"></div>
+     </div>
+   </ng-container>  -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="productGroup">
+
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Product Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="productName"
+              placeholder="Enter Product Name" autocomplete="off"
+              [class.is-invalid]="isProductControlInvalid('productName')" formControlName="productName" required />
+            <div class="invalid-feedback" *ngIf="ProductcontrolHasError('required', 'productName')">Product Name is
+              required</div>
+
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Sell Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="sellPrice"
+              placeholder="Enter Sell Price" [class.is-invalid]="isProductControlInvalid('sellPrice')"
+              formControlName="productName" autocomplete="off" formControlName="sellPrice" />
+            <div class="invalid-feedback" *ngIf="ProductcontrolHasError('required', 'sellPrice')">Sell Price is
+              required</div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Cost Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="costPrice"
+              placeholder="Enter Cost Price" autocomplete="off" formControlName="costPrice" />
+          </div>
+        </div>
+
+        <!-- <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Quantity</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
+              placeholder="Enter Quantity" autocomplete="off" formControlName="quantity" />
+          </div>
+        </div> -->
+
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeProductModal()">Cancel</button>
+
+    <ng-container>
+      <button type="submit" (click)="addProduct()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+        class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+          style="margin: 17%;"></span></button>
+    </ng-container>
+  </div>
+
+</ng-template>
+
+<!-- Product Modal -->
+<!-- Add Service Modal -->
+<ng-template #serviceopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+       <ng-container *ngIf="customer.id">Edit</ng-container>
+       <ng-container *ngIf="!customer.id">Create</ng-container>
+    
+       <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+     </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Service</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="ServiceformGroup">
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="serviceName"
+              placeholder="Enter Service Name" autocomplete="off"
+              [class.is-invalid]="isServiceControlInvalid('serviceName')" formControlName="serviceName" required />
+            <div class="invalid-feedback" *ngIf="isServicecontrolHasError('required', 'serviceName')">Name is required
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <!-- <p>Please only enter numbers in the estimated time box below, and then select the time type below (e.g. Hours, Days, Weeks etc.)</p> -->
+            <label class="form-label"> Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid " name="price"
+              placeholder="Enter Price" autocomplete="off" [class.is-invalid]="isServiceControlInvalid('price')"
+              formControlName="price" required />
+            <div class="invalid-feedback" *ngIf="isServicecontrolHasError('required', 'price')">Price is required</div>
+
+          </div>
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeServiceModal()">Cancel</button>
+
+          <ng-container>
+            <button type="submit" (click)="addService()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Service Modal -->
+
+
+<!-- Confirm Box -->
+<ng-template #confrimSalesBox let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> -->
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+
+  <div class="modal-body">
+    <!-- <ng-container *ngIf="isDeleting">
+       <h4>Product is deleting...</h4>
+      </ng-container> -->
+
+    <ng-container>
+      <h4>Are you sure to delete this Item?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+
+      <!-- <div class="text-center"> -->
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDelete$ == true ? '25%':'20%'}" (click)="deleteItem()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isDelete$ == true}" style="margin: 10%;"></span></button>
+      <!-- </div> -->
+
+      <button type="button" (click)="closeDeleteItem()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->
+
+
+<!-- Confirm Box Delete Invoice-->
+<ng-template #confrimInvoice let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+    </div>
+  </div>
+
+
+  <div class="modal-body">
+    <ng-container>
+      <h4>Are you sure to delete this Invoice?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+
+      <!-- <div class="text-center"> -->
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDelete$ == true ? '25%':'20%'}" (click)="deleteInvoice()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isDelete$ == true}" style="margin: 10%;"></span></button>
+      <!-- </div> -->
+
+      <button type="button" (click)="closedeleteInvoice()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box Delete Invoice -->
+
+<!-- Confirm Box Delete Payment-->
+<ng-template #confrimPayment let-modal>
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <ng-container>
+      <h4>Are you sure to delete this Payment?</h4>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+      <!-- <div class="text-center"> -->
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDeletePayment$== true ? '25%':'20%'}"
+        (click)="deletePayment()" data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete
+        <span [ngClass]="{spinner:isDeletePayment$ == true}" style="margin: 10%;"></span></button>
+      <!-- </div> -->
+      <button type="button" (click)="closedeletePayment()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+  </div>
+
+</ng-template>
+<!-- Confirm Box Delete Payment -->
+<!-- Product Modal -->
+
+<ng-template #manualproductopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+        <ng-container *ngIf="customer.id">Edit</ng-container>
+        <ng-container *ngIf="!customer.id">Create</ng-container>
+     
+        <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+      </ng-container> -->  
+      <span *ngIf="isProductFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Product</span>
+      <span *ngIf="isProductFlag == 2"  style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update Product</span>
+
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 340px;">
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="productManualForm">
+
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Product Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="name"
+              placeholder="Enter Product Name" autocomplete="off"
+              [class.is-invalid]="isProductManualControlInvalid('name')" formControlName="name"
+              required />
+            <div class="invalid-feedback" *ngIf="ProductManualcontrolHasError('required', 'name')">Product Name
+              is
+              required</div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label">Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="sellPrice"
+              placeholder="Enter Price" [class.is-invalid]="isProductManualControlInvalid('sellPrice')"
+              formControlName="productName" autocomplete="off" formControlName="sellPrice" />
+            <div class="invalid-feedback" *ngIf="ProductManualcontrolHasError('required', 'sellPrice')">Price is
+              required</div>
+          </div>
+        </div>
+        <!-- <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Cost Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="costPrice"
+              placeholder="Enter Cost Price" autocomplete="off" formControlName="costPrice" />
+          </div>
+        </div> -->
+
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Quantity</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
+              placeholder="Enter Quantity" autocomplete="off" formControlName="quantity" />
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeProductManualModal()">Cancel</button>
+
+    <ng-container  *ngIf="isProductFlag == 1">
+      <button type="submit" (click)="addProductManually()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+        class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+          style="margin: 17%;"></span></button>
+    </ng-container>
+    <ng-container *ngIf="isProductFlag == 2"> 
+      <button type="submit" (click)="updateProductManually()"  [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"  class="btn btn-custom btn-elevate"
+       >Update <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button>
+
+    </ng-container>
+  </div>
+
+</ng-template>
+
+<!-- Product Modal -->
+
+<!-- Confirm Box Delete Manual Product-->
+<ng-template #confrimProductManual let-modal>
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <ng-container>
+      <h4>Are you sure to delete this product?</h4>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+      <!-- <div class="text-center"> -->
+      <button class="btn btn-danger" [ngStyle]=" {'width':deleteManualProduct== true ? '25%':'20%'}"
+        (click)="deleteProductManual()" data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete
+        <span [ngClass]="{spinner:deleteManualProduct == true}" style="margin: 10%;"></span></button>
+      <!-- </div> -->
+      <button type="button" (click)="closedeleteManualProduct()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+  </div>
+
+</ng-template>
+<!-- Confirm Box Delete Manual Product -->
