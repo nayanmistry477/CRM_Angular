@@ -27,6 +27,7 @@ import { Moment } from 'moment';
 import * as moment from "moment";
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
 import { PaymentService } from 'src/app/modules/auth/_services/payment.service';
+import { Router } from '@angular/router';
 
 declare var $: any;
 interface PaymentType {
@@ -179,6 +180,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     public http: HttpClient,
     public servicesService: ServicesService,
     public gallery: Gallery,
+    public router:Router,
     private desclaimerService: DesclaimerService,
     public technicianService: TechnicianService,
     public storageLocationService: StorageService,
@@ -1316,11 +1318,16 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.paymentForm.reset()
                 this.paymentObj = {}
                 this.isLoading$ = false;
-                if(val == 'updateInvoice'){
-                  setTimeout(() => {
-                    window.location.reload()
-                  }, 700)
-                  this.isLoading$ = false;
+                if (val == 'updateInvoice') { 
+                  // if(this.isStatusSelected != null){
+                    // window.location.reload()
+                    // this.router.navigate(['open-job'])
+                  // }else{
+                    this.router.navigate(['open-job'])
+                    this.isLoading$ = false;
+                    this.cdr.markForCheck();
+                  // }
+                 
                 }
               }
             } else {
@@ -1357,7 +1364,9 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
       obj.underWarranty = "true"
     }
     // obj.discount = this.jobObj.discount;
-    
+    if(obj.estDate == null){
+      obj.estDate = ""
+    }
     obj.price = this.sum;
     obj.discount = this.invoiceData.discount 
     // console.log(obj) 
@@ -1378,12 +1387,10 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               this.isLoading$ = false;
               this.updateInvoice('updateInvoice')
               // this.cdr.markForCheck();
-              if(this.uploader1.queue != null && this.uploader1.queue != undefined){
+              if(this.uploader1.queue.length != 0){
                 this.uploadDocument();
               }
-              setTimeout(() => {
-                window.location.reload()
-              }, 700)
+             
               // this.getJobByInvoiceID(this.jobObj.id);
             } else {
               if (v == 'updateRepair') {

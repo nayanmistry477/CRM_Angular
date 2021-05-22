@@ -28,6 +28,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { Moment } from 'moment';
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
 import { PaymentService } from 'src/app/modules/auth/_services/payment.service';
+import { Router } from '@angular/router';
 
 declare var $: any;
 interface PaymentType {
@@ -193,6 +194,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     private elRef: ElementRef,
     public storageLocationService: StorageService,
     private ngZone: NgZone,
+    public router:Router,
     public technicianService: TechnicianService,
     public paymentService:PaymentService,
     private modalService: NgbModal, private toastr: ToastrService) {
@@ -1033,12 +1035,16 @@ payType:any=null
                 this.paymentObj = {}
                 this.isLoading$ = false;
                 if(val == 'updateInvoice'){
-                  // setTimeout(() => {
-                  //   window.location.reload()
-                  // }, 700)
-                  this.jobService.fetch(); 
-                  this.JobformGroup.untouched;
-                  this.isLoading$ = false; 
+                  if(this.isStatusSelected != null && this.isStatusSelected !='open'){
+                    // window.location.reload() 
+                    this.router.navigate(['closed-job'])
+                  }else{
+                    this.jobService.fetch(); 
+                    // this.jobService.fetch(); 
+                    this.JobformGroup.untouched; 
+                    this.isLoading$ = false;
+                    this.cdr.markForCheck();
+                  } 
                 }
               }
             } else {
@@ -2244,7 +2250,7 @@ orgPrice1:number = 0;
     );
   }
 
-
+  isStatusSelected:any= null
   selectJobStatus(val) {
     // console.log(val)
     var result;
@@ -2253,6 +2259,7 @@ orgPrice1:number = 0;
     // this.jobObj.jobStatus = result.jobStatus;
     // this.jobObj.statusStage = result.statusStage
     // console.log(this.jobObj)
+    this.isStatusSelected = result.statusStage
     this.JobformGroup.controls['statusStage'].setValue(result.statusStage)
   }
 

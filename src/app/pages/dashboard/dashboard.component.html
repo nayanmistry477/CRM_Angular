@@ -479,13 +479,19 @@
                                 <div class="col-6">
                                  <div class="row">
                                     <div class="col-4">
-                                        
-                                        <label for="file-upload" class="custom-file-upload">
+                            
+                                        <!-- <label for="file-upload" class="custom-file-upload">
                                             <i class="fa fa-file" aria-hidden="true"> </i>
                                             Add Document
                                             <input id="file-upload" type="file" ng2FileSelect
                                             [uploader]="uploader1" (change)="onSelectDocument()"/> 
-                                        </label>
+                                        </label> -->
+                                        <a (click)="fileInput1.click()" style="text-decoration: none;color: black;" class="custom-file-upload">
+                                          <i class="fa fa-file" aria-hidden="true"> </i>
+                                          Add Document</a>
+                                        <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+                                          <input type="file" (change)="onSelectDocument()"   #fileInput1 ng2FileSelect [uploader]="uploader1" />
+                                     </span>
                                         {{fileName}}
                                         
                                         <div class="row">
@@ -502,7 +508,7 @@
                                             <div class="col-6">
                                                 <a *ngIf="uploader1.queue.length != 0 "
                                                  tooltip="Remove"
-                                                (click)="clearDocument()">
+                                                (click)=" clearDocument()">
                                                 <i class="fa fa-trash"
                                                     style="font-size: 15px;">Clear</i>
                                             </a>
@@ -1157,17 +1163,22 @@
                                                     </div>
                                                     <div class="col-4">
                                                         <div class="row">
-                                                            <div class="col-8">
-                                                                <label for="file-upload" class="custom-file-upload">
-                                                                    <i class="fa fa-camera" aria-hidden="true"> </i>
-                                                                    Add Attachment
-                                                                </label>
-                                                                <!-- <input id="file-upload" type="file" ng2FileSelect [uploader]="uploader"   multiple/> -->
-                                                                <input id="file-upload" type="file" ng2FileSelect
-                                                                    [uploader]="uploader" (change)="onSelect()"
-                                                                    multiple />
+                                                            <div class="col-8"  >
 
-                                                            </div>
+                                                                <a (click)="fileInput.click()" style="text-decoration: none;color: black;" class="custom-file-upload">
+                                                                  <i class="fa fa-camera" aria-hidden="true"> </i>
+                                                                  Add Attachment</a>
+                                                                <!-- <label for="file-upload" class="custom-file-upload">
+                                                                  <i class="fa fa-camera" aria-hidden="true"> </i>
+                                                                  Add Attachment
+                                                                </label> -->
+                                                                <!-- <input id="file-upload" type="file" ng2FileSelect [uploader]="uploader"   multiple/> -->
+                                                                <!-- <input   type="file" ng2FileSelect [uploader]="uploader"
+                                                                  (change)="onSelect()" multiple /> -->
+                                                               <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+                                                                    <input type="file" (change)="onSelect()" multiple #fileInput ng2FileSelect [uploader]="uploader" />
+                                                               </span>
+                                                              </div>
                                                             <div class="col-4" style="padding: 1%;">
                                                                 <div>
                                                                     <a tooltip="Remove from queue"

@@ -1082,8 +1082,9 @@ export class DashboardComponent implements OnInit {
                 this.paymentObj = {}
                 this.isLoading$ = false;
                 if (val == 'updateInvoice') { 
-                  if(this.isStatusSelected != null){
-                    window.location.reload() 
+                  if(this.isStatusSelected != null && this.isStatusSelected != 'open'){
+                    // window.location.reload()
+                    this.router.navigate(['closed-job'])
                   }else{
                     this.assignedService.fetch(); 
                     // this.jobService.fetch(); 
@@ -2422,7 +2423,7 @@ export class DashboardComponent implements OnInit {
     // this.jobObj.jobStatus = result.jobStatus;
     // this.jobObj.statusStage = result.statusStage
     // console.log(this.jobObj)
-    this.isStatusSelected = result
+    this.isStatusSelected = result.statusStage
     this.JobformGroup.controls['statusStage'].setValue(result.statusStage)
   }
   selectItem(items) {

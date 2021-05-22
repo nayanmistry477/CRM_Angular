@@ -160,7 +160,7 @@ export class InvoiceComponent implements OnInit {
     public quotationService:QuotationService,
     private modalService: NgbModal, private cdr: ChangeDetectorRef) {
     this.modalService.dismissAll()
-    this.getAllJobsStatus();
+    
     const sb = this.invoiceService.isLoading$.subscribe(res => this.isLoading = res);
     this.grouping = this.invoiceService.grouping;
     this.paginator = this.invoiceService.paginator;
@@ -181,6 +181,7 @@ export class InvoiceComponent implements OnInit {
     this.searchForm();
     this.getAllProducts();
     this.getAllServices();
+    this.getAllJobsStatus();
     this.getCompanyDetails();
     this.getAllCustomers();
     this.getAllEmailSettings();
@@ -1028,7 +1029,7 @@ export class InvoiceComponent implements OnInit {
 
  editPrice1(item, newPrice) {
 
-  this.dataList.forEach(element => {
+  this.dataList1.forEach(element => {
     if (element.id == item.id) {
       var total;
 
@@ -3112,7 +3113,9 @@ deletePaymentObj:any={}
     } else {
       this.jobObj.underWarranty = "true"
     }
-
+    if(this.jobObj.estDate == null){
+      this.jobObj.estDate = ""
+    }
     this.jobObj.price = this.sum;
     this.jobObj.discount = this.invoiceData.discount;
     console.log(this.jobObj)
