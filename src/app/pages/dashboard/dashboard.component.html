@@ -244,10 +244,10 @@
             </div>
             <br>
             <div class="row" style="font-size: 11px;">
-                <div class="col-md-7" style="text-align: start;">
+                <div class="col-md-8" style="text-align: start;">
                     <span>Previous Period: £ {{totalIncomePre}}</span>
                 </div>
-                <div class="col-md-5" style="text-align: end;">
+                <div class="col-md-4" style="text-align: end;">
                     <i class="fa fa-arrow-up" aria-hidden="true" style="font-size: 11px;"></i>{{totalIncomeavg}}%
                 </div>
             </div>
@@ -470,7 +470,7 @@
                     </div>
                 </ng-template> -->
                     <div class="" style="text-align:end ;">
-                        <div class="form-group cust-height">
+                        <div class="form-group">
                             <label class="form-label" style="margin-right: 1%;"><strong> Job Status </strong></label>
                             <div class="row">
                                 <div class="col-6">
@@ -488,7 +488,7 @@
                                         </label> -->
                                         <a (click)="fileInput1.click()" style="text-decoration: none;color: black;" class="custom-file-upload">
                                           <i class="fa fa-file" aria-hidden="true"> </i>
-                                          Add Document</a>
+                                         Upload Worksheet</a>
                                         <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
                                           <input type="file" (change)="onSelectDocument()"   #fileInput1 ng2FileSelect [uploader]="uploader1" />
                                      </span>
@@ -572,14 +572,14 @@
                             <br>
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-9">
                                         <div class="row">
                                             <div class="col-6" style="margin-top: 1%;">
                                                 <div class="row" style="height: 35%;">
                                                     <div class="col-3">
                                                         <b> <label class="form-label">Name:</label></b>
                                                     </div>
-                                                    <div class="col-8" style="right: 13%;">
+                                                    <div class="col-8" style="right: 11%;">
                                                         <label class="form-label">{{jobObj.customer}}</label>
                                                     </div>
                                                 </div>
@@ -587,7 +587,7 @@
                                             <div class="col-6">
                                                 <div class="row" style="height: 35%;"
                                                     *ngIf="isJobstatus != true;else custContact">
-                                                    <div class="col-3" style="margin-top: 2%;">
+                                                    <div class="col-3" style="margin-top: 1%;">
                                                         <b> <label class="form-label">Contact:</label></b>
                                                     </div>
                                                     <div class="col-7" style="right: 10%;">
@@ -615,10 +615,10 @@
                                                 </div>
                                                 <ng-template #custContact>
                                                     <div class="row" style="height: 35%;">
-                                                        <div class="col-3" style="margin-top: 2%;">
+                                                        <div class="col-3" style="margin-top: 1%;">
                                                             <b> <label class="form-label">Contact:</label></b>
                                                         </div>
-                                                        <div class="col-7" style="margin-top: 2%;right: 10%;">
+                                                        <div class="col-7" style="margin-top: 1%;right: 10%;">
                                                             <label class="form-label">{{jobObj.customerContact}}</label>
 
                                                         </div>
@@ -631,7 +631,7 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="row" *ngIf="isJobstatus != true;else custEmail">
-                                                    <div class="col-2" style="margin-top: 3%;">
+                                                    <div class="col-2" style="margin-top: 1%;">
                                                         <b> <label class="form-label">Email:</label></b>
                                                     </div>
                                                     <div class="col-9" style="right: 5%;">
@@ -649,10 +649,10 @@
                                                 </div>
                                                 <ng-template #custEmail>
                                                     <div class="row">
-                                                        <div class="col-2" style="margin-top: 3%;">
+                                                        <div class="col-2" style="margin-top: 1%;">
                                                             <b> <label class="form-label">Email:</label></b>
                                                         </div>
-                                                        <div class="col-9" style="margin-top: 3%;right: 5%;">
+                                                        <div class="col-9" style="margin-top: 1%;right: 5%;">
                                                             <label class="form-label">{{jobObj.customerEmail}}</label>
                                                         </div>
                                                     </div>
@@ -692,7 +692,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <!-- <div class="card">
                                         <div class="card-body"> -->
                                         <div class="row">
@@ -1030,10 +1030,10 @@
                                             <label class="form-label"><strong> Est Completion Date</strong></label>
                                             <br>
                                             <mat-form-field class="col-10">
-                                                <input matInput [matDatepicker]="picker" formControlName="estDate"
+                                                <input matInput [matDatepicker]="picker1" formControlName="estDate"
                                                     name="estDate" [min]="minDate" placeholder="Choose a date">
-                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                                <mat-datepicker #picker></mat-datepicker>
+                                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker1></mat-datepicker>
                                             </mat-form-field>
                                         </div>
                                         <div class="form-group cust-height">
@@ -1044,15 +1044,15 @@
                                             formControlName="completedDate" /> -->
                                             <br>
                                             <mat-form-field class="col-10">
-                                                <input matInput [matDatepicker]="picker1"
+                                                <input matInput [matDatepicker]="picker4"
                                                     formControlName="completedDate" name="completedDate" [min]="minDate"
                                                     placeholder="Choose a date">
-                                                <mat-datepicker-toggle matSuffix [for]="picker1">
+                                                <mat-datepicker-toggle matSuffix [for]="picker4">
                                                 </mat-datepicker-toggle>
-                                                <mat-datepicker #picker1></mat-datepicker>
+                                                <mat-datepicker #picker4></mat-datepicker>
                                             </mat-form-field>
                                         </div>
-                                        <div class="form-group cust-height" style="margin-top: -21px;">
+                                        <div class="form-group cust-height">
                                             <label><strong> Repair Description </strong></label>
                                             <textarea class="form-control form-control-lg " name="repairDescription"
                                                 [(ngModel)]="jobObj.repairDescription"
@@ -1085,10 +1085,10 @@
                                                             </mat-option>
                                                         </mat-select>
                                                     </mat-form-field>
-                                                    <div class="invalid-feedback"
+                                                    <!-- <div class="invalid-feedback"
                                                         *ngIf="jobcontrolHasError('required', 'assignedTo')">
                                                         Assign is required
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -1968,6 +1968,10 @@
                             </div>
                             <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
                               <div class="row">
+                                <button type="button"  *ngIf="this.invoiceData.paymentStatus != 'completed'"
+                                (click)="addProductManualModal()"  
+                                class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add product manually
+                              </button>
                                 <div class="col-12">
                                   <div class="card">
                                     <div class="card-body">
@@ -2009,12 +2013,12 @@
                                                       class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                                     </button>
                                                   </div>
-                                                  <div class="col-4">
+                                                  <!-- <div class="col-4">
                                                     <button type="button" tooltip="Add One Time Product" placement="top" show-delay="100"
                                                       (click)="addProductManualModal()" style="padding: 12px;"
                                                       class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                                     </button>
-                                                  </div>
+                                                  </div> -->
                                                 </div>
                                               </div>
                                             </div>
@@ -2397,11 +2401,11 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="row">
-                                            <div class="col-5">
+                                            <div class="col-4">
                                                 <label for=""><strong>Payment Status:</strong></label>
                                                 <!-- <b> {{invoiceData.paymentStatus}}</b> -->
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-4" style="right: 6%">
                                                 <span *ngFor="let Val of jobStatusList">
                                                     <p *ngIf="Val.statusType ===  invoiceData.paymentStatus ">
                                                         <span [ngStyle]="{'color':Val.statusColor}"
@@ -3101,11 +3105,7 @@
         </div>
     </div>
 </div>
-
-
-
-
-
+ 
 <!-- Repair Information Modal -->
 <ng-template #openRepairItem let-modal>
     <div class="modal-header cust-color">
@@ -3916,10 +3916,12 @@
   
           <div class="col-lg-12">
             <div class="form-group cust-height">
-              <label class="form-label"> Quantity</label>
-              <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
-                placeholder="Enter Quantity" autocomplete="off" formControlName="quantity" />
-            </div>
+                <label class="form-label"> Quantity</label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
+                  placeholder="Enter Quantity" [class.is-invalid]="isProductManualControlInvalid('quantity')" autocomplete="off" formControlName="quantity" />
+                  <div class="invalid-feedback" *ngIf="ProductManualcontrolHasError('required', 'quantity')">Quantity is
+                    required</div>
+                </div>
           </div>
         </form>
       </ng-container>

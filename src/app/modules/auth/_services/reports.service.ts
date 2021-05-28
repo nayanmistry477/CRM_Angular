@@ -112,7 +112,14 @@ getAllStocksByDate(data) {
       headers: httpHeaders,
     }); 
   }
- 
+  getJobStatusReportByStatus(data){
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    }); 
+    return this.http.post<any>(`${API_USERS_URL}/getJobStatusReportByStatus`, data,{
+      headers: httpHeaders,
+    }); 
+  }
  
   ngOnDestroy() {
     this.subscriptions.forEach(sb => sb.unsubscribe());

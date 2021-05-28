@@ -11,6 +11,7 @@ import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { ReportService } from 'src/app/modules/auth/_services/reports.service';
 import { ItemTypeService } from 'src/app/modules/auth/_services/itemType.service';
 import { DesclaimerService } from 'src/app/modules/auth/_services/desclaimer.service';
+import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
@@ -24,20 +25,28 @@ export class ReportsComponent implements OnInit {
 
   public filteredLocationMulti: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   public TechnicianMultiFilterCtrl: FormControl = new FormControl();
+
+  public filteredJobStatusMulti: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  public JobStatusMultiFilterCtrl: FormControl = new FormControl();
+
   isLoading$
   public stockList = [];
   public customerList = [];
   public partsList = [];
   public invoiceList = [];
   public statusList = [];
+  public jobStatusDetailList = [];
+  private jobStatusVal: any[] = [];
   isStock:boolean = false;
   isViewJob:boolean = false;
   isCustomer:boolean = false;
   isSales:boolean = false;
   isInvoice:boolean = false;
   isJobstatus:boolean = false;
+  isJobDetailstatus:boolean = false;
   selectedDate:any={}
   dtOptions: any = {};
+  dt:any={}
   jobObj:any={};
   public techVal = [];
   public searching: boolean = false;
@@ -50,7 +59,8 @@ export class ReportsComponent implements OnInit {
     {name: 'test', email: 'test@gmail.com', website:'test.com'},
 ];
 private itemVal: any[] = [];
-  constructor(public toastr:ToastrService, private desclaimerService: DesclaimerService,  public itemTypeService: ItemTypeService,public reportService:ReportService,public technicianService: TechnicianService, private elementRef: ElementRef,private emailSettings:EmailSettingsService,public cdr:ChangeDetectorRef,private productPurschase:ProductPurchaseService) {
+  constructor(public toastr:ToastrService,    public jobStatusService: JobStatusService,
+    private desclaimerService: DesclaimerService,  public itemTypeService: ItemTypeService,public reportService:ReportService,public technicianService: TechnicianService, private elementRef: ElementRef,private emailSettings:EmailSettingsService,public cdr:ChangeDetectorRef,private productPurschase:ProductPurchaseService) {
  
     this.dtOptions = {
       pagingType: 'full_numbers',
@@ -61,6 +71,7 @@ private itemVal: any[] = [];
             'copy', 'csv', 'excel', 'print'
         ]
     };
+   
     this.cdr.markForCheck()
    }
 
@@ -73,9 +84,11 @@ private itemVal: any[] = [];
     this.showPartsReport({label:""})
     this.showInvoiceReport({label:""})
     this.showJobStatusReport({label:""})
+    this.selectStatus("") 
     this.getAllTechnicians();
     
     this.getAllItemTypes();
+    this.getAllJobStatus() 
     this.getDesclaimer(); 
     // var script = document.createElement('script');
     // script.src = './assets/js/components/datatable-net.js';
@@ -332,6 +345,151 @@ showJobStatusReport(val){
     });
 
 }
+getAllJobStatus() {
+
+  this.jobStatusService.getAllJobStatus()
+    .subscribe(
+      data => {
+        if (data.status == 0) {
+          this.jobStatusVal = []; 
+        } else {
+          var list = [];
+          var str = {}
+          data.result.forEach(element => {
+            str = {id:element.id,statusStage:element.statusStage, jobStatus: element.statusType };
+            list.push(str);
+          });
+          this.jobStatusVal = list;  
+        //  console.log(result) 
+         
+          this.filteredJobStatusMulti.next(this.jobStatusVal.slice());
+          this.JobStatusMultiFilterCtrl.valueChanges
+            .pipe(
+              takeUntil(this._onDestroy))
+            .subscribe(() => {
+              this.searching = false;
+              this.filterJobStatus()
+            },
+              error => {
+                // no errors in our simulated example
+                this.searching = false;
+                // handle error...
+              });
+        }
+      },
+      error => {
+        // this.showError(error.statusText);
+        console.log(error);
+      });
+}
+
+selectStatus(val) { 
+//  console.log(result) 
+ 
+  console.log(val) 
+  var valData = {
+    label: val
+  }
+  this.reportService.getJobStatusReportByStatus(valData)
+  .subscribe(
+    data => { 
+      if (data.status == 0) { 
+        this.jobStatusDetailList = [];
+        this.cdr.markForCheck()
+       } else {   
+        // const table: any = $('table');
+        // this.dt = table.DataTable({
+        // });
+        this.jobStatusDetailList = data.result; 
+        this.cdr.markForCheck()
+      }
+    },
+    error => {
+      // this.showError(error.statusText);
+      console.log(error);
+    }); 
+}
+
+
+// changeDetail (val) {
+//   var dt
+//   const table: any = $('table');
+//    dt = table.DataTable({
+//   });
+//   const tr = $('#detail-btn');
+//   const row =  dt.row( tr );
+
+//   // var tr = $(this).closest('tr');
+//   // var row = table.DataTable().row(tr);
+
+//   // if ( row.child.isShown() ) {
+//   //   // This row is already open - close it
+//   //   row.child.hide();
+//   //   tr.removeClass('shown');
+//   // } else {
+//   //   // Open this row
+//   //   row.child(this.format({
+//   //     val
+//   // })).show();
+//   // }
+
+//   if (row.child.isShown()) {
+//     // This row is already open - close it
+
+//     row.child.hide();
+//     tr.removeClass('shown');
+// }
+// else {
+//     row.child(this.format({
+//       val
+//   })).show()  // create new if not exist
+//     // tr.addClass('shown');
+// }
+// }
+// invoiceItems:any = []
+// format (val) {
+//   this.invoiceItems = val.val.Invoiceitems
+//   // `d` is the original data object for the row
+//      // `d` is the original data object for the row
+ 
+   
+ 
+//      var html = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+//      for (var i=0;i< this.invoiceItems.length;i++){
+//          html += 
+     
+//          '<tr *ngFor="let items of invoiceItems">'+
+//          '<td>name:</td>'+
+//          '<td> '+this.invoiceItems[i].name+' </td>'+
+//       '</tr>'+
+//       '<tr>'+
+//          '<td>Price</td>'+
+//          '<td> '+this.invoiceItems[i].price+' </td>'+
+//       '</tr>'+
+//       '<tr>'+
+//          '<td>Quantity</td>'+
+//          '<td> '+this.invoiceItems[i].quantity+' </td>'+
+//        '</tr>';
+//      }        
+//      return html += '</table>'; 
+// }
+filterJobStatus() {
+  if (!this.jobStatusVal) {
+    return;
+  }
+  // get the search keyword
+  let search = this.JobStatusMultiFilterCtrl.value;
+  if (!search) {
+    this.filteredJobStatusMulti.next(this.jobStatusVal.slice());
+    return;
+  } else {
+    search = search.toLowerCase();
+  }
+  // filter the banks
+  this.filteredJobStatusMulti.next(
+    this.jobStatusVal.filter(jobstatus => jobstatus.jobStatus.toLowerCase().indexOf(search) > -1 || jobstatus.jobStatus.toUpperCase().indexOf(search) > -1)
+  );
+}
   selectedItem(val){
     this.selectedDate ={}
     this.showDate = false;
@@ -342,6 +500,7 @@ showJobStatusReport(val){
       this.isSales = false;
       this.isInvoice = false;
       this.isJobstatus = false;
+      this.isJobDetailstatus = false;
       this.isStock = true;
       
     } 
@@ -351,6 +510,7 @@ showJobStatusReport(val){
       this.isSales = false;
       this.isInvoice = false;
       this.isJobstatus = false;
+      this.isJobDetailstatus = false;
       this.isViewJob = true;
     }
     if(val == 'viewCustomer'){ 
@@ -359,6 +519,7 @@ showJobStatusReport(val){
       this.isSales = false;
       this.isInvoice = false;
       this.isJobstatus = false;
+      this.isJobDetailstatus = false;
       this.isCustomer = true;
     }
     if(val == 'viewSales'){ 
@@ -367,6 +528,7 @@ showJobStatusReport(val){
       this.isCustomer = false;
       this.isInvoice = false;
       this.isJobstatus = false;
+      this.isJobDetailstatus = false;
       this.isSales = true
     }
     if(val == 'viewInvoice'){ 
@@ -375,6 +537,7 @@ showJobStatusReport(val){
       this.isCustomer = false;
       this.isSales = false;
       this.isJobstatus = false;
+      this.isJobDetailstatus = false;
       this.isInvoice = true
     }
     if(val == 'viewJobStatus'){ 
@@ -383,7 +546,17 @@ showJobStatusReport(val){
       this.isCustomer = false;
       this.isSales = false
       this.isInvoice = false;
+      this.isJobDetailstatus = false;
       this.isJobstatus = true;
+    }
+    if(val == 'viewJobDetailStatus'){ 
+      this.isStock = false;
+      this.isViewJob = false;
+      this.isCustomer = false;
+      this.isSales = false
+      this.isInvoice = false;
+      this.isJobstatus = false;
+      this.isJobDetailstatus = true;
     }
   }
   public technicianList = [];

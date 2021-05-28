@@ -11,7 +11,7 @@
     </div>
     <div class="card-title">
       <div class=" row">
-        <div class="col-8" [formGroup]="searchGroup">
+        <div class="col-7" [formGroup]="searchGroup">
           <div class="card-toolbar">
             <div class="form-group has-search">
               <span class="fa fa-search form-control-feedback"></span>
@@ -20,7 +20,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-5">
           <div class="card-toolbar">
             <button type="button" class="btn btn-primary" (click)="editModal()">+ New Invoice</button>
           </div>
@@ -202,11 +202,11 @@
               </div>
               <div class="col-4">
                 <div class="row">
-                  <div class="col-5">
+                  <div class="col-4">
                     <label for=""><strong>Payment Status:</strong></label>
                     <!-- <b> {{invoiceData.paymentStatus}}</b> -->
                   </div>
-                  <div class="col-4">
+                  <div class="col-4" style="right: 6%">
                     <span *ngFor="let statusVal of jobStatusList">
                       <p *ngIf="statusVal.statusType ===  invoiceData.paymentStatus ">
                         <span [ngStyle]="{'color':statusVal.statusColor}"
@@ -763,11 +763,15 @@
               </div>
               <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
                 <div class="row">
+                  <button type="button" *ngIf="this.invoiceData.paymentStatus != 'completed'"
+                  (click)="addProductManualModal()"  
+                  class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add product manually
+                </button>
                   <div class="col-12">
                     <div class="card">
-                      <div class="card-body">
+                      <div class="card-body"> 
                         <div class="form-group">
-                          <div class="row" *ngIf="this.invoiceData.paymentStatus != 'completed'">
+                          <div class="row" *ngIf="this.invoiceData.paymentStatus != 'completed'"> 
                             <div class="col-6">
                               <label class="form-label">Product </label>
                               <div class="row">
@@ -804,12 +808,7 @@
                                         class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                       </button>
                                     </div>
-                                    <div class="col-4">
-                                      <button type="button" tooltip="Add One Time Product" placement="top" show-delay="100"
-                                        (click)="addProductManualModal()" style="padding: 12px;"
-                                        class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
-                                      </button>
-                                    </div>
+                                   
                                   </div>
                                 </div>
                               </div>
@@ -1634,8 +1633,10 @@
           <div class="form-group cust-height">
             <label class="form-label"> Quantity</label>
             <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
-              placeholder="Enter Quantity" autocomplete="off" formControlName="quantity" />
-          </div>
+              placeholder="Enter Quantity" [class.is-invalid]="isProductManualControlInvalid('quantity')" autocomplete="off" formControlName="quantity" />
+              <div class="invalid-feedback" *ngIf="ProductManualcontrolHasError('required', 'quantity')">Quantity is
+                required</div>
+            </div>
         </div>
       </form>
     </ng-container>

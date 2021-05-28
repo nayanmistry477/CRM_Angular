@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -58,6 +58,9 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('confrimInvoice') confrimInvoice: TemplateRef<any>;
   @ViewChild('openPaymentModal') openPaymentModal: TemplateRef<any>;
 
+  @ViewChild('fileInput1')
+  myInputVariable: ElementRef;
+
   p: number
   public jobObj: any = {};
   JobformGroup: FormGroup;
@@ -75,7 +78,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
   public repairItemObj: any = {}
   paginator: PaginatorState;
   paginatorService: PaginatorState;
-
+  isStatusSelected:any= null
   sorting: SortState;
   grouping: GroupingState;
   uploader: FileUploader;
@@ -503,9 +506,11 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
   clearDocument(){
-    this.uploader1.clearQueue()
-    this.fileName = [];
+    this.myInputVariable.nativeElement.value = "";
     this.cdr.markForCheck();
+    this.fileName =[];
+    this.uploader1.clearQueue();
+ 
   }
   filterpaymentType() {
     if (!this.paymentVal) {
@@ -742,7 +747,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.JobformGroup.controls['additionalNotes'].setValue(this.jobObj.additionalNotes);
     this.JobformGroup.controls['technicianNotes'].setValue(this.jobObj.technicianNotes);
     this.JobformGroup.controls['statusStage'].setValue(this.jobObj.statusStage)
-
+    this.isStatusSelected = this.jobObj.statusStage
 
 
     this.sum = this.jobObj.price;
@@ -933,13 +938,15 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
 
             this.toastr.success(data.data.message)
-            setTimeout(() => {
+            this.getJobByInvoiceID(this.jobObj.id);
+            this.isInvoice$ = false;
+            this.modalService.dismissAll();
+            this.cdr.markForCheck();
+            // setTimeout(() => {
 
-              this.getJobByInvoiceID(this.jobObj.id);
-              this.isInvoice$ = false;
-              this.modalService.dismissAll()
-              window.location.reload()
-            }, 700)
+         
+            //   window.location.reload()
+            // }, 700)
 
           }
         },
@@ -1314,19 +1321,20 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               if (val == 'updateRepair') {
                 this.updateJob('updateRepair')
               } else {
-                this.updateJob('Invoice')
-                this.paymentForm.reset()
-                this.paymentObj = {}
-                this.isLoading$ = false;
+                
                 if (val == 'updateInvoice') { 
-                  // if(this.isStatusSelected != null){
+                  if(this.isStatusSelected != null && this.isStatusSelected != 'closed'){
                     // window.location.reload()
-                    // this.router.navigate(['open-job'])
-                  // }else{
                     this.router.navigate(['open-job'])
+                  }else{ 
+                    
+                    this.jobService.fetch();  
+                    this.updateJob('Invoice')
+                    this.paymentForm.reset()
+                    this.paymentObj = {}
                     this.isLoading$ = false;
                     this.cdr.markForCheck();
-                  // }
+                  }
                  
                 }
               }
@@ -1344,8 +1352,22 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(error);
         });
   }
+  
+
   updateJob(v) {
     // this.isLoading$ = true
+
+    // this.JobformGroup.markAllAsTouched();
+    // if (!this.JobformGroup.valid) {
+    // return;
+    // } else {
+    if (this.isStatusSelected != 'open') {
+      if (this.uploader1.queue.length == 0) {
+        this.toastr.error('Please select worksheet and status completed')
+      } else {
+
+
+         // this.isLoading$ = true
 
     // this.JobformGroup.markAllAsTouched();
     // if (!this.JobformGroup.valid) {
@@ -1382,15 +1404,14 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (v == 'updateJob') {
               this.toastr.success(data.data.message);
-              this.jobService.fetch();
-              this.JobformGroup.untouched;
-              this.isLoading$ = false;
-              this.updateInvoice('updateInvoice')
-              // this.cdr.markForCheck();
-              if(this.uploader1.queue.length != 0){
+              if (this.uploader1.queue.length != null && this.uploader1.queue.length != 0) {
                 this.uploadDocument();
+                this.clearDocument()
+                this.cdr.markForCheck()
               }
-             
+              this.updateInvoice('updateInvoice')
+
+              this.cdr.markForCheck()
               // this.getJobByInvoiceID(this.jobObj.id);
             } else {
               if (v == 'updateRepair') {
@@ -1422,7 +1443,174 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
           // this.showError(error.statusText);
           console.log(error);
         });
-    // }
+      }
+
+    }
+    else {
+      if(this.uploader1.queue.length != 0){
+        if(this.isStatusSelected == 'open'){
+          this.toastr.error('Please select worksheet and status completed')
+
+        }else{
+         // this.isLoading$ = true
+
+    // this.JobformGroup.markAllAsTouched();
+    // if (!this.JobformGroup.valid) {
+    //   return;
+    // } else {
+    this.isLoading$ = true;
+    var obj = this.JobformGroup.value
+
+    var setval;
+    setval = this.jobObj.accompanying.toString().replace("[", "").replace("]", "");
+    var getval = setval.toString()
+    obj.accompanying = getval
+    if (this.JobformGroup.value.underWarranty == false) {
+      obj.underWarranty = ""
+    } else {
+      obj.underWarranty = "true"
+    }
+    // obj.discount = this.jobObj.discount;
+    if(obj.estDate == null){
+      obj.estDate = ""
+    }
+    obj.price = this.sum;
+    obj.discount = this.invoiceData.discount 
+    // console.log(obj) 
+    // console.log(this.sum)
+
+    this.jobService.updateJobData(obj)
+      .subscribe(
+        data => {
+          if (data.data.status == 0) {
+            this.toastr.error(data.data.message);
+            this.isLoading$ = false;
+          } else {
+
+            if (v == 'updateJob') {
+              this.toastr.success(data.data.message);
+              if (this.uploader1.queue.length != null && this.uploader1.queue.length != 0) {
+                this.uploadDocument();
+                this.clearDocument()
+                this.cdr.markForCheck()
+              }
+              this.updateInvoice('updateInvoice')
+
+              this.cdr.markForCheck()
+              // this.getJobByInvoiceID(this.jobObj.id);
+            } else {
+              if (v == 'updateRepair') {
+                setTimeout(() => {
+                  window.location.reload()
+                  this.selectedIndex = 1;
+                }, 500)
+
+              }
+              this.jobService.fetch();
+              this.JobformGroup.untouched;
+              this.isLoading$ = false;
+              // this.cdr.markForCheck();
+              // setTimeout(()=>{
+              //   window.location.reload()
+              // },700)
+              this.getJobByInvoiceID(this.jobObj.id);
+            }
+
+
+            // this.uploadAttachment(data.data.result1.id);
+
+            // window.location.reload()  
+
+
+          }
+        },
+        error => {
+          // this.showError(error.statusText);
+          console.log(error);
+        });
+        }
+      }
+
+      else{
+        // this.isLoading$ = true
+
+    // this.JobformGroup.markAllAsTouched();
+    // if (!this.JobformGroup.valid) {
+    //   return;
+    // } else {
+    this.isLoading$ = true;
+    var obj = this.JobformGroup.value
+
+    var setval;
+    setval = this.jobObj.accompanying.toString().replace("[", "").replace("]", "");
+    var getval = setval.toString()
+    obj.accompanying = getval
+    if (this.JobformGroup.value.underWarranty == false) {
+      obj.underWarranty = ""
+    } else {
+      obj.underWarranty = "true"
+    }
+    // obj.discount = this.jobObj.discount;
+    if(obj.estDate == null){
+      obj.estDate = ""
+    }
+    obj.price = this.sum;
+    obj.discount = this.invoiceData.discount 
+    // console.log(obj) 
+    // console.log(this.sum)
+
+    this.jobService.updateJobData(obj)
+      .subscribe(
+        data => {
+          if (data.data.status == 0) {
+            this.toastr.error(data.data.message);
+            this.isLoading$ = false;
+          } else {
+
+            if (v == 'updateJob') {
+              this.toastr.success(data.data.message);
+              if (this.uploader1.queue.length != null && this.uploader1.queue.length != 0) {
+                this.uploadDocument();
+                this.clearDocument()
+                this.cdr.markForCheck()
+              }
+              this.updateInvoice('updateInvoice')
+
+              this.cdr.markForCheck()
+              // this.getJobByInvoiceID(this.jobObj.id);
+            } else {
+              if (v == 'updateRepair') {
+                setTimeout(() => {
+                  window.location.reload()
+                  this.selectedIndex = 1;
+                }, 500)
+
+              }
+              this.jobService.fetch();
+              this.JobformGroup.untouched;
+              this.isLoading$ = false;
+              // this.cdr.markForCheck();
+              // setTimeout(()=>{
+              //   window.location.reload()
+              // },700)
+              this.getJobByInvoiceID(this.jobObj.id);
+            }
+
+
+            // this.uploadAttachment(data.data.result1.id);
+
+            // window.location.reload()  
+
+
+          }
+        },
+        error => {
+          // this.showError(error.statusText);
+          console.log(error);
+        });
+      }
+      // }
+    }
   }
   emailSettings:any=[]
   getAllEmailSettings() {
@@ -2324,6 +2512,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(val)
     var result;
     result = this.jobStatusVal.filter(res => res.jobStatus == val)[0];
+    this.isStatusSelected = result.statusStage
     this.JobformGroup.controls['statusStage'].setValue(result.statusStage)
   }
   selectItem(items) {

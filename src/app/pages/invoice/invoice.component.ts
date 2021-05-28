@@ -177,7 +177,7 @@ export class InvoiceComponent implements OnInit {
     this.filteredDisplayMulti.next(this.displayVal.slice());
     this.filteredstatusMulti.next(this.statusVal.slice());
 
-    this.changeOption('')
+    // this.changeOption('')
     this.searchForm();
     this.getAllProducts();
     this.getAllServices();
@@ -273,7 +273,7 @@ export class InvoiceComponent implements OnInit {
       id:[''],
       name: ['', Validators.compose([Validators.required,])],
       sellPrice: ['', Validators.compose([Validators.required,])],
-      quantity:[''], 
+      quantity:['',Validators.compose([Validators.required,])], 
     });
     this.ServiceformGroup = this.fb.group({
       serviceName: ['', Validators.compose([Validators.required])],
@@ -312,7 +312,7 @@ export class InvoiceComponent implements OnInit {
   }
   dates: any = {}
   editInvoice(data) {
-    console.log(data)
+    // console.log(data)
     this.isShow = true;
     data.dueDate.toString()
     this.invoiceData = data;
@@ -339,15 +339,47 @@ export class InvoiceComponent implements OnInit {
   changeOption(val){
     if(val == 'percentage'){
       this.isAmountBox = false;
-      this.isPercentageBox = true; 
-      this.cdr.markForCheck()
+      this.isPercentageBox = true;  
+      this.invoiceData.exactAmount = 0;
+      this.invoiceTotal = Number(this.invoiceData.subTotal) - Number(0)
+      // console.log(this.jobObj.deposit)
+      this.InvoiceForm.controls['totalPrice'].setValue(this.invoiceTotal);
+      var totalSum = Number(this.invoiceTotal) - Number(this.invoiceData.deposit);
+      this.totalSum = totalSum.toFixed(2)
+
+      this.InvoiceForm.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.invoiceData.discount = 0;
+      this.cdr.markForCheck();
     }if(val == 'exactAmount'){
       this.isPercentageBox = false;
       this.isAmountBox = true;   
-      this.cdr.markForCheck()
+      this.invoiceData.percentage = 0;
+      this.invoiceTotal = Number(this.invoiceData.subTotal) - Number(0)
+      // console.log(this.jobObj.deposit)
+      this.InvoiceForm.controls['totalPrice'].setValue(this.invoiceTotal);
+      var totalSum = Number(this.invoiceTotal) - Number(this.invoiceData.deposit);
+      this.totalSum = totalSum.toFixed(2)
+
+      this.InvoiceForm.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.invoiceData.discount = 0;
+     
+      this.cdr.markForCheck();
     }if(val == ''){
       this.isPercentageBox = false;
-      this.isAmountBox = false;  
+      this.isAmountBox = false;    
+      this.invoiceData.percentage = 0;
+      this.invoiceData.exactAmount = 0;
+      this.invoiceTotal = Number(this.invoiceData.subTotal) - Number(0)
+      // console.log(this.jobObj.deposit)
+      this.InvoiceForm.controls['totalPrice'].setValue(this.invoiceTotal);
+      var totalSum = Number(this.invoiceTotal) - Number(this.invoiceData.deposit);
+      this.totalSum = totalSum.toFixed(2)
+
+      this.InvoiceForm.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.invoiceData.discount = 0;
       this.cdr.markForCheck()
     }
     
@@ -3116,8 +3148,9 @@ deletePaymentObj:any={}
     if(this.jobObj.estDate == null){
       this.jobObj.estDate = ""
     }
-    this.jobObj.price = this.sum;
+    this.jobObj.price = this.invoiceData.subTotal;
     this.jobObj.discount = this.invoiceData.discount;
+    this.jobObj.deposit = this.invoiceData.deposit
     console.log(this.jobObj)
     // console.log(this.sum)
 
@@ -3228,8 +3261,12 @@ deletePaymentObj:any={}
 
     var obj = this.invoiceData;
     obj.duePrice = this.totalSum;
-    obj.username =this.emailSettings.username;
+    obj.username = this.emailSettings.username;
     obj.password = this.emailSettings.password;
+    obj.host = this.emailSettings.server;
+    obj.isSSL = this.emailSettings.isSSL;
+    obj.port = this.emailSettings.port;
+    obj.encryptiontype	 = this.emailSettings.encryptiontype;
     // obj.email = 'nayanmistry477@gmail.com'
     obj.email = this.invoiceData.customerEmail
     obj.items = this.dataList
@@ -3438,9 +3475,13 @@ deletePaymentObj:any={}
     var totalPrice = Number(invoice.subTotal) - Number(invoice.discount) 
     var totalSum = Number(totalPrice) - Number(invoice.deposit);
     invoice.totalPrice = totalPrice 
-    invoice.duePrice =  totalSum;
-    invoice.username =this.emailSettings.username;
+    invoice.duePrice =  totalSum; 
+    invoice.username = this.emailSettings.username;
     invoice.password = this.emailSettings.password;
+    invoice.host = this.emailSettings.server;
+    invoice.isSSL = this.emailSettings.isSSL;
+    invoice.port = this.emailSettings.port;
+    invoice.encryptiontype	 = this.emailSettings.encryptiontype;
     invoice.email = invoice.customerEmail;
     // obj.email = 'nayanmistry477@gmail.com' 
     invoice.items = this.dataList;
@@ -3620,14 +3661,14 @@ deletePaymentObj:any={}
         data.paymentStatus = 'pending';
         data.discount = 0;
         data.subTotal = 0;
+        data.jobId = null;
       }
 
 
       this.isInvoice$ = true;
       console.log(data)
       this.invoiceService.createInvoice(data)
-        .subscribe(
-          data => {
+        .subscribe(async data => {
             // console.log(data.data.status)
             if (data.data.status == 0) {
               this.toastr.error(data.data.message)
@@ -3635,16 +3676,13 @@ deletePaymentObj:any={}
             } else {
 
               this.toastr.success(data.data.message)
+              this.editInvoice(data.data.result1) 
+              this.isInvoice$ = false;
+              this.modalService.dismissAll()
               this.selectedJob = {}
               this.selectedCustomer = {}
-              this.invoiceGroup.reset();
-              setTimeout(() => {
-
-                this.getInvoiceByID(this.invoiceData.id);
-                this.isInvoice$ = false;
-                this.modalService.dismissAll()
-                window.location.reload()
-              }, 700)
+              this.invoiceGroup.reset();   
+              this.cdr.markForCheck()
 
             }
           },

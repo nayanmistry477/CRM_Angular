@@ -162,7 +162,7 @@
             </div>
           </ng-template> -->
           <div class="" style="text-align:end ;">
-            <div class="form-group cust-height">
+            <div class="form-group">
                 <label class="form-label" style="margin-right: 1%;"><strong> Job Status </strong></label>
                 <div class="row">
                   <div class="col-6">
@@ -174,7 +174,7 @@
                           
                           <label for="file-upload" class="custom-file-upload">
                               <i class="fa fa-file" aria-hidden="true"> </i>
-                              Add Document
+                              Upload Worksheet
                               <input id="file-upload" type="file" ng2FileSelect
                               [uploader]="uploader1" (change)="onSelectDocument()"/> 
                           </label>
@@ -250,14 +250,14 @@
               <br>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-9">
                     <div class="row">
-                      <div class="col-5">
+                      <div class="col-6">
                         <div class="row">
                           <div class="col-3">
                             <b> <label class="form-label">Name:</label></b>
                           </div>
-                          <div class="col-8">
+                          <div class="col-8" style="right: 11%;">
                             <label class="form-label">{{jobObj.customer}}</label>
                           </div>
                         </div>
@@ -267,7 +267,7 @@
                           <div class="col-3">
                             <b> <label class="form-label">Contact:</label></b>
                           </div>
-                          <div class="col-7">
+                          <div class="col-7" style="right: 10%;">
                             <label class="form-label">{{jobObj.customerContact}}</label>
                             <!-- <div class="form-group ">
                               <input type="text" class=" form-control   form-control-solid" name="customerContact"
@@ -279,7 +279,7 @@
                     </div>
                     <br>
                     <div class="row">
-                      <div class="col-5">
+                      <div class="col-6">
                         <div class="row">
                           <div class="col-3">
                             <b> <label class="form-label">Email:</label></b>
@@ -297,7 +297,7 @@
                           <div class="col-3">
                             <b> <label class="form-label"> Address :</label></b>
                           </div>
-                          <div class="col-9">
+                          <div class="col-9" style="right: 10%;">
                             <div class="form-group cust-height">
                               <textarea class="form-control form-control-lg  " name="address" disabled
                                 placeholder="Enter Address" autocomplete="off" formControlName="address" cols="12"
@@ -308,7 +308,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-4">
+                  <div class="col-3">
                     <div class="row">
                       <div class="col-6">
                         <div class="form-group " style="display: inline; height: 50px;">

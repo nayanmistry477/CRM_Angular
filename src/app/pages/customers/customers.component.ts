@@ -94,6 +94,20 @@ export class CustomersComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+
+    this.formGroup = this.fb.group({
+
+      id:[''],
+      customerType: [''],   
+      firstName: [this.customer.firstName, Validators.compose([Validators.required])],
+      lastName: [this.customer.lastName, Validators.compose([Validators.required])],
+      contactNo: ['', Validators.compose([ Validators.minLength(11), Validators.maxLength(11)])],
+      referredBy: [''],
+      companyName: [this.customer.companyName],
+      email: [this.customer.email, Validators.compose([  Validators.email])],
+      address: [this.customer.address],
+      postCode: [this.customer.postCode],
+    })
     this.getAllReferredBys()   
     this.searchForm();
     this.filteredcustomerMulti.next(this.customerVal.slice());
@@ -111,19 +125,7 @@ export class CustomersComponent implements OnInit {
           this.searching = false;
           // handle error...
         });
-    this.formGroup = this.fb.group({
-
-      id:[''],
-      customerType: ['', ],   
-      firstName: [this.customer.firstName, Validators.compose([Validators.required])],
-      lastName: [this.customer.lastName, Validators.compose([Validators.required])],
-      contactNo: ['', Validators.compose([ Validators.minLength(11), Validators.maxLength(11)])],
-      referredBy: [''],
-      companyName: [this.customer.companyName],
-      email: [this.customer.email, Validators.compose([  Validators.email])],
-      address: [this.customer.address],
-      postCode: [this.customer.postCode,],
-    })
+   
 
   }
 
@@ -212,7 +214,7 @@ export class CustomersComponent implements OnInit {
     // console.log(data)
     this.isFlag = 2;
     this.modalService.open(this.openModal)
-    this.customerObj = data
+    
     this.formGroup.controls['id'].setValue( data.id);  
     this.formGroup.controls['firstName'].setValue( data.firstName); 
     this.formGroup.controls['lastName'].setValue( data.lastName);   
@@ -222,11 +224,10 @@ export class CustomersComponent implements OnInit {
     this.formGroup.controls['email'].setValue( data.email);
     this.formGroup.controls['address'].setValue(data.address);
     this.formGroup.controls['postCode'].setValue( data.postCode); 
-    this.formGroup.controls['customerType'].setValue(data.customerType); 
+    this.formGroup.controls['customerType'].setValue(data.customerType);  
 
-
-  
-    
+    this.customerObj = data
+    this.cdr.markForCheck();
   }
   customerData:any={}
   updateCustomer(){ 

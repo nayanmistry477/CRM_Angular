@@ -167,7 +167,7 @@
             <div class="card-body"> -->
          
             <div class="" style="text-align:end ;">
-              <div class="form-group cust-height">
+              <div class="form-group ">
                   <label class="form-label" style="margin-right: 1%;"><strong> Job Status </strong></label>
                   <div class="row">
                     <div class="col-6">
@@ -185,7 +185,7 @@
                             </label> -->
                             <a (click)="fileInput1.click()" style="text-decoration: none;color: black;" class="custom-file-upload">
                               <i class="fa fa-file" aria-hidden="true"> </i>
-                              Add Document</a>
+                              Upload Worksheet</a>
                             <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
                               <input type="file" (change)="onSelectDocument()"   #fileInput1 ng2FileSelect [uploader]="uploader1" />
                          </span>
@@ -254,16 +254,11 @@
             <div class="col-12">
               <div class="modal-header cust-color" style="padding:1%;">
                 <div class="modal-title h4" id="example-modal-sizes-title-lg">
-                  <div class="row">
-
-                    <!-- <div class="col-9">
-                      <span>Customer Details</span>
-                    </div> -->
-                    <div class="col-lg-12 ">
-                      <!-- <h5 class="font-weight-bold">Customer Details</h5> -->
-                      <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Customer
-                        Details</span>
-
+                  <div class="row"> 
+                    <div class="col-lg-12 "> 
+                      <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i>
+                         Customer Details
+                      </span> 
                     </div>
                   </div>
                 </div>
@@ -271,21 +266,21 @@
               <br>
               <div class="col-12">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-9">
                     <div class="row">
                       <div class="col-6" style="margin-top: 1%;">
                         <div class="row" style="height: 35%;">
                           <div class="col-3">
                             <b> <label class="form-label">Name:</label></b>
                           </div>
-                          <div class="col-8" style="right: 13%;">
+                          <div class="col-8" style="right: 11%;">
                             <label class="form-label">{{jobObj.customer}}</label>
                         </div>
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="row" style="height: 35%;">
-                          <div class="col-3" style="margin-top: 2%;">
+                          <div class="col-3" style="margin-top: 1%;">
                             <b> <label class="form-label">Contact:</label></b>
                           </div>
                           <div class="col-7" style="right: 10%;">
@@ -308,7 +303,7 @@
                     <div class="row">
                       <div class="col-6">
                         <div class="row">
-                          <div class="col-2" style="margin-top: 3%;">
+                          <div class="col-2" style="margin-top: 1%;">
                             <b> <label class="form-label">Email:</label></b>
                           </div>
                           <div class="col-9" style="right: 5%;">
@@ -342,7 +337,7 @@
 
                     </div>
                   </div>
-                  <div class="col-4">
+                  <div class="col-3">
                     <!-- <div class="card">
                     <div class="card-body"> -->
                     <div class="row">
@@ -413,18 +408,13 @@
             <div class="col-12">
               <div class="modal-header cust-color" style="padding:1%;">
                 <div class="modal-title h4" id="example-modal-sizes-title-lg">
-                  <div class="row">
-                    <!-- <div class="col-9">
-                        <span>Customer Details</span>
-                      </div> -->
-                    <div class="col-lg-12 ">
-                      <!-- <h5 class="font-weight-bold">Customer Details</h5> -->
+                  <div class="row"> 
+                    <div class="col-lg-12 "> 
                       <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Item
-                        information</span>
-
+                        information
+                     </span> 
                     </div>
-                  </div>
-                  <!-- <span>Item information</span> -->
+                  </div> 
                 </div>
               </div>
               <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
@@ -652,7 +642,7 @@
                           <mat-datepicker #picker4  ></mat-datepicker>
                         </mat-form-field>
                     </div>
-                    <div class="form-group cust-height"  style="margin-top: -21px;">
+                    <div class="form-group cust-height" >
                       <label><strong> Repair Description </strong></label>
                       <textarea class="form-control form-control-lg " name="repairDescription" [(ngModel)]="jobObj.repairDescription"
                         placeholder="Enter a description of the repair, or details of the problem" autocomplete="off"
@@ -693,11 +683,7 @@
                       <!-- <div class="invalid-feedback" *ngIf="Step2FormSelectcontrolHasError('required', 'serialNo')">Serial No is
                           required
                         </div> -->
-                    </div>
-                 
-                    
-
-                   
+                    </div>  
                     <div class="form-group cust-height">
                       <label class="form-label"><strong> Repair Comment </strong></label>
                       <textarea class="form-control form-control-lg " name="itemComment" [(ngModel)]="jobObj.itemComment"
@@ -753,13 +739,7 @@
                 <div class="col-lg-12">
                   <div class="card">
                     <div class="card-body">
-                      <div class="modal-title h4" id="example-modal-sizes-title-lg">
-                        <!-- <ng-container *ngIf="customer">
-                              <ng-container *ngIf="customer.id">Edit</ng-container>
-                              <ng-container *ngIf="!customer.id">Create</ng-container>
-                           
-                              <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
-                            </ng-container> -->
+                      <div class="modal-title h4" id="example-modal-sizes-title-lg"> 
                         <div class="row">
                           <div class="col-8">
                             <span><strong> Job Attachments </strong></span> 
@@ -810,11 +790,9 @@
                         </div>
                    
                         <div class="row" *ngIf="uploader.queue.length != 0 ">
-                          <div class="col-md-12">
-                            <!-- <h3>Upload queue</h3> -->
+                          <div class="col-md-12"> 
                             <div class="table-responsive angular-bootstrap-table">
-                              <table class="table table-head-custom table-vertical-center overflow-hidden">
-                                <!-- <table class="table-headed table-striped"> -->
+                              <table class="table table-head-custom table-vertical-center overflow-hidden"> 
                                 <thead>
                                   <tr>
                                     <th class="text-left">Name</th>
@@ -825,11 +803,8 @@
                                 <tbody>
                                   <tr *ngFor="let item of uploader.queue">
                                     <td>{{ item?.file?.name }}</td>
-                                    <td class="text-right">{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
-
-
-                                    <td class="text-right">
-
+                                    <td class="text-right">{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td> 
+                                    <td class="text-right"> 
                                       <a tooltip="Remove from queue" (click)="item.remove()">
                                         <i class="fa fa-trash"></i>
                                       </a>
@@ -845,9 +820,7 @@
                         <div class="card">
                           <div class="card-body">
                             <div class="row">
-                              <div class="col-3" *ngFor="let attachment of attachmentList;index as i">
-                                <!-- <div class="col-12"> -->
-
+                              <div class="col-3" *ngFor="let attachment of attachmentList;index as i">  
                                 <div class="row" style="margin-top: 15px;">
                                   <div class="img-wrap">
                                     <span class="close" (click)="editDeleteattachment(attachment)">&times;</span>
@@ -856,9 +829,7 @@
                                         *ngIf="isImageLoading != false;">
                                   </div>
                                 </div>
-                                <div class="clearfix"></div> 
-                                
-                                <!-- </div> --> 
+                                <div class="clearfix"></div>  
 
                               </div>
                               <div class="clearfix"></div>
@@ -889,10 +860,7 @@
                 </ng-container>
               </div>
             </div>
-          </div>
-
-          <!-- </div>
-          </div> -->
+          </div> 
         </mat-tab>
         <mat-tab label="Repair Details">
           <div class="card">
@@ -901,22 +869,21 @@
 
                 <div class="modal-header cust-color" style="padding:1%;">
                   <div class="modal-title h4" id="example-modal-sizes-title-lg">
-                    <div class="row">
-                      <!-- <div class="col-9">
-                        <span>Customer Details</span>
-                      </div> -->
-                      <div class="col-lg-12 ">
-                        <!-- <h5 class="font-weight-bold">Customer Details</h5> -->
+                    <div class="row"> 
+                      <div class="col-lg-12 "> 
                         <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Repair
                           Details</span>
 
                       </div>
-                    </div>
-                    <!-- <span>Item information</span> -->
+                    </div> 
                   </div>
                 </div>
                 <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
                   <div class="row">
+                    <button type="button"  *ngIf="this.invoiceData.paymentStatus != 'completed'"
+                    (click)="addProductManualModal()"  
+                    class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add product manually
+                  </button>
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
@@ -958,12 +925,12 @@
                                           class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                         </button>
                                       </div>
-                                      <div class="col-4">
+                                      <!-- <div class="col-4">
                                         <button type="button" tooltip="Add One Time Product" placement="top" show-delay="100"
                                           (click)="addProductManualModal()" style="padding: 12px;"
                                           class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                         </button>
-                                      </div>
+                                      </div> -->
                                     </div>
                                   </div>
                                 </div>
@@ -1174,95 +1141,7 @@
                     </div>
                   </div>
                 </div> 
-              </div>
-              <!-- <div class="demo-tab-content">
-                <div class="modal-header cust-color" style="padding:1%;">
-                  <div class="modal-title h4" id="example-modal-sizes-title-lg">
-                    <div class="row"> 
-                      <div class="col-lg-12 "> 
-                        <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Add
-                         Product Manually</span>
-  
-                      </div>
-                    </div>
-  
-                  </div>
-                </div>
-                 <div class="row" *ngIf="this.invoiceData.paymentStatus != 'completed'">
-                    <div class="col-8"> 
-                    </div> 
-                    <div class="col-4" style="margin-left: 90%;"> 
-                        <div class="card-toolbar">
-                          <button type="button" class="btn btn-primary" (click)="addProductManualModal()">+ Add
-                              </button>
-                        </div> 
-                    </div>
-                  </div> 
-                <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="card">
-                        <div class="card-body">
-                          <div class="form-group"> 
-                            <div class="row">
-                              <div class="col-10">
-                                <div class="table-responsive angular-bootstrap-table">
-                                  <table class="table table-head-custom table-vertical-center">
-                                    <thead>
-                                      <th>
-                                        NAME
-                                      </th>
-                                      <th>
-                                        PRICE
-                                      </th>
-                                      <th>
-                                        QUANTITY
-                                      </th> 
-                                      <th *ngIf="this.invoiceData.paymentStatus != 'completed'">ACTIONS</th>
-                                    </thead>
-                                    <tbody>
-                                      <tr
-                                        *ngFor="let product of dataList1 | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index">
-  
-  
-                                        <td>{{ product.name }}</td>
-                                        <td>£{{ product.price }}</td>
-                                        <td>{{ product.quantity }}</td>
-  
-                                        <td *ngIf="this.invoiceData.paymentStatus != 'completed'">
-                                          <a title="Edit Product"
-                                            class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                                            (click)="editProductManualModal(product)">
-                                            <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
-                                              cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
-                                            </span>
-                                          </a>
-  
-                                          <a title="Delete Product" class="btn btn-icon btn-light btn-hover-danger btn-sm"
-                                            (click)="editDeletemodalManual(product)">
-                                            <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
-                                              cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
-                                            </span>
-                                          </a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                    <tfoot *ngIf="dataList1.length > 5">
-                                      <pagination-controls (pageChange)="p = $event"
-                                        class="d-flex justify-content-between align-items-center flex-wrap">
-                                      </pagination-controls> 
-                                    </tfoot>
-                                  </table>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>  -->
+              </div> 
               <div *ngIf="this.invoiceData.paymentStatus != 'completed'" class="modal-footer">
                 <ng-container>
                   <button type="submit" (click)="updateRepairDetails()"
@@ -1348,11 +1227,11 @@
                   </div>
                   <div class="col-4">
                     <div class="row">
-                      <div class="col-5">
+                      <div class="col-4">
                         <label for=""><strong>Payment Status:</strong></label>
                         <!-- <b> {{invoiceData.paymentStatus}}</b> -->
                       </div>
-                      <div class="col-4">
+                      <div class="col-4" style="right: 6%">
                         <span *ngFor="let Val of jobStatusList">
                           <p *ngIf="Val.statusType ===  invoiceData.paymentStatus ">
                             <span [ngStyle]="{'color':Val.statusColor}"
@@ -2727,8 +2606,10 @@
           <div class="form-group cust-height">
             <label class="form-label"> Quantity</label>
             <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
-              placeholder="Enter Quantity" autocomplete="off" formControlName="quantity" />
-          </div>
+              placeholder="Enter Quantity" [class.is-invalid]="isProductManualControlInvalid('quantity')" autocomplete="off" formControlName="quantity" />
+              <div class="invalid-feedback" *ngIf="ProductManualcontrolHasError('required', 'quantity')">Quantity is
+                required</div>
+            </div>
         </div>
       </form>
     </ng-container>

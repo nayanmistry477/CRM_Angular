@@ -235,10 +235,7 @@
             <div class="form-group row">
               <label class="col-xl-4 col-lg-4 col-form-label"> <b> Currency </b></label>
               <div class="col-lg-8 col-xl-8">
-                <!-- <select name="currency" id="currency" formControlName="currency" class="form-control">
-                  <option value="">Select</option>
-                  <option value="{{currency.code}}" *ngFor="let currency of CurrencyList">{{currency.text}}</option>
-                </select> -->
+              
 
                 <mat-form-field class="col-12">
                   <mat-select (selectionChange)="selectCurrency($event.value)"

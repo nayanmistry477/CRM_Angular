@@ -1914,8 +1914,12 @@ export class QuotationComponent implements OnInit {
   sendMail() {
 
     var obj = this.quoteData; 
-    obj.username =this.emailSettings.username;
+    obj.username = this.emailSettings.username;
     obj.password = this.emailSettings.password;
+    obj.host = this.emailSettings.server;
+    obj.isSSL = this.emailSettings.isSSL;
+    obj.port = this.emailSettings.port;
+    obj.encryptiontype	 = this.emailSettings.encryptiontype;
     // obj.email = 'nayanmistry477@gmail.com'
     obj.email = this.quoteData.customerEmail
     obj.items = this.dataList
@@ -1955,6 +1959,7 @@ export class QuotationComponent implements OnInit {
           if (data.status == 0) {
             // this.toastr.error(data.message) 
             this.isLoading$ = false;
+            this.sendMailIquote(quote) 
           } else {
 
             // this.dataList = data.result
@@ -1989,6 +1994,7 @@ export class QuotationComponent implements OnInit {
                 if (data.status == 0) {
                   // this.toastr.error(data.message) 
                   this.isLoading$ = false;
+                  this.sendMailIquote(quote) 
                 } else {
       
                   // this.dataList = data.result
@@ -2036,10 +2042,14 @@ export class QuotationComponent implements OnInit {
     var totalPrice = Number(quote.subTotal) - Number(quote.discount) 
     var totalSum = Number(totalPrice) - Number(quote.deposit);
     quote.totalPrice = totalPrice  
-    quote.username =this.emailSettings.username;
+    quote.username = this.emailSettings.username;
     quote.password = this.emailSettings.password;
+    quote.host = this.emailSettings.server;
+    quote.isSSL = this.emailSettings.isSSL;
+    quote.port = this.emailSettings.port;
+    quote.encryptiontype	 = this.emailSettings.encryptiontype;
     quote.email = quote.customerEmail;
-    // obj.email = 'nayanmistry477@gmail.com' 
+    // quote.email = 'nayanmistry477@gmail.com' 
     quote.items = this.dataList;
     quote.items1 = this.dataList1;
     console.log(quote)
@@ -2181,15 +2191,19 @@ export class QuotationComponent implements OnInit {
             } else {
 
               this.toastr.success(data.data.message)
+              
+              this.editQuote(data.data.result1)
+              this.modalService.dismissAll()
+              this.isQuote$ = false;
               this.selectedJob = {}
               this.selectedCustomer = {}
               this.quoteGroup.reset();
-              setTimeout(() => { 
-                this.isQuote$ = false;
-                this.modalService.dismissAll()
-                window.location.reload()
-              }, 700)
-
+              // setTimeout(() => { 
+              //   this.isQuote$ = false;
+              //   this.modalService.dismissAll()
+              //   window.location.reload()
+              // }, 700)
+              this.cdr.markForCheck();
             }
           },
           error => {

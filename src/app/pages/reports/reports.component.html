@@ -22,15 +22,18 @@
             <a (click)="selectedItem('viewInvoice')">
               <i class="fas fa-file-alt settings-sidemenu-small fa-fw" aria-hidden="true"></i> Invoice Report 
           </a> 
-          <br>
-          <a (click)="selectedItem('viewJobStatus')">
+          <!-- <br> -->
+          <!-- <a (click)="selectedItem('viewJobStatus')">
               <i class="far fa-check-circle settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Status
-          </a> 
+          </a>  -->
           <br>
             <a (click)="selectedItem('viewJob')">
                 <i class="fas fa-file-alt settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Report 
             </a> 
             <br>
+            <a (click)="selectedItem('viewJobDetailStatus')">
+              <i class="fas fa-file-alt settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Detailed Status Report 
+          </a>  
             <!-- <a (click)="selectedItem('viewJobStatus')">
               <i class="far fa-check-circle settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Status Report 
           </a>  -->
@@ -646,6 +649,118 @@
                       <td style="text-transform: capitalize;">{{status.jobStatus }}</td> 
                       <td>{{status.statusCount}}</td>
                       <td>£{{status.totalValue}}</td>     
+                    </tr> 
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+      <div class="card card-custom gutter-b" *ngIf="isJobDetailstatus">
+        <div class="card-header d-block"> 
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Job Status Detailed Report</h3>
+              </div>  
+            </div> 
+            <div class="col-md-6 col-sm-12 col-xl-6">
+              <div class="row d-flex align-items-center">
+                <div class="col-6"></div>
+                <!-- <div class="col-6">
+                  <mat-form-field *ngIf="showDate">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                      <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                      <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"   placeholder="End date" (dateChange)="changeJobDate($event.target.value)" >
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker> 
+                    <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                    <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                  </mat-form-field> 
+                </div> -->
+                <div class="col-6 d-flex">
+                  <div class="form-group  cust-height selectGroup"> 
+                    <label for="cars">Job Status:</label>
+                    <br>
+                    <!-- <select class="form-control " name="cars" id="cars" (change)="changeJobDateRange($event.target.value)">
+                        <optgroup label="Custom">
+                            <option value="Custom Date Range">Custom Date Range</option>
+                        </optgroup>
+                        <optgroup label="Misc">
+                            <option value="" selected>All Time</option>
+                        </optgroup>
+                        <optgroup label="This ...">
+                            <option value="ThisWeek">This Week</option>
+                            <option value="ThisMonth">This Month</option>
+                            <option value="thisQuater">This Quarter</option>
+                            <option value="ThisYear">This Year</option>
+                        </optgroup> 
+                    </select>  -->
+                    <mat-form-field class="col-12">
+                      <mat-select (selectionChange)="selectStatus($event.value)" style="text-transform: capitalize;"
+                        [(ngModel)]="jobObj.jobStatus" 
+                          name="jobStatus" placeholder="Select Status">
+                        <mat-option>
+                          <ngx-mat-select-search [formControl]="JobStatusMultiFilterCtrl" [searching]="searching">
+                          </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="">None</mat-option>
+                        <mat-option *ngFor="let jobstatus of filteredJobStatusMulti | async" style="text-transform: capitalize;"
+                          [value]="jobstatus.jobStatus" >
+                          {{jobstatus.jobStatus}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                </div> 
+                </div>
+              </div> 
+          </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table">
+                <table  datatable [dtOptions]="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr>  
+                      <!-- <th></th> -->
+                    <th>
+                    Job ID
+                    </th>
+                    <th>
+                    CUSTOMER
+                    </th>    
+                    <th>
+                      JOB STATUS
+                    </th>   
+                    <th>
+                      PAYMENT STATUS
+                    </th>
+                    <th>
+                     TOTAL PRICE
+                    </th>
+                    <th>
+                      PENDING PRICE
+                    </th>
+                    <th>
+                      CREATED AT
+                    </th>
+                   
+                  </tr> 
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let jobDetail of jobStatusDetailList"> 
+                      <!-- <td class="details-control" id="detail-btn" (click)="changeDetail(jobDetail)" orderable="false"></td> -->
+                      <td>{{jobDetail.JobID}}</td>
+                      <td>{{jobDetail.customer}}</td>
+                      <td style="text-transform: capitalize;">{{jobDetail.jobStatus }}</td>
+                      <td  *ngIf="jobDetail.pendingPrice == 0;else notComp">Completed</td>  
+                      <ng-template #notComp>
+                        <td>Pending</td>  
+                      </ng-template>
+                      <td>£{{jobDetail.price}}</td>
+                      <td>£{{jobDetail.pendingPrice}}</td>
+                      <td>{{jobDetail.createdDate | date: 'dd/MM/yyyy'}}</td>    
                     </tr> 
                   </tbody>
                 </table>

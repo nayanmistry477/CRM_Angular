@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -48,7 +48,11 @@ const API_USERS_URL = `${environment.apiUrl}/services`;
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
+
 export class DashboardComponent implements OnInit {
+
+  @ViewChild('fileInput1')
+  myInputVariable: ElementRef;
 
   @ViewChild('openJobModal') openJobModal: TemplateRef<any>;
   @ViewChild('openRepairItem') openRepairItem: TemplateRef<any>;
@@ -128,6 +132,7 @@ export class DashboardComponent implements OnInit {
   disclaimer: any = {}
   totalSum: any = 0;
   paymentObj: any = {};
+  isStatusSelected:any= null
   public filteredpaymentTypeMulti: ReplaySubject<PaymentType[]> = new ReplaySubject<PaymentType[]>(1);
   public paymentTypeMultiFilterCtrl: FormControl = new FormControl();
   private paymentVal: PaymentType[] = [
@@ -312,7 +317,7 @@ export class DashboardComponent implements OnInit {
       statusStage: [''],
       address: [''],
       bookedBy: ['', Validators.compose([Validators.required])],
-      assignedTo: ['', Validators.compose([Validators.required])],
+      assignedTo: [''],
       estDate: [''],
       createdDate: [''],
       completedDate: [''],
@@ -377,7 +382,7 @@ export class DashboardComponent implements OnInit {
       id:[''],
       name: ['', Validators.compose([Validators.required,])],
       sellPrice: ['', Validators.compose([Validators.required,])],
-      quantity:[''], 
+      quantity:['',Validators.compose([Validators.required,])], 
     });
     this.ServiceformGroup = this.fb.group({
       serviceName: ['', Validators.compose([Validators.required])],
@@ -413,14 +418,16 @@ export class DashboardComponent implements OnInit {
   }
 
   backToMain() {
-   
-    this.jobObj = null; 
-    this.dataList = []
-    this.list = [];
-    this.listPro = [];
-    this.attachmentList = []
     this.isShow = false;
-    this.jobService.fetch() 
+    this.jobObj = {}; 
+    this.paymentObj = {};
+    this.invoiceData = {};
+    this.dataList = [];
+    this.dataList1 = [];
+    this.list = {};
+    this.listPro = {};
+    this.attachmentList = [];
+    this.assignedService.fetch(); 
     this.getChart();
     this.cdr.markForCheck()
   }
@@ -525,7 +532,7 @@ export class DashboardComponent implements OnInit {
   onSelectDocument(){
     for (let i = 0; i < this.uploader1.queue.length; i++) {
       let fileItem = this.uploader1.queue[i]._file;
-      console.log(fileItem.name); 
+      // console.log(fileItem.name); 
       this.fileName = fileItem.name
       if (fileItem.size > 100000000) {
         // alert("Each File should be less than 10 MB of size.");
@@ -533,6 +540,7 @@ export class DashboardComponent implements OnInit {
         this.uploader1.queue = []
         return;
       }
+      this.cdr.markForCheck();
     }
   }
   uploadDocument(){
@@ -572,9 +580,11 @@ export class DashboardComponent implements OnInit {
       });
   }
   clearDocument(){
+    this.myInputVariable.nativeElement.value = "";
+    this.cdr.markForCheck();
+    this.fileName =[];
     this.uploader1.clearQueue();
-    this.fileName = [];
-
+ 
   }
   list: any = {}
   totalQty: number = 0
@@ -680,7 +690,7 @@ export class DashboardComponent implements OnInit {
     this.JobformGroup.controls['technicianNotes'].setValue(this.jobObj.technicianNotes);
     this.JobformGroup.controls['statusStage'].setValue(this.jobObj.statusStage)
     this.JobformGroup.controls['jobStatus'].setValue(this.jobObj.jobStatus)
-
+    this.isStatusSelected = this.jobObj.statusStage
    
 
     // this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
@@ -692,25 +702,56 @@ export class DashboardComponent implements OnInit {
   }
   isPercentageBox:boolean = false;
   isAmountBox:boolean = false;
-  changeOption(val){
-    if(val == 'percentage'){
+  changeOption(val) {
+    if (val == 'percentage') {
       this.isAmountBox = false;
-      this.isPercentageBox = true; 
+      this.isPercentageBox = true;
+      this.invoiceData.exactAmount = 0;
+      this.invoiceTotal = Number(this.jobObj.price) - Number(0)
+      this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
+      var totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
+      this.totalSum = totalSum.toFixed(2)
+
+      this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.jobObj.discount = Number(0)
+      this.invoiceData.discount = Number(0)
       this.cdr.markForCheck()
-    }if(val == 'exactAmount'){
+    } if (val == 'exactAmount') {
       this.isPercentageBox = false;
-      this.isAmountBox = true;   
+      this.isAmountBox = true;
+      this.invoiceData.percentage = 0;
+      this.invoiceData.exactAmount = 0;
+      this.invoiceTotal = Number(this.jobObj.price) - Number(0)
+      this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
+      var totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
+      this.totalSum = totalSum.toFixed(2)
+
+      this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.jobObj.discount = Number(0)
+      this.invoiceData.discount = Number(0)
       this.cdr.markForCheck()
-    }if(val == ''){
+    } if (val == '') {
       this.isPercentageBox = false;
-      this.isAmountBox = false;  
+      this.isAmountBox = false;
+      this.invoiceData.percentage = 0;
+      this.invoiceTotal = Number(this.jobObj.price) - Number(0)
+      this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
+      var totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
+      this.totalSum = totalSum.toFixed(2)
+
+      this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.jobObj.discount = Number(0)
+      this.invoiceData.discount = Number(0)
       this.cdr.markForCheck()
     }
-    
+
     console.log(val)
   }
   public isInvoice: Boolean = false;
- async getJobByInvoiceID(id) {
+  getJobByInvoiceID(id) {
     var val = {
       id: id
     }
@@ -730,6 +771,13 @@ export class DashboardComponent implements OnInit {
             this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
             this.getattachmentsByjobID(id)
             this.isInvoice = false;
+            if(this.jobObj.statusStage == "closed"){
+              this.isJobstatus = true;
+              this.cdr.markForCheck()
+            }else{
+              this.isJobstatus = false;
+              this.cdr.markForCheck()
+            }
           } else {
             this.invoiceData = data.result[0];
             // console.log(this.invoiceData)
@@ -825,13 +873,15 @@ export class DashboardComponent implements OnInit {
           } else {
 
             this.toastr.success(data.data.message)
-            setTimeout(() => {
+            this.getJobByInvoiceID(this.jobObj.id);
+            this.isInvoice$ = false;
+            this.modalService.dismissAll();
+            this.cdr.markForCheck();
+            // setTimeout(() => {
 
-              this.getJobByInvoiceID(this.jobObj.id);
-              this.isInvoice$ = false;
-              this.modalService.dismissAll()
-              window.location.reload()
-            }, 700)
+             
+            //   window.location.reload()
+            // }, 700)
 
           }
         },
@@ -1011,7 +1061,13 @@ export class DashboardComponent implements OnInit {
     this.paymentForm.controls['paymentReference'].reset();
   }
   updateInvoice(val) {
+
+    // this.JobformGroup.markAllAsTouched();
+    // if (!this.JobformGroup.valid) {
+    // return;
+    // } else {
     this.isLoading$ = true;
+    
     var data = {
       id: this.invoiceData.id,
       jobId: this.jobObj.id,
@@ -1077,10 +1133,7 @@ export class DashboardComponent implements OnInit {
               if (val == 'updateRepair') {
                 this.updateJob('updateRepair')
               } else {
-                this.updateJob('Invoice')
-                this.paymentForm.reset()
-                this.paymentObj = {}
-                this.isLoading$ = false;
+               
                 if (val == 'updateInvoice') { 
                   if(this.isStatusSelected != null && this.isStatusSelected != 'open'){
                     // window.location.reload()
@@ -1088,6 +1141,10 @@ export class DashboardComponent implements OnInit {
                   }else{
                     this.assignedService.fetch(); 
                     // this.jobService.fetch(); 
+                    this.updateJob('Invoice')
+                    this.paymentForm.reset()
+                    this.paymentObj = {}
+                    this.isLoading$ = false;
                     this.JobformGroup.untouched; 
                     this.isLoading$ = false;
                     this.cdr.markForCheck();
@@ -1108,6 +1165,7 @@ export class DashboardComponent implements OnInit {
         error => {
           console.log(error);
         });
+      // }
   }
   editMode: any;
   editModeCheck(i, x, data) {
@@ -1511,88 +1569,258 @@ export class DashboardComponent implements OnInit {
           console.log(error);
         });
   }
-  updateJob(val) {
+   updateJob(val) {
     // this.isLoading$ = true
 
-    this.JobformGroup.markAllAsTouched();
-    // if (this.JobformGroup.valid) {
+    // this.JobformGroup.markAllAsTouched();
+    // if (!this.JobformGroup.valid) {
     // return;
     // } else {
-    this.isLoading$ = true;
-    var obj = this.JobformGroup.value
+    if (this.isStatusSelected != 'open' && this.isStatusSelected != 'returned') {
+      if (this.uploader1.queue.length == 0) {
+        this.toastr.error('Please select worksheet and status completed')
+      } else {
 
-    var setval;
-    setval = this.jobObj.accompanying.toString().replace("[", "").replace("]", "");
-    var getval = setval.toString()
-    obj.accompanying = getval
-    if (this.JobformGroup.value.underWarranty == false) {
-      obj.underWarranty = ""
-    } else {
-      obj.underWarranty = "true"
-    }
-    if (obj.statusStage == "closed" || val != 'DeleteItem') {
-      obj.completedDate = new Date()
-    }
-    // obj.discount = this.jobObj.discount;
-    obj.price = this.jobObj.price;
-    obj.customer = this.jobObj.customer;
-    obj.id = this.jobObj.id;
 
-     obj.discount = this.invoiceData.discount
-    
-    // console.log(obj) 
-    if (this.JobformGroup.value.estDate == null) {
-      obj.estDate = ""
-    }
-    // console.log(this.sum)
+        this.isLoading$ = true;
+        var obj = this.JobformGroup.value
 
-    this.jobService.updateJobData(obj)
-      .subscribe(
-        data => {
-          if (data.data.status == 0) {
-            this.toastr.error(data.data.message);
-            this.isLoading$ = false;
-          } else {
-            if (val == 'updateJob') {
+        var setval;
+        setval = this.jobObj.accompanying.toString().replace("[", "").replace("]", "");
+        var getval = setval.toString()
+        obj.accompanying = getval
+        if (this.JobformGroup.value.underWarranty == false) {
+          obj.underWarranty = ""
+        } else {
+          obj.underWarranty = "true"
+        }
+        if (obj.statusStage == "closed" || val != 'DeleteItem') {
+          obj.completedDate = new Date()
+        }
+        // obj.discount = this.jobObj.discount;
+        obj.price = this.jobObj.price;
+        obj.customer = this.jobObj.customer;
+        obj.id = this.jobObj.id;
 
-              this.toastr.success(data.data.message);
-              if(this.uploader1.queue.length != 0){
-                this.uploadDocument();
-              }
-            
-              this.updateInvoice('updateInvoice') 
-              // this.isLoading$ = false; 
-             
-            } else {
-              if (val == 'updateRepair') {
-                // setTimeout(() => {
-                //   window.location.reload()
-                //   this.selectedIndex = 1;
-                // }, 500)
-                this.updateProductManually()
+        if (this.invoiceData.discount != undefined && this.invoiceData.discount != null) {
+          obj.discount = this.invoiceData.discount
+        } else {
+          obj.discount = this.jobObj.discount;
+        }
+        // console.log(obj) 
+        if (this.JobformGroup.value.estDate == null) {
+          obj.estDate = ""
+        }
+        // console.log(this.sum)
+
+        this.jobService.updateJobData(obj)
+          .subscribe(
+            data => {
+              if (data.data.status == 0) {
+                this.toastr.error(data.data.message);
                 this.isLoading$ = false;
-                this.getProducts_ServiceByJobID(this.jobObj.id) 
-                 
+              } else {
+                if (val == 'updateJob') {
+
+                  this.toastr.success(data.data.message);
+                  if (this.uploader1.queue.length != null && this.uploader1.queue.length != 0) {
+                    this.uploadDocument();
+                    this.clearDocument()
+                    this.cdr.markForCheck()
+                  }
+                  this.updateInvoice('updateInvoice')
+
+                  this.cdr.markForCheck()
+                  // window.location.reload() 
+                } else {
+                  if (val == 'updateRepair') {
+                    // setTimeout(() => {
+                    //   window.location.reload()
+                    //   this.selectedIndex = 1;
+                    // }, 500)
+                    this.updateProductManually()
+                    this.isLoading$ = false;
+                    this.getProducts_ServiceByJobID(this.jobObj.id)
+
+
+                  }
+
+                  this.paymentForm.reset()
+                  this.jobService.fetch();
+                  this.JobformGroup.untouched;
+                  // this.isLoading$ = false;
+                  // this.cdr.markForCheck();
+                  // setTimeout(() => {
+                  //   window.location.reload()
+                  // }, 700)
+                  this.getJobByInvoiceID(this.jobObj.id);
+                }
 
               }
-              
-              this.paymentForm.reset()
-              this.jobService.fetch();
-              this.JobformGroup.untouched;
-              this.isLoading$ = false;
-              // this.cdr.markForCheck();
-              // setTimeout(() => {
-              //   window.location.reload()
-              // }, 700)
-              this.getJobByInvoiceID(this.jobObj.id); 
-            }
+            },
+            error => {
+              // this.showError(error.statusText);
+              console.log(error);
+            });
+        // }
+      }
 
+    }
+    else {
+      if(this.uploader1.queue.length != 0){
+        if(this.isStatusSelected == 'open' && this.isStatusSelected == 'returned'){
+          this.toastr.error('Please select worksheet and status completed')
+
+        }else{
+          this.isLoading$ = true;
+          var obj = this.JobformGroup.value
+    
+          var setval;
+          setval = this.jobObj.accompanying.toString().replace("[", "").replace("]", "");
+          var getval = setval.toString()
+          obj.accompanying = getval
+          if (this.JobformGroup.value.underWarranty == false) {
+            obj.underWarranty = ""
+          } else {
+            obj.underWarranty = "true"
           }
-        },
-        error => {
-          // this.showError(error.statusText);
-          console.log(error);
-        });
+          if (obj.statusStage == "closed" || val != 'DeleteItem') {
+            obj.completedDate = new Date()
+          }
+          // obj.discount = this.jobObj.discount;
+          obj.price = this.jobObj.price;
+          obj.customer = this.jobObj.customer;
+          obj.id = this.jobObj.id;
+    
+          if (this.invoiceData.discount != undefined && this.invoiceData.discount != null) {
+            obj.discount = this.invoiceData.discount
+          } else {
+            obj.discount = this.jobObj.discount;
+          }
+          // console.log(obj) 
+          if (this.JobformGroup.value.estDate == null) {
+            obj.estDate = ""
+          }
+          // console.log(this.sum)
+    
+          this.jobService.updateJobData(obj)
+            .subscribe(
+              data => {
+                if (data.data.status == 0) {
+                  this.toastr.error(data.data.message);
+                  this.isLoading$ = false;
+                } else {
+                  if (val == 'updateJob') {
+    
+                    this.toastr.success(data.data.message);
+                    if (this.uploader1.queue.length != null && this.uploader1.queue.length != 0) {
+                      this.uploadDocument();
+                      this.clearDocument()
+                      this.cdr.markForCheck()
+                    }
+                    this.updateInvoice('updateInvoice')
+    
+                    this.cdr.markForCheck()
+                    // window.location.reload() 
+                  } else {
+                    if (val == 'updateRepair') {
+                      // setTimeout(() => {
+                      //   window.location.reload()
+                      //   this.selectedIndex = 1;
+                      // }, 500)
+                      this.updateProductManually()
+                      this.isLoading$ = false;
+                      this.getProducts_ServiceByJobID(this.jobObj.id)
+    
+    
+                    }
+    
+                    this.paymentForm.reset()
+                    this.jobService.fetch();
+                    this.JobformGroup.untouched;
+                    // this.isLoading$ = false;
+                    // this.cdr.markForCheck();
+                    // setTimeout(() => {
+                    //   window.location.reload()
+                    // }, 700)
+                    this.getJobByInvoiceID(this.jobObj.id);
+                  }
+    
+                }
+              },
+              error => {
+                // this.showError(error.statusText);
+                console.log(error);
+              });
+        }
+      }
+
+      else{
+        this.isLoading$ = true;
+        var obj = this.JobformGroup.value
+  
+        var setval;
+        setval = this.jobObj.accompanying.toString().replace("[", "").replace("]", "");
+        var getval = setval.toString()
+        obj.accompanying = getval
+        if (this.JobformGroup.value.underWarranty == false) {
+          obj.underWarranty = ""
+        } else {
+          obj.underWarranty = "true"
+        }
+        if (obj.statusStage == "closed" || val != 'DeleteItem') {
+          obj.completedDate = new Date()
+        }
+        // obj.discount = this.jobObj.discount;
+        obj.price = this.jobObj.price;
+        obj.customer = this.jobObj.customer;
+        obj.id = this.jobObj.id;
+  
+        if (this.invoiceData.discount != undefined && this.invoiceData.discount != null) {
+          obj.discount = this.invoiceData.discount
+        } else {
+          obj.discount = this.jobObj.discount;
+        }
+        // console.log(obj) 
+        if (this.JobformGroup.value.estDate == null) {
+          obj.estDate = ""
+        } 
+        this.jobService.updateJobData(obj)
+          .subscribe(
+            data => {
+              if (data.data.status == 0) {
+                this.toastr.error(data.data.message);
+                this.isLoading$ = false;
+              } else {
+                if (val == 'updateJob') {
+  
+                  this.toastr.success(data.data.message);
+                  if (this.uploader1.queue.length != null && this.uploader1.queue.length != 0) {
+                    this.uploadDocument();
+                    this.clearDocument();
+                    this.cdr.markForCheck();
+                  }
+                  this.updateInvoice('updateInvoice');
+                  this.cdr.markForCheck(); 
+                } else {
+                  if (val == 'updateRepair') { 
+                    this.updateProductManually();
+                    this.isLoading$ = false;
+                    this.getProducts_ServiceByJobID(this.jobObj.id); 
+                  } 
+                  this.paymentForm.reset();
+                  this.jobService.fetch();
+                  this.JobformGroup.untouched; 
+                  this.getJobByInvoiceID(this.jobObj.id);
+                }
+  
+              }
+            },
+            error => { 
+              console.log(error);
+            });
+      }
+      }
     // }
   }
   getAllJobsStatus() {
@@ -1602,23 +1830,15 @@ export class DashboardComponent implements OnInit {
           if (data.status == 0) {
             // this.toastr.error(data.message)
             this.isLoading$ = false;
-          } else {
-
-
-            // this.jobStatusList = data.result
-            var list = []
-            data.result.forEach(element => {
-              // console.log(element)
-              // if(element.statusType != 'pending' && element.statusType !='in progress'){
-              list.push(element)
-              // } 
+          } else { 
+            var list = [];
+            data.result.forEach(element => { 
+              list.push(element) 
             });
-            this.jobStatusList = list
-            console.log(this.jobStatusList)
+            this.jobStatusList = list; 
           }
         },
-        error => {
-          // this.showError(error.statusText);
+        error => { 
           console.log(error);
         });
   }
@@ -1629,15 +1849,13 @@ export class DashboardComponent implements OnInit {
   sum: number = 0;
   selectService(val) {
     console.log(val)
-    this.list = {}
-    var data = {}
+    this.list = {};
+    var data = {};
 
     data = val
     this.list = data
-    this.list = this.serviceVal.filter(x => x.service == val)[0];
-    // console.log(this.list)
-    this.cdr.markForCheck()
-
+    this.list = this.serviceVal.filter(x => x.service == val)[0]; 
+    this.cdr.markForCheck(); 
   }
 
   servicePrice: number = 0;
@@ -1656,12 +1874,12 @@ export class DashboardComponent implements OnInit {
 
       // console.log(data)
       if (this.dataList.length == 0) {
-        this.dataList.push(data)
+        this.dataList.push(data);
         this.JobformGroup.controls['service'].reset();
-        this.sum = Number(this.jobObj.price) + Number(this.list.price)
+        this.sum = Number(this.jobObj.price) + Number(this.list.price);
         this.jobObj.price = this.sum;
-        this.list = []
-        this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount)
+        this.list = [];
+        this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount);
         // console.log(this.jobObj.deposit)
         this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
         this.totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
@@ -1695,18 +1913,16 @@ export class DashboardComponent implements OnInit {
 
                     }
                   });
-                  this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount)
-                  // console.log(this.jobObj.deposit)
+                  this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount) 
                   this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
                   this.totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
 
                   this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
                   this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
-                  this.JobformGroup.controls['service'].reset();
-                  // this.sum = Number(this.sum) + Number(result.price)
-                  result = []
-                  this.list = []
-                  this.cdr.markForCheck()
+                  this.JobformGroup.controls['service'].reset(); 
+                  result = [];
+                  this.list = [];
+                  this.cdr.markForCheck();
                 }
               },
               error => {
@@ -1716,15 +1932,13 @@ export class DashboardComponent implements OnInit {
 
         }
         else {
-          this.dataList.push(data)
+          this.dataList.push(data);
           // console.log(this.dataList)
           this.JobformGroup.controls['service'].reset();
-          this.sum = Number(this.jobObj.price) + Number(this.list.price)
-          console.log(this.sum)
+          this.sum = Number(this.jobObj.price) + Number(this.list.price); 
           this.jobObj.price = this.sum;
-          this.list = []
-          this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount)
-          // console.log(this.jobObj.deposit)
+          this.list = [];
+          this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount); 
           this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
           this.totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
 
@@ -1733,10 +1947,9 @@ export class DashboardComponent implements OnInit {
         }
       }
 
-      this.cdr.markForCheck()
+      this.cdr.markForCheck();
     } else {
-      this.toastr.error('Please Select Service')
-
+      this.toastr.error('Please Select Service'); 
     }
 
   }
@@ -1745,18 +1958,16 @@ export class DashboardComponent implements OnInit {
 
     setTimeout(() => {
  
-      this.invoiceTotal = Number(this.jobObj.price) - Number(event.target.value)
+      this.invoiceTotal = Number(this.jobObj.price) - Number(event.target.value);
       this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
       var totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
-      this.totalSum = totalSum.toFixed(2)
+      this.totalSum = totalSum.toFixed(2);
 
       this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
       this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
-      this.jobObj.discount = Number(event.target.value)
-      this.invoiceData.discount = Number(event.target.value)
-      // this.sum = this.jobObj.price;
-      this.cdr.markForCheck()
-      
+      this.jobObj.discount = Number(event.target.value);
+      this.invoiceData.discount = Number(event.target.value); 
+      this.cdr.markForCheck(); 
 
     }, 1000)
   }
@@ -1765,17 +1976,15 @@ export class DashboardComponent implements OnInit {
     discount = (Number(this.jobObj.price) / 100) * Number(event.target.value);
     setTimeout(() => {
    
-      this.invoiceTotal = Number(this.jobObj.price) - Number(discount);
-      // console.log(this.jobObj.deposit)
+      this.invoiceTotal = Number(this.jobObj.price) - Number(discount); 
       this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
       var totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
-      this.totalSum = totalSum.toFixed(2)
+      this.totalSum = totalSum.toFixed(2);
 
       this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
       this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
-      this.invoiceData.discount = Number(discount)
-
-      this.cdr.markForCheck()
+      this.invoiceData.discount = Number(discount); 
+      this.cdr.markForCheck();
 
     }, 1000)
   }
@@ -1786,7 +1995,7 @@ export class DashboardComponent implements OnInit {
         data => {
           if (data.status == 0) {
 
-            this.serviceVal = []
+            this.serviceVal = [];
           } else {
             var list = [];
             var str = {}
@@ -1804,7 +2013,7 @@ export class DashboardComponent implements OnInit {
                 takeUntil(this._onDestroy))
               .subscribe(() => {
                 this.searching = false;
-                this.filterService()
+                this.filterService();
               },
                 error => {
                   // no errors in our simulated example
@@ -1896,18 +2105,18 @@ export class DashboardComponent implements OnInit {
     ) {
 
       if (this.dataList.length == 0) {
-        this.dataList.push(data)
+        this.dataList.push(data);
         this.JobformGroup.controls['product'].reset();
-        this.sum = Number(this.jobObj.price) + Number(this.listPro.price)
+        this.sum = Number(this.jobObj.price) + Number(this.listPro.price);
         this.jobObj.price = this.sum;
-        this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount)
+        this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount);
         // console.log(this.jobObj.deposit)
         this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
         this.totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
 
         this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
         this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
-        this.listPro = []
+        this.listPro = [];
 
       } else {
 
@@ -1940,8 +2149,7 @@ export class DashboardComponent implements OnInit {
 
                       }
                     });
-                    this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount)
-                    // console.log(this.jobObj.deposit)
+                    this.invoiceTotal = Number(this.jobObj.price) - Number(this.jobObj.discount); 
                     this.JobformGroup.controls['totalPrice'].setValue(this.invoiceTotal);
                     this.totalSum = Number(this.invoiceTotal) - Number(this.jobObj.deposit);
 
@@ -1963,7 +2171,7 @@ export class DashboardComponent implements OnInit {
 
         else {
         if(this.totalQty != 0){
-          this.dataList.push(data)
+          this.dataList.push(data);
           this.JobformGroup.controls['product'].reset();
           this.sum = Number(this.jobObj.price) + Number(this.listPro.price);
           this.jobObj.price = this.sum;
@@ -1975,15 +2183,15 @@ export class DashboardComponent implements OnInit {
           this.JobformGroup.controls['pendingPrice'].setValue(this.totalSum);
           this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
           this.listPro = [];
-          this.cdr.markForCheck()
+          this.cdr.markForCheck();
         }else{
-          this.toastr.error("Product stock gone its limit")
+          this.toastr.error("Product stock gone its limit");
         }
       }
       }
-      this.cdr.markForCheck()
+      this.cdr.markForCheck();
     } else {
-      this.toastr.error('Please Select Product')
+      this.toastr.error('Please Select Product');
     }
   }
 
@@ -2000,10 +2208,10 @@ export class DashboardComponent implements OnInit {
         .subscribe(
           data => {
             if (data.data.status == 0) {
-              this.toastr.error(data.data.message)
+              this.toastr.error(data.data.message);
               this.isLoading$ = false;
             } else {
-              this.toastr.success(data.data.message)
+              this.toastr.success(data.data.message);
               this.jobObj.product = this.productGroup.value.productName;
               this.listPro = { id: data.data.result1.insertId, product: this.productGroup.value.productName, price: this.productGroup.value.sellPrice, quanity: 1 }
 
@@ -2015,16 +2223,15 @@ export class DashboardComponent implements OnInit {
 
             }
           },
-          error => {
-            // this.showError(error.statusText);
+          error => { 
             console.log(error);
           });
     }
   }
 
   editRepairModal() {
-    this.assignedService.fetch()
-    this.modalService.open(this.openRepairItem)
+    this.assignedService.fetch();
+    this.modalService.open(this.openRepairItem);
     this.itemRepairForm.controls['id'].setValue(this.repairItemObj.id);
     this.itemRepairForm.controls['repairDescription'].setValue(this.repairItemObj.repairDescription);
     this.itemRepairForm.controls['storageLocation'].setValue(this.repairItemObj.storageLocation);
@@ -2068,8 +2275,7 @@ export class DashboardComponent implements OnInit {
   //   }
   // }
 
-  closeUpdateJob() {
-    // this.isJobShow = false
+  closeUpdateJob() { 
     this.modalService.dismissAll()
   }
   getAllItemTypes() {
@@ -2205,7 +2411,7 @@ export class DashboardComponent implements OnInit {
                 takeUntil(this._onDestroy))
               .subscribe(() => {
                 this.searching = false;
-                this.filterACItem()
+                this.filterACItem();
               },
                 error => {
                   // no errors in our simulated example
@@ -2262,7 +2468,7 @@ export class DashboardComponent implements OnInit {
                 takeUntil(this._onDestroy))
               .subscribe(() => {
                 this.searching = false;
-                this.filterStorageLocation()
+                this.filterStorageLocation();
               },
                 error => {
                   // no errors in our simulated example
@@ -2321,7 +2527,7 @@ export class DashboardComponent implements OnInit {
               takeUntil(this._onDestroy))
             .subscribe(() => {
               this.searching = false;
-              this.filterassignTo()
+              this.filterassignTo();
             },
               error => {
                 // no errors in our simulated example
@@ -2355,8 +2561,7 @@ export class DashboardComponent implements OnInit {
   }
   selectAssignTo(val) {
     console.log(val)
-  }
-
+  } 
 
   //Job Status
 
@@ -2382,7 +2587,7 @@ export class DashboardComponent implements OnInit {
                 takeUntil(this._onDestroy))
               .subscribe(() => {
                 this.searching = false;
-                this.filterJobStatus()
+                this.filterJobStatus();
               },
                 error => {
                   // no errors in our simulated example
@@ -2414,7 +2619,7 @@ export class DashboardComponent implements OnInit {
       this.jobStatusVal.filter(jobstatus => jobstatus.jobStatus.toLowerCase().indexOf(search) > -1 || jobstatus.jobStatus.toUpperCase().indexOf(search) > -1)
     );
   }
-  isStatusSelected:any= null
+
   selectJobStatus(val) {
     console.log(val)
     var result;
@@ -2427,16 +2632,16 @@ export class DashboardComponent implements OnInit {
     this.JobformGroup.controls['statusStage'].setValue(result.statusStage)
   }
   selectItem(items) {
-    console.log(items)
+    // console.log(items)
   }
   selectBrand(items) {
-    console.log(items)
+    // console.log(items)
   }
   selectACItems(items) {
-    console.log(items)
+    // console.log(items)
   }
   changeWarranty(val) {
-    console.log(val)
+    // console.log(val)
 
   }
   emailSettings:any=[]
@@ -2446,8 +2651,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(
         data => {
           // console.log(data.data.status)
-          if (data.status == 0) {
-
+          if (data.status == 0) { 
 
           } else {
             var result = data.result[0];
@@ -2469,29 +2673,26 @@ export class DashboardComponent implements OnInit {
     // obj.email = 'nayanmistry477@gmail.com'
     obj.username =this.emailSettings.username;
     obj.password = this.emailSettings.password;
-    obj.email = this.jobObj.customerEmail
-    obj.items = this.dataList
-    obj.items1 = this.dataList1
-    obj.totalPrice = this.invoiceTotal
-    console.log(obj)
+    obj.email = this.jobObj.customerEmail;
+    obj.items = this.dataList;
+    obj.items1 = this.dataList1;
+    obj.totalPrice = this.invoiceTotal;
+    // console.log(obj)
     this.isMailSent = true;
     this.emailService.sendMail(obj)
       .subscribe(
         data => {
           if (data.status == 0) {
-            this.toastr.error(data.message)
+            this.toastr.error(data.message);
             this.isMailSent = false;
-          } else {
-
-            // this.saleQty = data.result[0].saleQty;
-            this.toastr.success(data.message)
+          } else { 
+            this.toastr.success(data.message);
             this.isMailSent = false;
             this.cdr.markForCheck();
 
           }
         },
-        error => {
-          // this.showError(error.statusText);
+        error => { 
           console.log(error);
         });
   }
@@ -2500,20 +2701,20 @@ export class DashboardComponent implements OnInit {
     var obj = this.invoiceData;
     obj.duePrice = this.totalSum;
     // obj.email = 'nayanmistry477@gmail.com'
-    obj.email = this.jobObj.customerEmail
-    obj.items = this.dataList
-    obj.items1 = this.dataList1
-    obj.totalPrice = this.invoiceTotal
+    obj.email = this.jobObj.customerEmail;
+    obj.items = this.dataList;
+    obj.items1 = this.dataList1;
+    obj.totalPrice = this.invoiceTotal;
     obj.customer = this.jobObj.customer;
     obj.paymentType = this.invoiceData.paymentType;
     obj.paymentDetails = this.JobformGroup.value.paymentDetails;
     obj.DueDate = moment(new Date(this.invoiceData.dueDate)).format('MMMM/DD/YYYY');
     obj.InvoiceDate = moment(new Date(this.invoiceData.invoiceDate)).format('MMMM/DD/YYYY');
-    obj.ItemType = this.jobObj.itemType
+    obj.ItemType = this.jobObj.itemType;
     obj.Brand = this.jobObj.brand;
-    obj.SerialNo = this.jobObj.serialNo
-    obj.repairDescription = this.jobObj.repairDescription
-    console.log(obj)
+    obj.SerialNo = this.jobObj.serialNo;
+    obj.repairDescription = this.jobObj.repairDescription;
+    // console.log(obj)
     this.isMailSent = true;
     this.emailService.generateInvoice(obj)
       .subscribe(
@@ -2531,15 +2732,12 @@ export class DashboardComponent implements OnInit {
 
           }
         },
-        error => {
-          // this.showError(error.statusText);
+        error => { 
           console.log(error);
         });
   }
   repairAssig: any = {}
-  editRepairAssignment(item, data) {
-    // this.openReviewModel() 
-    // document.getElementById("openModalButton").click();
+  editRepairAssignment(item, data) { 
     this.modalService.open(this.openRepairModal)
     console.log(data)
     console.log(item)
