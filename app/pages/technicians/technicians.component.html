@@ -1,0 +1,213 @@
+<div class="d-flex align-items-center font-weight-bold my-2 ">
+  <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;"
+      class="flaticon2-gear"></i></span> &nbsp;&nbsp;
+  <a class="navi-text" routerLink="/settings">Back To Settings</a>
+</div>
+
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Technicians</h3>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-primary" (click)="editModal()">+ Add Technicians</button>
+
+    </div>
+  </div>
+  <div class="card-body"> 
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            ID
+            <!-- <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon> -->
+          </th>
+          <th>
+            NAME
+            <app-sort-icon column="name" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            EMAIL
+            <app-sort-icon column="email" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th> 
+          <th>
+            CONTACT NO
+            <app-sort-icon column="contactNo" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let technician of technicianService.items$ | async "> 
+            <td>{{ technician.id }}</td>
+            <td>{{ technician.firstname }} {{ technician.lastname }}</td>
+            <td>{{ technician.email }}</td> 
+            <td>{{technician.contactNo}}</td> 
+            <td>
+
+              <a title="Edit technician" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                (click)="editTechnician(technician)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+
+              <a title="Delete technician" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="editDeletemodal(technician); ">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>
+
+
+
+  <!-- Add Customer Modal --> 
+  <ng-template #openModal let-modal> 
+    <div class="modal-header cust-color">
+      <div class="modal-title h4" id="example-modal-sizes-title-lg"> 
+  
+        <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Technician</span>
+        <span *ngIf="isFlag == 2"  style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update Technician</span>
+
+      </div>
+    </div>
+    <div class="demo-tab-content">
+      <div class="overlay overlay-block cursor-default modal-body" style="min-height: 404px; width: 500px;"> 
+  
+        <ng-container>
+          <form action="#" class="form form-label-right" [formGroup]="formGroup"> 
+          
+            <div class="row">
+              <div class="col-6"> 
+              <div class="form-group cust-height">
+                <label class="form-label"> First Name</label>
+                <input pattern="^(\w+ ?)*$" type="text"  class="form-control form-control-lg form-control-solid" name="firstname" 
+                  placeholder="Enter First Name" autocomplete="off" [class.is-invalid]="isControlInvalid('firstname')"
+                     formControlName="firstname" />
+             
+                <div class="invalid-feedback" *ngIf="controlHasError('required', 'firstname')">First
+                  name is required</div>
+              </div>
+            </div>
+            <div class="col-6">  
+              <div class="form-group cust-height">
+                <label class="form-label">Last Name</label>
+                <input pattern="^(\w+ ?)*$" type="text"    id="lastname"  class="form-control form-control-lg form-control-solid" name="lastName"
+                  placeholder="Enter Last Name" autocomplete="off" [class.is-invalid]="isControlInvalid('lastname')"
+                   formControlName="lastname"    />
+               
+                <div class="invalid-feedback" *ngIf="controlHasError('required', 'lastname')">Last name
+                  is required</div>
+              </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group cust-height">
+                  <label class="form-label"> Email</label>
+                  <input type="email" class="form-control form-control-lg form-control-solid" name="email"
+                    placeholder="Enter Email" autocomplete="off"  
+                    formControlName="email"   /> 
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group cust-height">
+                  <label class="form-label">Contact No</label>
+                  <input type="text" (keypress)="keyPress($event)"   maxlength=11 class="form-control form-control-lg form-control-solid" name="contactNo"
+                    placeholder="Enter Contact No" autocomplete="off"  
+                    formControlName="contactNo"  />  
+                </div>
+              </div>
+            </div> 
+          
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group cust-height" style="display: inline;">
+                  <label class="form-label"> Address</label>
+                  <textarea pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid" name="address"
+                    placeholder="Enter Address" autocomplete="off" formControlName="address"  cols="10"
+                    rows="5"></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </ng-container>
+      </div>
+  
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button>
+      <ng-container *ngIf="isFlag == 1">
+  
+        <button type="submit" (click)="Submit()"  [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"  class="btn btn-custom btn-elevate"
+         >Submit <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button>
+
+    
+      </ng-container>
+      <ng-container *ngIf="isFlag == 2"> 
+        <button type="submit" (click)="updateTechnician()"  [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"  class="btn btn-custom btn-elevate"
+           >Update <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button> 
+    
+      </ng-container> 
+    </div>
+  
+  </ng-template>
+  
+  <!-- Add Customer Modal -->
+
+
+  <!-- Confirm Box -->
+  <ng-template #confrimBox let-modal>
+
+    <div class="modal-header ">
+      <div class="modal-title h4" id="example-modal-sizes-title-lg">
+        <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> --> 
+         <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+      </div>
+    </div>
+    
+ 
+
+    <div class="modal-body"> 
+    
+      <ng-container  >
+      <h4>Are you sure to  delete this technician?</h4>
+      </ng-container>
+    </div>
+    
+    <div class="modal-footer"> 
+      <ng-container> 
+        <button class="btn btn-danger" [ngStyle]=" {'width':isDeleting == true ? '25%':'20%'}" (click)="deleteTechnician()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isDeleting== true}" style="margin: 10%;"></span></button>
+        
+        <button type="button" (click)="closeDelete()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </ng-container>
+   
+    </div>
+  
+  </ng-template>
+  
+  <!-- Confirm Box -->

@@ -1,0 +1,318 @@
+<ng-container *ngIf="user">
+  <div class="card card-custom" [formGroup]="formGroup">
+    <!-- begin::Loading -->
+    <ng-container *ngIf="isDataSaved">
+      <div class="progress progress-modal">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+          style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </ng-container>
+    <!-- end::Loading -->
+    <!--begin::Header-->
+    <div class="card-header py-3">
+      <div class="card-title align-items-start flex-column">
+        <h3 class="card-label font-weight-bolder text-dark">Company Information</h3>
+        <span class="text-muted font-weight-bold font-size-sm mt-1">Change your Company settings</span>
+      </div>
+      <div class="card-toolbar">
+        <button type="submit" [disabled]="formGroup.invalid" class="btn btn-success mr-2" (click)="save()">Save
+          Changes</button>
+        <button type="reset" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </div>
+    </div>
+    <!--end::Header-->
+    <!--begin::Form-->
+    <div class="form">
+      <div class="card-body">
+        <!--begin::Heading-->
+        <div class="row">
+          <!-- <label class="col-xl-3"></label> -->
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mb-6">General Settings</h5>
+          </div>
+        </div>
+        <!--begin::Form Group-->
+
+        <!--begin::Form Group-->
+
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Company Name </b></label>
+              <div class="col-lg-8 col-xl-8">
+
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Company Name"
+                  formControlName="companyName" [class.is-invalid]="isControlInvalid('companyName')" />
+
+              </div>
+            </div>
+
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Website </b></label>
+              <div class="col-lg-8 col-xl-8">
+
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Company Website"
+                  formControlName="website" [class.is-invalid]="isControlInvalid('website')" />
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Email Address </b></label>
+              <div class="col-lg-8 col-xl-8">
+           
+                  <input type="email" class="form-control form-control-lg  " placeholder="Email" formControlName="email"
+                    [class.is-invalid]="isControlInvalid('email')" />
+                 
+               
+              </div>
+            </div>
+
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Company Reg Number </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Company Reg Number"
+                  formControlName="regNo" [class.is-invalid]="isControlInvalid('regNo')" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Phone Number </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="number" class="form-control form-control-lg " placeholder="Enter Phone Number"
+                  formControlName="phone" [class.is-invalid]="isControlInvalid('phone')" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> VAT Number </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter VAT Number"
+                  formControlName="vatNo" [class.is-invalid]="isControlInvalid('vatNo')" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mb-6">Address Settings</h5>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Street Address </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Street Address"
+                  formControlName="streetAddress1" [class.is-invalid]="isControlInvalid('streetAddress1')" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Street Address 2 </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Street Address 2"
+                  formControlName="streetAddress2" [class.is-invalid]="isControlInvalid('streetAddress2')" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Town </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Town" formControlName="town"
+                  [class.is-invalid]="isControlInvalid('town')" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> City </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter City" formControlName="city"
+                  [class.is-invalid]="isControlInvalid('city')" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Postalcode </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <input type="text" class="form-control form-control-lg " placeholder="Enter Postal Code"
+                  formControlName="postCode" [class.is-invalid]="isControlInvalid('postCode')" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Country </b></label>
+              <div class="col-lg-8 col-xl-8">
+
+                <mat-form-field class="col-12">
+                  <mat-select (selectionChange)="selectCountry($event.value)"
+                    [class.is-invalid]="isControlInvalid('country')"
+                    formControlName="country" name="country" style="text-transform: capitalize;"
+                    placeholder="Select Country">
+                    <mat-option>
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="countryMultiFilterCtrl"
+                        [searching]="searching">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let con of filteredCountry | async"
+                      [value]="con.code" style="text-transform: capitalize;">
+                      {{con.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mb-6">Invoice Settings</h5>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"><b> Payment Terms </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <!-- <input type="text" class="form-control form-control-lg " placeholder="Enter Payment Terms"
+                    formControlName="paymentTerms" [class.is-invalid]="isControlInvalid('paymentTerms')"/>  -->
+                <textarea class="form-control form-control-lg " placeholder="Enter Payment Terms"
+                  [class.is-invalid]="isControlInvalid('paymentTerms')" formControlName="paymentTerms" name="paymentTerms" id="" cols="5"
+                  rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"><b> Payment Details </b></label>
+              <div class="col-lg-8 col-xl-8">
+                <!-- <input type="text" class="form-control form-control-lg " placeholder="Enter Payment Details"
+                    formControlName="paymentDetails" [class.is-invalid]="isControlInvalid('paymentDetails')"/>  -->
+                <textarea class="form-control form-control-lg " placeholder="Enter Payment Details"
+                  [class.is-invalid]="isControlInvalid('paymentDetails')"  formControlName="paymentDetails" name="paymentDetails" id="" cols="5"
+                  rows="3"></textarea>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-9 col-xl-6">
+            <h5 class="font-weight-bold mb-6">Other Settings</h5>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Currency </b></label>
+              <div class="col-lg-8 col-xl-8">
+              
+
+                <mat-form-field class="col-12">
+                  <mat-select (selectionChange)="selectCurrency($event.value)"
+                    [class.is-invalid]="isControlInvalid('currency')"
+                    formControlName="currency" name="currency" style="text-transform: capitalize;"
+                    placeholder="Select Currency">
+                    <mat-option>
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="currencyMultiFilterCtrl"
+                        [searching]="searching">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let curr of filteredCurrency | async"
+                      [value]="curr.code" style="text-transform: capitalize;">
+                      {{curr.text}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <label class="col-xl-3 col-lg-3 col-form-label"> <b> Time Zone </b></label>
+              <div class="col-lg-9 col-xl-9">
+           
+                <mat-form-field class="col-12">
+                  <mat-select (selectionChange)="selectTimeZone($event.value)"
+                    [class.is-invalid]="isControlInvalid('timeZone')"
+                    formControlName="timeZone" name="timeZone" style="text-transform: capitalize;"
+                    placeholder="Select TimeZone">
+                    <mat-option>
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="timeZoneMultiFilterCtrl"
+                        [searching]="searching">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let tm of filteredTimeZone | async"
+                      [value]="tm.text" style="text-transform: capitalize;">
+                      {{tm.text}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+
+            <div class="form-group row">
+              <label class="col-xl-4 col-lg-4 col-form-label"> <b> Language </b></label>
+              <div class="col-lg-8 col-xl-8"> 
+
+                <mat-form-field class="col-12">
+                  <mat-select (selectionChange)="selectLanguage($event.value)"
+                    [class.is-invalid]="isControlInvalid('language')"
+                    formControlName="language" name="language" style="text-transform: capitalize;"
+                    placeholder="Select Language">
+                    <mat-option>
+                      <ngx-mat-select-search  [placeholderLabel]="'Search...'" [formControl]="languageMultiFilterCtrl"
+                        [searching]="searching">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let langu of filteredLanguage | async"
+                      [value]="langu.text" style="text-transform: capitalize;">
+                      {{langu.text}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div> 
+        </div> 
+   
+        <!--begin::Form Group-->
+      
+      </div>
+    </div>
+    <!--end::Form-->
+  </div>
+</ng-container>

@@ -1,0 +1,855 @@
+ 
+<div class="card card-custom gutter-b">
+  <div class="row">
+    <div class="col-xl-3 col-md-3 col-lg-3" >
+     
+      <div class="row" style="line-height: 30px;">
+      <div class="col-lg-10"> 
+            <div class="view-container">
+              <h4 class="settings-page-header">Reports</h4>   
+              <a  (click)="selectedItem('viewStock')"><i class="fas fa-fw fa-cog settings-page-small-icon"></i>
+                  Stock Report
+              </a> 
+              <br>
+              <a (click)="selectedItem('viewCustomer')">
+                  <i class="fas fa-users settings-sidemenu-small fa-fw" aria-hidden="true"></i> Customer Report 
+              </a> 
+              <br>
+              <a (click)="selectedItem('viewSales')">
+                <i class="fas fa-wrench settings-sidemenu-small fa-fw" aria-hidden="true"></i> Product Sales Report 
+              </a>  
+            <br>
+            <a (click)="selectedItem('viewInvoice')">
+              <i class="fas fa-file-alt settings-sidemenu-small fa-fw" aria-hidden="true"></i> Invoice Report 
+          </a> 
+          <!-- <br> -->
+          <!-- <a (click)="selectedItem('viewJobStatus')">
+              <i class="far fa-check-circle settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Status
+          </a>  -->
+          <br>
+            <a (click)="selectedItem('viewJob')">
+                <i class="fas fa-file-alt settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Report 
+            </a> 
+            <br>
+            <a (click)="selectedItem('viewJobDetailStatus')">
+              <i class="fas fa-file-alt settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Detailed Status Report 
+          </a>  
+            <!-- <a (click)="selectedItem('viewJobStatus')">
+              <i class="far fa-check-circle settings-sidemenu-small fa-fw" aria-hidden="true"></i> Job Status Report 
+          </a>  -->
+          </div>
+      </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-md-9">
+      <div class="card card-custom gutter-b" *ngIf="isStock">
+        <div class="card-header d-block">
+          
+      
+          <!-- <div class="row">
+            <div class="col-7">
+              <div class="card-toolbar">
+              <mat-form-field appearance="fill">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                  <input matStartDate formControlName="start" placeholder="Start date">
+                  <input matEndDate formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+              
+                <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+              </mat-form-field>
+              </div>
+            </div>
+              <div class="col-5">
+                <div class="row">
+                  <div class="col-8"> 
+                    <div class="card-toolbar">
+                       <button type="button" (click)="generateReport()" class="btn btn-sm btn-primary  ">
+                        <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                        class="svg-icon svg-icon-md ">
+                      </span> Generate Report
+                      </button> 
+                     
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="card-toolbar">
+                      <button type="button" class="btn btn-primary" (click)="showReport()">Show Report</button>
+                      </div>
+                  </div>
+                </div> 
+              </div> 
+          </div> -->
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Stock Report</h3>
+              </div>  
+            </div>
+            <!-- <div class="col-md-6 col-sm-12 col-xl-6 formField" *ngIf="!showDate"></div> -->
+            <div class="col-md-6 col-sm-12 col-xl-6">
+                <div class="row d-flex align-items-center">
+                  <div class="col-6">
+                    <mat-form-field *ngIf="showDate">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                        <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"   placeholder="End date" (dateChange)="changeDate($event.target.value)" >
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker> 
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field> 
+                  </div>
+                  <div class="col-6 d-flex">
+                    <div class="form-group  cust-height selectGroup"> 
+                      <label for="cars">Date Range:</label>
+                      <br>
+                      <select class="form-control " name="cars" id="cars" (change)="changeDateRange($event.target.value)">
+                          <optgroup label="Custom">
+                              <option value="Custom Date Range">Custom Date Range</option>
+                          </optgroup>
+                          <optgroup label="Misc">
+                              <option value="" selected>All Time</option>
+                          </optgroup>
+                          <optgroup label="This ...">
+                              <option value="ThisWeek">This Week</option>
+                              <option value="ThisMonth">This Month</option>
+                              <option value="thisQuater">This Quarter</option>
+                              <option value="ThisYear">This Year</option>
+                          </optgroup> 
+                      </select>
+                   
+                </div> 
+                  </div>
+                </div>
+            
+            </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table"  >
+                <table  datatable [dtOptions]="dtOptions"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr>
+                    <th>
+                      ID 
+                    </th>
+                    <th>
+                      PRODUCT NAME 
+                    </th>
+                    <th>
+                      INWARD 
+                    </th>
+                    <th>
+                      OUTWARD 
+                    </th> 
+                    
+                    <th>
+                      AVAILABLE STOCK
+                    </th> 
+                    </tr>
+                    <!-- <tr>
+                   
+                      <th>
+                       NAME 
+                      </th>
+                      <th>
+                        EMAIL 
+                      </th>
+                      <th>
+                        WEBSITE 
+                      </th> 
+                        
+                      </tr> -->
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let stock of stockList"> 
+                      <td>{{stock.productId }}</td>
+                      <td>{{stock.name}}</td>
+                      <td>{{stock.Inward}}</td>
+                      <td>{{stock.Outward}}</td> 
+                      <td>{{stock.pendingQty}}</td>   
+                    </tr>
+                    <!-- <tr *ngFor="let stock of data">  
+                      <td>{{stock.name}}</td>
+                      <td>{{stock.email}}</td>
+                      <td>{{stock.website}}</td>    
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+      <div class="card card-custom gutter-b" *ngIf="isViewJob">
+        <div class="card-header d-block">  
+          <!-- <div class="row">
+            <div class="col-7">
+              <div class="card-toolbar">
+              <mat-form-field appearance="fill">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                  <input matStartDate formControlName="start" placeholder="Start date">
+                  <input matEndDate formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+              
+                <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+              </mat-form-field>
+              </div>
+            </div>
+              <div class="col-5">
+                <div class="row">
+                  <div class="col-8"> 
+                    <div class="card-toolbar">
+                       <button type="button" (click)="generateReport()" class="btn btn-sm btn-primary  ">
+                        <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                        class="svg-icon svg-icon-md ">
+                      </span> Generate Report
+                      </button> 
+                     
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="card-toolbar">
+                      <button type="button" class="btn btn-primary" (click)="showReport()">Show Report</button>
+                      </div>
+                  </div>
+                </div> 
+              </div> 
+          </div> -->
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Job Report</h3>
+              </div>  
+            </div>
+            <!-- <div class="col-md-6 col-sm-12 col-xl-6 formField" *ngIf="!showDate"></div> -->
+            <div class="col-md-6 col-sm-12 col-xl-6">
+                <div class="row d-flex align-items-center">
+                  <div class="col-6"></div>
+                  <!-- <div class="col-6">
+                    <mat-form-field *ngIf="showDate">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                        <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"   placeholder="End date" (dateChange)="changeJobDate($event.target.value)" >
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker> 
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field> 
+                  </div> -->
+                  <div class="col-6 d-flex">
+                    <div class="form-group  cust-height selectGroup"> 
+                      <label for="cars">Technician:</label>
+                      <br>
+                      <!-- <select class="form-control " name="cars" id="cars" (change)="changeJobDateRange($event.target.value)">
+                          <optgroup label="Custom">
+                              <option value="Custom Date Range">Custom Date Range</option>
+                          </optgroup>
+                          <optgroup label="Misc">
+                              <option value="" selected>All Time</option>
+                          </optgroup>
+                          <optgroup label="This ...">
+                              <option value="ThisWeek">This Week</option>
+                              <option value="ThisMonth">This Month</option>
+                              <option value="thisQuater">This Quarter</option>
+                              <option value="ThisYear">This Year</option>
+                          </optgroup> 
+                      </select>  -->
+                      <mat-form-field class="col-12">
+                        <mat-select (selectionChange)="selectTechnician($event.value)"
+                          [(ngModel)]="jobObj.technician" 
+                            name="technician" placeholder="Select Technician">
+                          <mat-option>
+                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="TechnicianMultiFilterCtrl" [searching]="searching">
+                            </ngx-mat-select-search>
+                          </mat-option>
+                          <mat-option value="">None</mat-option>
+                          <mat-option *ngFor="let tech of filteredLocationMulti | async"
+                            [value]="tech.technician">
+                            {{tech.technician}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                  </div> 
+                  </div>
+                </div> 
+            </div>
+        </div>
+        </div>
+        <div class="card-body"> 
+          <div class="table-responsive angular-bootstrap-table">
+            <table datatable [dtOptions]="dtOptions" class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+              <thead>
+                <tr>
+                    <th>Job No</th>
+                    <th>Customer Name</th>
+                    <th>Job Date</th>
+                    <th>Item Type</th>
+                    <th>Brand</th>
+                    <th>Technician</th>
+                    <th>Action</th>
+                    <!-- <th>Job Status</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tech of technicianList">
+                    <td>{{tech.id}}</td>
+                    <td>{{tech.customer}}</td>
+                    <td>{{tech.createdDate | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{tech.itemType }}</td>
+                    <td>{{tech.brand}}</td> 
+                    <td>{{tech.assignedTo}}</td>
+                    <td>
+                      <a title="Send job Sheet" tooltip="Open Work sheet" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="openWorksheet(tech)">
+                        <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                        class="svg-icon svg-icon-md svg-icon-primary">
+                      </span>  
+                      </a>
+                    </td>
+                </tr> 
+            </tbody> 
+            </table>
+          </div>  
+        </div> 
+      </div> 
+      <div class="card card-custom gutter-b" *ngIf="isCustomer">
+        <div class="card-header d-block"> 
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Customer Report</h3>
+              </div>  
+            </div> 
+            <div class="col-md-6 col-sm-12 col-xl-6">
+                <div class="row d-flex align-items-center">
+                  <div class="col-6">
+                    <mat-form-field *ngIf="showDate">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                        <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"   placeholder="End date" (dateChange)="changeCustomerDate($event.target.value)" >
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker> 
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field> 
+                  </div>
+                  <div class="col-6 d-flex">
+                    <div class="form-group  cust-height selectGroup"> 
+                      <label for="cars">Date Range:</label>
+                      <br>
+                      <select class="form-control " name="cars" id="cars" (change)="changeCustomerDateRange($event.target.value)">
+                          <optgroup label="Custom">
+                              <option value="Custom Date Range">Custom Date Range</option>
+                          </optgroup>
+                          <optgroup label="Misc">
+                              <option value="" selected>All Time</option>
+                          </optgroup>
+                          <optgroup label="This ...">
+                              <option value="ThisWeek">This Week</option>
+                              <option value="ThisMonth">This Month</option>
+                              <option value="thisQuater">This Quarter</option>
+                              <option value="ThisYear">This Year</option>
+                          </optgroup> 
+                      </select>
+                   
+                </div> 
+                  </div>
+                </div>
+            
+            </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table"  >
+                <table  datatable [dtOptions]="dtOptions"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr>
+                    <th>
+                      ID 
+                    </th>
+                    <th>
+                      CUSTOMER NAME 
+                    </th>
+                    <th>
+                      NUMBER OF JOBS 
+                    </th>
+                    <th>
+                      MONEY SPENT 
+                    </th>   
+                    <th>
+                      AVERAGE REPAIR PRICE
+                    </th> 
+                    </tr> 
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let cust of customerList"> 
+                      <td>{{cust.id }}</td>
+                      <td>{{cust.customer}} </td>
+                      <td>{{cust.jobs}}</td>
+                      <td>£ {{cust.moneySpent}}</td> 
+                      <td>£ {{cust.avgPrice}}</td>   
+                    </tr>
+                 
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+      <div class="card card-custom gutter-b" *ngIf="isSales">
+        <div class="card-header d-block"> 
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Product Sales Report</h3>
+              </div>  
+            </div> 
+            <div class="col-md-6 col-sm-12 col-xl-6">
+                <div class="row d-flex align-items-center">
+                  <div class="col-6">
+                    <mat-form-field *ngIf="showDate">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                        <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"  placeholder="End date" (dateChange)="changePartsDate($event.target.value)" >
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker> 
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field> 
+                  </div>
+                  <div class="col-6 d-flex">
+                    <div class="form-group  cust-height selectGroup"> 
+                      <label for="cars">Date Range:</label>
+                      <br>
+                      <select class="form-control " name="cars" id="cars" (change)="changePartsDateRange($event.target.value)">
+                          <optgroup label="Custom">
+                              <option value="Custom Date Range">Custom Date Range</option>
+                          </optgroup>
+                          <optgroup label="Misc">
+                              <option value="" selected>All Time</option>
+                          </optgroup>
+                          <optgroup label="This ...">
+                              <option value="ThisWeek">This Week</option>
+                              <option value="ThisMonth">This Month</option>
+                              <option value="thisQuater">This Quarter</option>
+                              <option value="ThisYear">This Year</option>
+                          </optgroup> 
+                      </select> 
+                  </div> 
+                  </div>
+                </div>
+            
+            </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table">
+                <table  datatable [dtOptions]="dtOptions"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr> 
+                    <th>
+                      PRODUCT/SERVICE NAME 
+                    </th>
+                    <th>
+                      UNIT PRICE
+                    </th>
+                    <th>
+                    TOTAL REPAIR
+                    </th>   
+                    </tr> 
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let parts of partsList"> 
+                      <td>{{parts.productName }}</td> 
+                      <td>£ {{parts.sellPrice}}</td>
+                      <td>{{parts.totalRepair}}</td>    
+                    </tr>
+                    <!-- <tr *ngFor="let stock of data">  
+                      <td>{{stock.name}}</td>
+                      <td>{{stock.email}}</td>
+                      <td>{{stock.website}}</td>    
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+      <div class="card card-custom gutter-b" *ngIf="isInvoice">
+        <div class="card-header d-block"> 
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Invoice Report</h3>
+              </div>  
+            </div> 
+            <div class="col-md-6 col-sm-12 col-xl-6">
+                <div class="row d-flex align-items-center">
+                  <div class="col-6">
+                    <mat-form-field *ngIf="showDate">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                        <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"  placeholder="End date" (dateChange)="changeInvoiceDate($event.target.value)" >
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker> 
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field> 
+                  </div>
+                  <div class="col-6 d-flex">
+                    <div class="form-group  cust-height selectGroup"> 
+                      <label for="cars">Date Range:</label>
+                      <br>
+                      <select class="form-control " name="cars" id="cars" (change)="changeInvoiceDateRange($event.target.value)">
+                          <optgroup label="Custom">
+                              <option value="Custom Date Range">Custom Date Range</option>
+                          </optgroup>
+                          <optgroup label="Misc">
+                              <option value="" selected>All Time</option>
+                          </optgroup>
+                          <optgroup label="This ...">
+                              <option value="ThisWeek">This Week</option>
+                              <option value="ThisMonth">This Month</option>
+                              <option value="thisQuater">This Quarter</option>
+                              <option value="ThisYear">This Year</option>
+                          </optgroup> 
+                      </select> 
+                  </div> 
+                  </div>
+                </div>
+            
+            </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table">
+                <table  datatable [dtOptions]="dtOptions"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr> 
+                    <th>
+                      INVOICE ID
+                    </th>
+                    <th>
+                     CUSTOMER NAME
+                    </th>
+                    <th>
+                   INVOICE DATE
+                    </th>    
+                    <th>
+                      PAYMENT TYPE
+                    </th> 
+                    <th>
+                      SUB TOTAL
+                    </th>
+                    <th>
+                      TOTAL PRICE
+                    </th>
+                    <th>
+                      STATUS
+                    </th>
+                  </tr> 
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let invoice of invoiceList"> 
+                      <td>{{invoice.invoiceID }}</td> 
+                      <td>{{invoice.invoiceTo}}</td>
+                      <td>{{invoice.invoiceDate | date: 'dd/MM/yyyy'}}</td>     
+                      <td>{{invoice.paymentType}}</td> 
+                      <td>£ {{invoice.subTotal}}</td> 
+                      <td>£ {{invoice.totalPrice}}</td> 
+                      <td>{{invoice.paymentStatus}}</td> 
+
+                    </tr>
+                  
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+      <div class="card card-custom gutter-b" *ngIf="isJobstatus">
+        <div class="card-header d-block"> 
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Job Status Report</h3>
+              </div>  
+            </div> 
+            <div class="col-md-6 col-sm-12 col-xl-6">
+                <div class="row d-flex align-items-center">
+                  <div class="col-6">
+                    <mat-form-field *ngIf="showDate">
+                      <mat-label>Enter a date range</mat-label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                        <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"  placeholder="End date" (dateChange)="changeJobStatusDate($event.target.value)" >
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker> 
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field> 
+                  </div>
+                  <div class="col-6 d-flex">
+                    <div class="form-group  cust-height selectGroup"> 
+                      <label for="cars">Date Range:</label>
+                      <br>
+                      <select class="form-control " name="cars" id="cars" (change)="changeJobStatusDateRange($event.target.value)">
+                          <optgroup label="Custom">
+                              <option value="Custom Date Range">Custom Date Range</option>
+                          </optgroup>
+                          <optgroup label="Misc">
+                              <option value="" selected>All Time</option>
+                          </optgroup>
+                          <optgroup label="This ...">
+                              <option value="ThisWeek">This Week</option>
+                              <option value="ThisMonth">This Month</option>
+                              <option value="thisQuater">This Quarter</option>
+                              <option value="ThisYear">This Year</option>
+                          </optgroup> 
+                      </select> 
+                  </div> 
+                  </div>
+                </div>
+            
+            </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table">
+                <table  datatable [dtOptions]="dtOptions"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr>  
+                    <th>
+                     STATUS NAME
+                    </th>
+                    <th>
+                    STATUS COUNTS
+                    </th>    
+                    <th>
+                      TOTAL VALUE
+                    </th>   
+                  </tr> 
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let status of statusList"> 
+                      <td style="text-transform: capitalize;">{{status.jobStatus }}</td> 
+                      <td>{{status.statusCount}}</td>
+                      <td>£{{status.totalValue}}</td>     
+                    </tr> 
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+      <div class="card card-custom gutter-b" *ngIf="isJobDetailstatus">
+        <div class="card-header d-block"> 
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 col-sm-12 col-xl-6 " >
+              <div class="card-title">
+                <h3 class="card-label">Job Status Detailed Report</h3>
+              </div>  
+            </div> 
+            <div class="col-md-6 col-sm-12 col-xl-6">
+              <div class="row d-flex align-items-center">
+                <div class="col-6"></div>
+                <!-- <div class="col-6">
+                  <mat-form-field *ngIf="showDate">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                      <input matStartDate formControlName="start" [(ngModel)]="selectedDate.start"  placeholder="Start date">
+                      <input matEndDate formControlName="end" [(ngModel)]="selectedDate.end"   placeholder="End date" (dateChange)="changeJobDate($event.target.value)" >
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker> 
+                    <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                    <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                  </mat-form-field> 
+                </div> -->
+                <div class="col-6 d-flex">
+                  <div class="form-group  cust-height selectGroup"> 
+                    <label for="cars">Job Status:</label>
+                    <br>
+                    <!-- <select class="form-control " name="cars" id="cars" (change)="changeJobDateRange($event.target.value)">
+                        <optgroup label="Custom">
+                            <option value="Custom Date Range">Custom Date Range</option>
+                        </optgroup>
+                        <optgroup label="Misc">
+                            <option value="" selected>All Time</option>
+                        </optgroup>
+                        <optgroup label="This ...">
+                            <option value="ThisWeek">This Week</option>
+                            <option value="ThisMonth">This Month</option>
+                            <option value="thisQuater">This Quarter</option>
+                            <option value="ThisYear">This Year</option>
+                        </optgroup> 
+                    </select>  -->
+                    <mat-form-field class="col-12">
+                      <mat-select (selectionChange)="selectStatus($event.value)" style="text-transform: capitalize;"
+                        [(ngModel)]="jobObj.jobStatus" 
+                          name="jobStatus" placeholder="Select Status">
+                        <mat-option>
+                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="JobStatusMultiFilterCtrl" [searching]="searching">
+                          </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="">None</mat-option>
+                        <mat-option *ngFor="let jobstatus of filteredJobStatusMulti | async" style="text-transform: capitalize;"
+                          [value]="jobstatus.jobStatus" >
+                          {{jobstatus.jobStatus}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                </div> 
+                </div>
+              </div> 
+          </div>
+        </div>
+        </div>
+        <div class="card-body" >  
+              <div class="table-responsive angular-bootstrap-table">
+                <table  datatable [dtOptions]="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance"  class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+                  <thead>
+                    <tr>  
+                      <!-- <th></th> -->
+                    <th>
+                    Job ID
+                    </th>
+                    <th>
+                    CUSTOMER
+                    </th>    
+                    <th>
+                      JOB STATUS
+                    </th>   
+                    <th>
+                      PAYMENT STATUS
+                    </th>
+                    <th>
+                     TOTAL PRICE
+                    </th>
+                    <th>
+                      PENDING PRICE
+                    </th>
+                    <th>
+                      CREATED AT
+                    </th>
+                   
+                  </tr> 
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let jobDetail of jobStatusDetailList"> 
+                      <!-- <td class="details-control" id="detail-btn" (click)="changeDetail(jobDetail)" orderable="false"></td> -->
+                      <td>{{jobDetail.JobID}}</td>
+                      <td>{{jobDetail.customer}}</td>
+                      <td style="text-transform: capitalize;">{{jobDetail.jobStatus }}</td>
+                      <td  *ngIf="jobDetail.pendingPrice == 0;else notComp">Completed</td>  
+                      <ng-template #notComp>
+                        <td>Pending</td>  
+                      </ng-template>
+                      <td>£{{jobDetail.price}}</td>
+                      <td>£{{jobDetail.pendingPrice}}</td>
+                      <td>{{jobDetail.createdDate | date: 'dd/MM/yyyy'}}</td>    
+                    </tr> 
+                  </tbody>
+                </table>
+              </div> 
+        </div> 
+      </div>
+    </div>
+  </div>
+  <!-- <div class="card card-custom gutter-b">
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Stock Report</h3>
+      </div> 
+  
+      <div class="row">
+        <div class="col-7">
+          <div class="card-toolbar">
+          <mat-form-field appearance="fill">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+              <input matStartDate formControlName="start" placeholder="Start date">
+              <input matEndDate formControlName="end" placeholder="End date">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          
+            <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+            <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+          </mat-form-field>
+          </div>
+        </div>
+          <div class="col-5">
+            <div class="row">
+              <div class="col-8"> 
+                <div class="card-toolbar">
+                   <button type="button" (click)="generateReport()" class="btn btn-sm btn-primary  ">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-md ">
+                  </span> Generate Report
+                  </button> 
+                 
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="card-toolbar">
+                  <button type="button" class="btn btn-primary" (click)="showReport()">Show Report</button>
+                  </div>
+              </div>
+            </div> 
+          </div> 
+      </div>
+    </div>
+    <div class="card-body" > 
+        <div class="overlay overlay-block cursor-default modal-body" style="min-height: 304px;">
+          <div class="table-responsive angular-bootstrap-table"  >
+            <table   class="display nowrap table table-head-custom table-vertical-center overflow-hidden">
+              <thead>
+            
+                <th>
+                  ID 
+                </th>
+                <th>
+                  PRODUCT NAME 
+                </th>
+                <th>
+                  INWARD 
+                </th>
+                <th>
+                  OUTWARD 
+                </th> 
+                <th>
+                  AVAILABLE STOCK
+                </th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let stock of stockList"> 
+                  <td>{{stock.productId }}</td>
+                  <td>{{stock.name}}</td>
+                  <td>{{stock.Inward}}</td>
+                  <td>{{stock.Outward}}</td> 
+                  <td>{{stock.pendingQty}}</td>   
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+  
+  </div> -->
+ 
+  
+</div>

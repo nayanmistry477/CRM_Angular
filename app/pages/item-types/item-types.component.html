@@ -1,0 +1,460 @@
+<div class="d-flex align-items-center font-weight-bold my-2 ">
+  <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;"
+      class="flaticon2-gear"></i></span> &nbsp;&nbsp;
+  <a class="navi-text" routerLink="/settings">Back To Settings</a>
+</div>
+<div class="card card-custom gutter-b" *ngIf="isShow == false">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Item Types</h3>
+    </div>
+    <!-- <div class="card-toolbar">
+        <button type="button" class="btn btn-primary" (click)="editItemModal()">Add</button>
+  
+      </div> -->
+
+    <div class=" row">
+      <div class="col-8" [formGroup]="searchGroup">
+        <div class="card-toolbar">
+          <!-- <small class="form-text text-muted"><b>Search</b> in all fields</small> -->
+
+          <div class="form-group has-search">
+            <span class="fa fa-search form-control-feedback"></span>
+            <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+              formControlName="searchTerm" />
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-primary" (click)="editItemModal()">+ Add</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- begin: Filtration form -->
+    <!-- <div class="form form-label-right">
+            <div class="form-group row">
+              <div class="col-lg-4">
+                <div class="row" [formGroup]="filterGroup">
+                  <div class="col-lg-6">
+                    <select class="form-control" name="status" placeholder="Filter by Status" formControlName="status">
+                      <option value="">All</option>
+                      <option value="1">Susspended</option>
+                      <option value="2">Active</option>
+                      <option value="3">Pending</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
+                  </div>
+                  <div class="col-lg-6">
+                    <select class="form-control" placeholder="Filter by Type" name="type" formControlName="type">
+                      <option value="">All</option>
+                      <option value="1">Business</option>
+                      <option value="2">Individual</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Type</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2" [formGroup]="searchGroup">
+                <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+                  formControlName="searchTerm" /><small class="form-text text-muted"><b>Search</b> in all fields</small>
+              </div>
+            </div>
+          </div> -->
+    <!-- end: Filtration form -->
+
+    <!-- begin: Grouping -->
+    <!-- <ng-container *ngIf="grouping.getSelectedRowsCount()"> -->
+    <!-- <div class="form">
+              <div class="row align-items-center form-group-actions margin-top-20 margin-bottom-20">
+                <div class="col-xl-12">
+                  <div class="form-group form-group-inline">
+                    <div class="form-label form-label-no-wrap">
+                      <label class="font-bold font-danger"><span>Selected records count:
+                          <b>{{ grouping.getSelectedRowsCount() }}</b></span></label>
+                    </div>
+                    <div>
+                      <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-1"
+                        (click)="deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete All
+                      </button>&nbsp;
+                      <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                        (click)="fetchSelected()">
+                        <i class="fa fa-stream"></i> Fetch Selected
+                      </button>&nbsp;
+                      <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                        (click)="updateStatusForSelected()">
+                        <i class="fa fa-sync-alt"></i> Update Status
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+    <!-- </ng-container> -->
+    <!-- end: Grouping -->
+
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <!-- <th class="selection-cell-header" data-row-selection="true">
+                  <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectAllRows()"
+                      [checked]="grouping.checkAreAllRowsSelected()" /><span></span></label>
+                </th> -->
+          <th>
+            ID
+            <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            ITEM TYPE
+            <app-sort-icon column="itemTypeName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let itemType of itemTypeService.items$ | async">
+
+            <td>{{ itemType.id }}</td>
+            <td>{{ itemType.itemTypeName }}</td>
+            <td>
+
+              <a title="Edit ItemType" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                (click)="editItemType(itemType)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+
+              <a title="Delete ItemType" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="editDelete(itemType)">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>
+
+<!-- Add Item Type Modal -->
+<ng-template #itemopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+
+      <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Item
+        Type</span>
+
+      <!-- <span *ngIf="isFlag == 2" style="color:aliceblue;"> <i class="fas fa-edit"  aria-hidden="true"></i> Update Item Type</span> -->
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="itemTypeFormGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Item Type</label>
+            <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid"
+              name="itemTypeName" required placeholder="Enter Item Name" autocomplete="off"
+              [class.is-invalid]="isItemControlInvalid('itemTypeName')" formControlName="itemTypeName" />
+            <div class="invalid-feedback" *ngIf="isItemcontrolHasError('required', 'itemTypeName')">Item Name is
+              required</div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeItemTypeModal()">Cancel</button>
+
+
+          <ng-container *ngIf="isFlag == 1">
+            <button type="submit" (click)="addItemType()" [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+
+
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Item Type Modal -->
+
+
+<!-- Confirm Box -->
+<ng-template #confrimBox let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> -->
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+  <div class="modal-body">
+    <h4>
+      Are you sure want to delete this item?
+    </h4>
+  </div>
+
+
+  <!-- <div class="modal-footer">
+       <ng-container> 
+        <button type="submit" (click)="deleteItemType()"  class="btn btn-primary btn-elevate"
+         >Yes</button>
+
+         <button type="submit" (click)="closeDelete()"  class="btn btn-primary btn-elevate"
+           >No</button>
+      </ng-container>
+   
+    </div> -->
+
+  <div class="modal-footer">
+  
+
+    <ng-container> 
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDeleting == true ? '25%':'20%'}" (click)="deleteItemType()"
+      data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+        [ngClass]="{spinner:isDeleting== true}" style="margin: 10%;"></span></button>
+      
+      <button type="button" (click)="closeDelete()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->
+
+<div *ngIf="isShow == true">
+  <button type="button" (click)="backToMain()" class="btn btn-sm btn-primary  "><i class="fa fa-arrow-left"
+      aria-hidden="true"></i></button>
+</div>
+<div class="card card-custom gutter-b"  *ngIf="isShow == true">
+  <div class="modal-header">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+
+      <span> Update Item type</span>
+
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="itemTypeFormGroup">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group cust-height">
+                  <label class="form-label"><strong>Item Type </strong></label>
+                  <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid"
+                    name="itemTypeName" required placeholder="Enter Item Name" autocomplete="off"
+                    [class.is-invalid]="isItemControlInvalid('itemTypeName')" formControlName="itemTypeName" />
+                  <div class="invalid-feedback" *ngIf="isItemcontrolHasError('required', 'itemTypeName')">Item Name is
+                    required</div>
+                </div>
+              </div>
+              <div class="col-lg-3" style="margin-top: 4%;">
+
+
+                <button type="submit" (click)="updateItemType()" [ngStyle]=" {'width':isLoading$ == true ? '75%':'70%'}"
+                  class="btn btn-custom btn-elevate">Update <span [ngClass]="{spinner:isLoading$ == true}"
+                    style="margin: 6%;"></span></button>
+
+              </div>
+              <div class="col-lg-3" style="margin-top: 4%;">
+
+                <button type="submit" (click)="editChecklistItem()" class="btn btn-custom btn-elevate">+ Add Item
+                </button>
+
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </form>
+    </ng-container>
+
+    <div class="col-6">
+      <div class="table-responsive angular-bootstrap-table">
+        <table class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <th>
+              ID
+            </th>
+            <th>
+              NAME
+            </th>
+            <th>ACTIONS</th>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let checkItem of checkList  | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
+              <td>{{checkItem.id }}</td>
+              <td>{{checkItem.name}}</td>
+              <td>
+                <a title="Edit Checklist" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                  (click)="editChecklist(checkItem)">
+                  <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-md svg-icon-primary">
+                  </span>
+                </a>
+                <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                  (click)="editDeleteChecklist(checkItem)">
+                  <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-md svg-icon-danger">
+                  </span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="checkList.length > 5">
+            <pagination-controls (pageChange)="p = $event"
+              class="d-flex justify-content-between align-items-center flex-wrap">
+            </pagination-controls>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button>
+    <ng-container>
+      <button type="submit" (click)="nextButton()" class="btn btn-custom btn-elevate">Submit</button>
+    </ng-container>
+  </div> -->
+</div>
+
+<!-- Add Check List Items -->
+<ng-template #openChecklistModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+
+      <span *ngIf="flagCheck == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+        Checklist item
+      </span>
+
+      <span *ngIf="flagCheck == 2" style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update
+        Checklist</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="checklistFormGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Name</label>
+            <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid" name="name"
+              required placeholder="Enter Item Name" autocomplete="off"
+              [class.is-invalid]="isCheckItemControlInvalid('name')" formControlName="name" />
+            <div class="invalid-feedback" *ngIf="isCheckItemcontrolHasError('required', 'name')">Item Name is
+              required</div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeChecklistModal()">Cancel</button>
+
+
+          <ng-container *ngIf="flagCheck == 1">
+            <button type="submit" (click)="addChecklistItem()" [ngStyle]=" {'width':isChecklist == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isChecklist == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+          <ng-container *ngIf="flagCheck == 2">
+            <button type="submit" (click)="updateChecklistItem()"
+              [ngStyle]=" {'width':isChecklist == true ? '25%':'17%'}" class="btn btn-custom btn-elevate">Update <span
+                [ngClass]="{spinner:isChecklist == true}" style="margin: 17%;"></span></button>
+          </ng-container>
+
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Item Type Modal -->
+
+<!-- Confirm Box -->
+<ng-template #confrimBoxChecklist let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> -->
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+  <div class="modal-body">
+    <h4>
+      Are you sure want to delete this checklist item?
+    </h4>
+  </div>
+
+
+  <!-- <div class="modal-footer">
+       <ng-container> 
+        <button type="submit" (click)="deleteItemType()"  class="btn btn-primary btn-elevate"
+         >Yes</button>
+
+         <button type="submit" (click)="closeDelete()"  class="btn btn-primary btn-elevate"
+           >No</button>
+      </ng-container>
+   
+    </div> -->
+
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+
+      <div class="text-center">
+        <button class="btn btn-danger" (click)="deleteChecklistItem()"     [ngStyle]=" {'width':isChecklist == true ? '100%':'100%'}" data-entity="user" id="userDeleteButton"><span
+           style="margin-left: -33%;" class="fa fa-trash"></span> Delete <span
+            [ngClass]="{spinner:isChecklist == true}" style="margin: 0%;"></span> </button>
+      </div>
+      
+
+      <!-- <button type="submit" (click)="closeDelete()"  class="btn btn-custom btn-elevate"
+           >No</button> -->
+
+      <button type="button" (click)="closeDeleteChecklist()" class="btn btn-default"
+        data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->

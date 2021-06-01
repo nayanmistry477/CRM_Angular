@@ -1,0 +1,2344 @@
+<div class="card card-custom gutter-b" *ngIf="isShow != true ">
+  <ng-container *ngIf="isMailSent">
+    <div class="progress progress-modal">
+      <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+        style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+  </ng-container>
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Closed Jobs</h3>
+    </div>
+    <div class="card-title">
+      <div class=" row">
+        <div class="col-7" [formGroup]="searchGroup">
+          <div class="card-toolbar">
+            <div class="form-group has-search">
+              <span class="fa fa-search form-control-feedback"></span>
+              <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+                formControlName="searchTerm" />
+            </div>
+          </div>
+        </div>
+        <div class="col-5">
+          <div class="card-toolbar">
+            <button type="button" class="btn btn-primary" routerLink="/create-job">+ New Job</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            ID
+            <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            CUSTOMER
+            <app-sort-icon column="customer" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            CREATED DATE
+            <app-sort-icon column="createdDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
+          </th>
+       
+          <th>
+            EST COMPLETION DATE
+            <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+
+          <th>
+            COMPLETED DATE
+            <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            PRICE
+            <!-- <app-sort-icon column="price" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon> -->
+          </th>
+          <th>
+            JOB STATUS
+            <!-- <app-sort-icon column="jobStatus" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon> -->
+          </th>
+
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobService.items$ | async">
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned'">{{ job.id }}</td>
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned'">{{ job.customer }}</td>
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned' && job.createdDate != '0000-00-00 00:00:00'">{{ job.createdDate | date:'dd/MM/yyyy'}}</td>
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned' && job.estDate != '0000-00-00 00:00:00'">{{ job.estDate | date: 'dd/MM/yyyy'}}</td>  
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned' && job.completedDate != '0000-00-00 00:00:00'" >{{ job.completedDate | date: 'dd/MM/yyyy'}}</td> <td *ngIf="job.completedDate == '0000-00-00 00:00:00'"></td>
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned'">£ {{ job.price }}</td>
+            <!-- <td *ngFor="let status=al of jobStatusList"> <span *ngIf="statusVal.statusType === job.jobStatus " style="color: yellow; background-color: green; padding: 5px; border-radius: 10px;">{{job.jobStatus}}</span></td> -->
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned'">
+              <span *ngFor="let statusVal of jobStatusList">
+
+                <p *ngIf="statusVal.statusType === job.jobStatus ">
+                  <span [ngStyle]="{'color':statusVal.statusColor}"
+                    style="text-transform: capitalize; padding: 5px; border-radius: 10px;">
+                    <b> {{statusVal.statusType}}</b>
+                  </span>
+
+                </p>
+              </span>
+            </td>
+
+            <td *ngIf="job.statusStage == 'closed' || job.statusStage == 'returned'">
+
+              <!-- <a title="Send job Sheet" tooltip="Generate Job sheet" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="sendJobSheet(job)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                class="svg-icon svg-icon-md svg-icon-primary">
+              </span>  
+              </a> -->
+              <a title="Open Work Sheet" tooltip="Open Work sheet"
+                class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="openWorksheet(job)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+              <a title="Edit Job" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="editJob(job)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+              <!-- <a title="Delete Job" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="editDeleteJob(job)">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>
+
+
+<div *ngIf="isShow == true">
+  <button type="button" (click)="backToMain()" class="btn btn-sm btn-primary  "><i class="fa fa-arrow-left"
+      aria-hidden="true"></i>
+  </button>
+</div>
+<div class="clearfix"></div>
+<div *ngIf="isJobShow != true">
+  <mat-card *ngIf="isShow == true">
+    <mat-card-content>
+      <!-- <h5 class="example-h2">Tabs with text labels</h5> -->
+      <mat-tab-group class="demo-tab-group" [formGroup]="JobformGroup" [selectedIndex]="selectedIndex">
+        <mat-tab label="Job Information">
+          <!-- <div class="card">
+            <div class="card-body"> -->
+          <!-- <div class="row" *ngIf="isInvoice != true;else show">
+            <div class="col-10">
+
+            </div>
+            <div class="col-2" style="padding: 1%;">
+              <button type="button" (click)="openInvoice()" class="btn btn-sm btn-primary  ">
+                <i class="fa fa-plus-square" aria-hidden="true"></i> Create Invoice
+              </button>
+            </div>
+          </div>
+          <ng-template #show>
+            <div class="row">
+              <div class="col-10">
+
+              </div>
+              <br> 
+            </div>
+          </ng-template> -->
+          <div class="" style="text-align:end ;">
+            <div class="form-group">
+                <label class="form-label" style="margin-right: 1%;"><strong> Job Status </strong></label>
+                <div class="row">
+                  <div class="col-6">
+
+                  </div>
+                  <div class="col-6">
+                   <div class="row">
+                      <div class="col-4">
+                          
+                          <label for="file-upload" class="custom-file-upload">
+                              <i class="fa fa-file" aria-hidden="true"> </i>
+                              Upload Worksheet
+                              <input id="file-upload" type="file" ng2FileSelect
+                              [uploader]="uploader1" (change)="onSelectDocument()"/> 
+                          </label>
+                          {{fileName}}
+                          
+                          <div class="row">
+                              <!-- <div class="col-6">
+                                  <button *ngIf="uploader1.queue.length != 0 "
+                                  type="submit" (click)="uploadDocument()"
+                                  [ngStyle]=" {'width':isLoading$ == true ? '90%':'75%'}"
+                                  class="btn btn-sm btn-custom btn-elevate">Upload
+                                  <span [ngClass]="{spinner:isLoading$ == true}"
+                                      style="margin: 8%;"></span>
+                              </button>
+                              </div> -->
+                              <div class="col-6"></div>
+                              <div class="col-6">
+                                  <a *ngIf="uploader1.queue.length != 0 "
+                                   tooltip="Remove"
+                                  (click)=" clearDocument()">
+                                  <i class="fa fa-trash"
+                                      style="font-size: 15px;">Clear</i>
+                              </a>
+                              </div>
+                          </div>  
+                      </div>
+                          <div class="col-8">
+                              
+                              <mat-form-field class="col-10" style="width: 60%;">
+                                  <mat-select (selectionChange)="selectJobStatus($event.value)"
+                                      [(ngModel)]="jobObj.jobStatus"
+                                      [class.is-invalid]="jobControlInvalid('jobStatus')"
+                                      formControlName="jobStatus" name="jobStatus"
+                                      style="text-transform: capitalize;" placeholder="Select Job Status">
+                                      <mat-option>
+                                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="jobStatusMultiFilterCtrl"
+                                              [searching]="searching">
+                                          </ngx-mat-select-search>
+                                      </mat-option>
+                                      <mat-option *ngFor="let jobstatus of filteredjobStatusMulti | async"
+                                          [value]="jobstatus.jobStatus"
+                                          style="text-transform: capitalize;">
+                                          {{jobstatus.jobStatus}}
+                                      </mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                              <div class="invalid-feedback"
+                                  *ngIf="jobcontrolHasError('required', 'jobStatus')">
+                                  Job
+                                  Status is required
+                              </div>
+                          </div>
+                   </div>
+                  </div>
+
+                  <!-- <div class="col-4">
+                <button type="button" tooltip="Add Job Status " placement="top" show-delay="100"
+                  (click)="editJobStatus()" style="padding: 12px;" class="btn btn-sm btn-primary"><i
+                    class="fa fa-plus" aria-hidden="true"></i></button>
+              </div> -->
+              </div>
+            </div>
+        </div>
+          <div class="demo-tab-content">
+            <div class="col-12">
+              <div class="modal-header cust-color" style="padding:1%; ">
+                <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+
+                  <span style="color:aliceblue; text-align: justify;"> Customer Details</span>
+
+                </div>
+              </div>
+              <br>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-9">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-3">
+                            <b> <label class="form-label">Name:</label></b>
+                          </div>
+                          <div class="col-8" style="right: 11%;">
+                            <label class="form-label">{{jobObj.customer}}</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-3">
+                            <b> <label class="form-label">Contact:</label></b>
+                          </div>
+                          <div class="col-7" style="right: 10%;">
+                            <label class="form-label">{{jobObj.customerContact}}</label>
+                            <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-3">
+                            <b> <label class="form-label">Email:</label></b>
+                          </div>
+                          <div class="col-9">
+                            <!-- <input type="text" class="form-control form-control-lg form-control-solid"
+                              name="customerEmail" placeholder="Enter Contact No" autocomplete="off"
+                              formControlName="customerEmail" /> -->
+                            <label class="form-label">{{jobObj.customerEmail}}</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-3">
+                            <b> <label class="form-label"> Address :</label></b>
+                          </div>
+                          <div class="col-9" style="right: 10%;">
+                            <div class="form-group cust-height">
+                              <textarea class="form-control form-control-lg  " name="address" disabled
+                                placeholder="Enter Address" autocomplete="off" formControlName="address" cols="12"
+                                rows="3"></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group " style="display: inline; height: 50px;">
+                          <label class="form-label"><strong> Deposit </strong></label>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                            </div>
+                            <input type="number" class="form-control" name="deposit" formControlName="deposit" disabled
+                              aria-label="deposit" aria-describedby="basic-addon1">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="form-group" style="display: inline; height: 50px;">
+                          <label class="form-label"><strong>Discount </strong></label>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                            </div>
+                            <input type="number" (keyup)="keyFunc($event)" class="form-control" name="discount"
+                              formControlName="discount" disabled aria-label="price" aria-describedby="basic-addon1">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group" style="display: inline; height: 50px;">
+                          <label class="form-label"><strong> Pending Price</strong></label>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                            </div>
+                            <input type="number" class="form-control" name="pendingPrice" formControlName="pendingPrice"
+                              disabled aria-label="price" aria-describedby="basic-addon1">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="form-group" style="display: inline;">
+                          <label class="form-label"><strong>Total Price </strong></label>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                            </div>
+                            <input type="number" class="form-control" name="price" formControlName="price" disabled
+                              aria-label="price" aria-describedby="basic-addon1">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-tab-content">
+            <div class="col-12">
+              <div class="modal-header cust-color" style="padding:1%; ">
+                <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+
+                  <span style="color:aliceblue; text-align: justify;"> Item Information</span>
+
+                </div>
+              </div>
+              <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <!-- <div class="col-4">
+                        <label class="form-label"> Job Status </label>
+                      </div> -->
+                      <!-- <div class="col-6">
+                        <div class="row">
+                          <div class="col-6"> 
+                            <mat-form-field>
+                              <mat-select (selectionChange)="selectJobStatus($event.value)"
+                                [(ngModel)]="jobObj.jobStatus" [class.is-invalid]="jobControlInvalid('jobStatus')"
+                                formControlName="jobStatus" name="jobStatus" style="text-transform: capitalize;"
+                                placeholder="Select Job Status">
+                                <mat-option>
+                                  <ngx-mat-select-search [formControl]="jobStatusMultiFilterCtrl"
+                                    [searching]="searching">
+                                  </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let jobstatus of filteredjobStatusMulti | async"
+                                  [value]="jobstatus.jobStatus" style="text-transform: capitalize;">
+                                  {{jobstatus.jobStatus}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'jobStatus')">
+                              Job
+                              Status is required
+                            </div> 
+                          </div>
+                          <div class="col-6">
+                            <ng-container>
+                              <button type="submit" (click)="updateJob('updateJob')"
+                                style="position: absolute;right:85%;"
+                                [ngStyle]=" {'width':isLoading$ == true ? '32%':'25%'}"
+                                class="btn btn-custom btn-elevate">Update
+                                <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span>
+                              </button>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Item Type: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.itemType}}</label>
+                              <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Brand: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.brand}}</label>
+                              <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Serial No: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.serialNo}}</label>
+                              <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Password: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.password}}</label>
+
+                              <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                            </div>
+                          </div>
+                          <!-- <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Barcode: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.barcode}}</label>  
+                            </div>
+                          </div> -->
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Booked By: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.bookedBy}}</label>
+                              <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Assigned To: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.assignedTo}}</label>
+                              <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label for=""><strong>Repair Description</strong></label>
+                              <textarea class="form-control form-control-lg " name="repairDescription" disabled
+                                placeholder="Enter a description of the repair, or details of the problem"
+                                autocomplete="off" formControlName="repairDescription" cols="8" rows="3"></textarea>
+                            </div>
+
+                          </div>
+                          <div class="col-6">
+                            <div class="form-group">
+                              <label for=""><strong>Repair Comment</strong></label>
+                              <textarea class="form-control form-control-lg  " name="itemComment" disabled
+                                placeholder="Any comments relating the item (e.g the battery does not  last long)."
+                                autocomplete="off" formControlName="itemComment" cols="8" rows="3"></textarea>
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="col-6">
+
+                        <div class="row">
+                          <div class="col-7">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Model: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.modelNo}}</label> 
+
+                            </div>
+                          </div>
+                          <div class="col-5">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Warranty: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label" *ngIf="jobObj.underWarranty == 'true'else no">Yes</label>
+                              <ng-template #no>
+                                <label class="form-label">No</label> 
+                              </ng-template> 
+
+                            </div>
+                         
+                          </div>
+                       
+
+                        </div>
+                        <div class="row">
+                          <div class="col-7">
+                            <div class="form-group"> 
+                              <label class="form-label"><strong>Accompanying Items: </strong></label>
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.accompanying}}</label>  
+                            </div>
+                          </div>
+                          <div class="col-5">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Completed Date: </strong></label>
+                              &nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.completedDate | date: 'dd/MM/yyyy'}}</label> 
+                            </div> 
+                          </div>
+                        </div> 
+                        <div class="row">
+                          <div class="col-12"> 
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-7">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Storage Location: </strong></label>
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.storageLocation}}</label> 
+
+                            </div>
+                         
+                          
+                            <div class="row">
+                              <div class="col-12">
+
+                                <div class="form-group ">
+                                  <label class="form-label"><strong>Damage Assesment: </strong></label>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;
+
+                                  <textarea class="form-control form-control-lg  " name="damageAsses" disabled
+                                    placeholder="Make a  note of any damage NOT related to the repair here (e.g scratch on the case)."
+                                    autocomplete="off" formControlName="damageAsses" cols="8" rows="3"></textarea>
+
+                                </div>
+                              </div> 
+                            </div>
+                          </div>  
+                          <div class="col-5">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Est Completion Date: </strong></label> 
+                              <label class="form-label">{{jobObj.estDate | date: 'dd/MM/yyyy'}}</label> 
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label> <strong> Additional notes </strong></label>
+                            <angular-editor formControlName="additionalNotes" name="additionalNotes" [config]="config">
+                            </angular-editor>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label> <strong> Technician notes </strong></label>
+                            <angular-editor formControlName="technicianNotes" name="technicianNotes" [config]="config">
+                            </angular-editor>
+
+                          </div>
+                        </div>
+                      </div> 
+                   </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <label for="" class="form-label h5">Disclaimer</label>
+                    <div class="view-container">
+                      <p id="dis" [innerHtml]="disclaimer.disclaimer"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <!-- <div class="card">
+                    <div class="card-body"> -->
+                  <div class="modal-header  " style="padding:1%; ">
+                    <div class="modal-title h3 " id="example-modal-sizes-title-lg">
+
+                      <span>Job Attachments</span>
+
+                    </div>
+                  </div>
+                  <div class="row">
+
+                    <!-- <div class="col-6">
+                              <span>Job Attachments</span>
+                            </div>
+                            <div class="col-6"> 
+                              <div class="row">
+                                <div class="col-8">
+                                  <label for="file-upload" class="custom-file-upload">
+                                    <i class="fa fa-camera" aria-hidden="true"> </i>
+                                    Add Attachment
+                                  </label>
+                                   <input id="file-upload" type="file" ng2FileSelect [uploader]="uploader"
+                                    (change)="onSelect()" multiple /> 
+                                </div>
+                                <div class="col-4">
+                                  <div>
+                                    <a tooltip="Remove from queue" (click)="uploader.clearQueue()">
+                                      <i class="fa fa-trash"> Clear All</i>
+                                    </a>
+                                     </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-12">
+                                  {{fileObj.name}}
+                                </div>
+                              </div>
+                            </div> -->
+                  </div>
+                  <!-- <div class="row">
+                            <div class="col-md-12"> 
+                              <div class="table-responsive angular-bootstrap-table">
+                                <table class="table table-head-custom table-vertical-center overflow-hidden">
+                                   <thead>
+                                    <tr>
+                                      <th class="text-left">Name</th>
+                                      <th class="text-right">Size</th>
+                                      <th class="text-right">Actions</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let item of uploader.queue">
+                                      <td>{{ item?.file?.name }}</td>
+                                      <td class="text-right">{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td> 
+                                      <td class="text-right"> 
+                                        <a tooltip="Remove from queue" (click)="item.remove()">
+                                          <i class="fa fa-trash"></i>
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table> 
+                              </div>
+                            </div> 
+                          </div> -->
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-3" *ngFor="let attachment of attachmentList;index as i">
+                          <!-- <div class="col-12"> -->
+
+                          <div class="row" style="margin-top: 15px;">
+                            <div class="img-wrap">
+                              <!-- <span class="close" (click)="editDeleteattachment(attachment)">&times;</span> -->
+
+                              <img height="200px" width="200px" [src]="attachment.data.src" [lightbox]="i"
+                                alt="Place image title" *ngIf="isImageLoading != false;">
+                            </div>
+                          </div>
+                          <div class="clearfix"></div>
+
+                          <!-- </div> -->
+                        </div>
+                        <div class="clearfix"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="modal-footer">
+                <ng-container>
+                  <button type="submit" (click)="updateJob('updateJob')"
+                    [ngStyle]=" {'width':isLoading$ == true ? '10%':'7%'}" class="btn btn-custom btn-elevate">Update
+                    <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 10%;"></span>
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Repair Details">
+          <div class="card">
+            <div class="card-body">
+              <div class="demo-tab-content">
+                <div class="modal-header cust-color" style="padding:1%; ">
+                  <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+
+                    <span style="color:aliceblue; text-align: justify;"> Repair Details</span>
+
+                  </div>
+                </div>
+                <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <div class="row">
+                              <div class="col-10" style="padding-left: 5%;">
+                                <div class="table-responsive angular-bootstrap-table">
+                                  <table class="table table-head-custom table-vertical-center">
+                                    <thead>
+                                      <th>
+                                        NAME
+                                      </th>
+                                      <th>
+                                        PRICE
+                                      </th>
+                                      <th>
+                                        QUANTITY
+                                      </th>
+                                      <!-- <th>ACTIONS</th> -->
+                                    </thead>
+                                    <tbody>
+                                      <tr
+                                        *ngFor="let item of dataList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
+
+                                        <td>{{item.name}}</td>
+                                        <td style=" padding-top: 2%; width: 30%;">
+
+                                          <div class="input-group">
+                                            <!-- <input type="number" class="form-control" (input)="priceVal=$event.target.value"
+                                              [(value)]="item.price" (keyup.enter)="editPrice(item,$event.target.value)"
+                                              [disabled]="indexOfelement != editMode" [name]="item.price"> -->
+                                            <label class="form-label"> £{{item.price}}</label>
+
+                                            <!-- <span class="">
+                                              <div class="col-sm-8" *ngIf="indexOfelement != editMode">
+                                                <button class="btn btn-default"
+                                                  (click)="editModeCheck(i,indexOfelement,item)">
+                                                  <span class="material-icons">
+                                                    create
+                                                  </span>
+                                                </button>
+                                              </div>
+                                              <div class="col-sm-4" *ngIf="indexOfelement == editMode">
+                                                <button class="btn btn-default"
+                                                  (click)="editModeSave(i,indexOfelement,item)">
+                                                  <span class="material-icons">
+                                                    done
+                                                  </span>
+                                                </button>
+                                              </div>
+                                            </span> -->
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div class="cust-div" *ngIf="item.service !=1;else service">
+                                            <!-- <span [hidden]="item.quantity <= 1" (click)="decrement(item)"
+                                                      class="minus "><i class="fa fa-minus cust-minus"
+                                                        aria-hidden="true"></i></span> -->
+                                            <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" /> -->
+                                            <!-- <span (click)="increment(item,i)" class="plus "><i
+                                                        class="fa fa-plus cust-plus"></i></span> -->
+                                            <label class="form-label"> {{item.quantity}}</label>
+                                          </div>
+                                          <ng-template #service>
+                                            <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" />  -->
+                                            <label class="form-label"> {{item.quantity}}</label>
+                                            <!-- <input disabled class="cust-txt" type="text" value="1" /> -->
+                                          </ng-template>
+                                        </td>
+                                        <!-- <td> 
+                                          <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                            (click)="deleteData(item)">
+                                            <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                              class="svg-icon svg-icon-md svg-icon-danger">
+                                            </span>
+                                          </a>
+                                        </td> -->
+                                      </tr>
+                                      <tr *ngFor="let product of dataList1 | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index"> 
+                                        <!-- <td *ngIf="product.productID == null && product.serviceID == null">{{ product.name }}</td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null">£{{ product.price }}</td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null">{{ product.quantity }}</td>
+    
+                                        <td  *ngIf="product.productID == null && product.serviceID == null">
+                                          <a title="Edit Product"
+                                            class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                            (click)="editProductManualModal(product)">
+                                            <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                              cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                                            </span>
+                                          </a>
+    
+                                          <a title="Delete Product" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                            (click)="editDeletemodalManual(product)">
+                                            <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                              cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                                            </span>
+                                          </a>
+                                        </td> -->
+                                        <td *ngIf="product.productID == null && product.serviceID == null">{{product.name}}
+    
+                                        </td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null" style=" padding-top: 2%; width: 30%;">
+    
+                                          <div class="input-group">
+                                            <label class="form-label"> £{{product.price}}</label>
+                                          </div>
+                                        </td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null">
+                                          <div class="cust-div"  >
+                                            <label class="form-label"> {{product.quantity}}</label>
+                                          </div>
+                                       
+                                        </td>
+                       
+                                      </tr>
+                                    </tbody>
+                                    <tfoot *ngIf="dataList.length > 5  || dataList1.length > 5">
+                                      <pagination-controls (pageChange)="p = $event"
+                                        class="d-flex justify-content-between align-items-center flex-wrap">
+                                      </pagination-controls>
+                                    </tfoot>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Invoice Details" *ngIf="isInvoice != false">
+          <ng-container *ngIf="isMailSent">
+            <div class="progress progress-modal">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </ng-container>
+          <div class="row">
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-6">
+
+                </div>
+                <div class="col-3" style="padding: 1%;">
+                  <button type="button" (click)="sendMail()" class="btn btn-sm btn-primary  ">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Mail.svg'" cacheSVG="true"
+                      class="svg-icon svg-icon-md ">
+                    </span> Email Invoice
+                  </button>
+                </div>
+                <div class="col-3" style="padding: 1%;">
+                  <button type="button" (click)="generateInvoice()" class="btn btn-sm btn-primary  ">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
+                      class="svg-icon svg-icon-md ">
+                    </span> Generate Invoice
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- <div class="row"  >
+            <div class="col-10">
+
+            </div>
+            <div class="col-2" style="padding: 1%;">
+              <button type="button" (click)="sendMail()" class="btn btn-sm btn-primary  ">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Mail.svg'" cacheSVG="true"
+                class="svg-icon svg-icon-md ">
+              </span> Email Invoice
+              </button> 
+            </div>
+          </div> -->
+          <div class="demo-tab-content">
+            <div class="col-12">
+              <br>
+              <div class="modal-header cust-color" style="padding:1%; ">
+                <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+                  <span style="color:aliceblue; text-align: justify;"> Invoice Details</span>
+                </div>
+              </div>
+              <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label h3"><strong>Invoice: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                          <label class="form-label h3">{{invoiceData.invoiceID}} </label>
+                          <!-- <div class="form-group ">
+                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
+                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
+                            </div> -->
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="row">
+                      <div class="col-5">
+                        <label for=""><strong>Payment Status:</strong></label>
+                        <!-- <b> {{invoiceData.paymentStatus}}</b> -->
+                      </div>
+                      <div class="col-4">
+                        <span *ngFor="let statusVal of jobStatusList">
+                          <p *ngIf="statusVal.statusType ===  invoiceData.paymentStatus ">
+                            <span [ngStyle]="{'color':statusVal.statusColor}"
+                              style="text-transform: capitalize; padding: 5px; border-radius: 10px;">
+                              <b> {{invoiceData.paymentStatus}}</b>
+                            </span>
+                          </p>
+                        </span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-md-3">
+                    <div class="form-group">
+                      <label for="" class="h5"><strong>Invoice To:</strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                      <label class="form-label h5 "> {{invoiceData.invoiceTo}} </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-md-4">
+                    <div class="view-container">
+                      <div class="form-group row">
+                        <div class="col-12">
+                          <label class="form-label h6"><strong>Invoice Date: </strong></label>
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                          <!-- </div>
+                        <div class="col-7"> -->
+                          <!-- <input type="date" class="form-control form-label " autocomplete="off"
+                            [ngModel]="invoiceData.invoiceDate | date:'y-MM-dd'" name="invoiceDate"
+                            formControlName="invoiceDate" /> -->
+
+                          <mat-form-field class="col-12">
+                            <input matInput [matDatepicker]="picker1" [ngModel]="invoiceData.invoiceDate"
+                              formControlName="invoiceDate" name="invoiceDate" [min]="minDate"
+                              placeholder="Choose a date">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-12">
+                          <label class="form-label h6"><strong>Due Date: </strong></label>
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                          <!-- </div>
+                        <div class="col-7"> -->
+                          <!-- <input type="date" class="form-control form-label" name="dueDate" formControlName="dueDate"
+                            autocomplete="off" [ngModel]="invoiceData.dueDate | date:'y-MM-dd'" /> -->
+                          <mat-form-field class="col-12">
+                            <input matInput [matDatepicker]="picker2" [ngModel]="invoiceData.dueDate"
+                              formControlName="dueDate" name="dueDate" [min]="minDate" placeholder="Choose a date">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12 col-md-4">
+                    <div class="view-container">
+                      <div class="form-group row">
+                        <div class="col-12" style="margin-bottom: -10%;">
+                          <!-- <div class="card">
+                          <div class="card-body"> -->
+                          <label for="" class=" sidebar-title-nmt h5"><strong>Contact Details</strong></label>
+                          <hr>
+                          <ul style="list-style-type:none; padding: 1%;">
+                            <div class="inputWithIcon">  
+                            <div class="inputWithIcon">
+                              <div class="form-group ">
+                                <input type="text" class="cust-contact form-control" placeholder="Enter Email" [class.is-invalid]="jobControlInvalid('customerEmail')" name="customerEmail" formControlName="customerEmail" [(ngModel)]="jobObj.customerEmail">
+                                <i class="fa fa-envelope fa-lg fa-fw" aria-hidden="true"></i>
+                                </div>
+                                <p style="color: red;" *ngIf="jobcontrolHasError('email', 'customerEmail')">Email format is
+                                    incorrect</p>
+                            </div>
+                            
+                            <div class="inputWithIcon">
+                              <div class="form-group ">
+                                <input type="text" class="cust-contact form-control" placeholder="Enter Phone Number" [class.is-invalid]="jobControlInvalid('customerContact')" (keypress)="keyPress($event)" pattern="^((\\+0?)|0)?[0-9]{10}$" maxlength=11 minlength=11 formControlName="customerContact"   name="customerContact" [(ngModel)]="jobObj.customerContact">
+                                <i class="fa fa-phone fa-lg fa-fw" aria-hidden="true"></i>
+                                </div>
+                                <p style="color: red;" *ngIf="jobcontrolHasError('minlength', 'customerContact')">Contact No
+                                    should have at
+                                    least 11 digits</p>
+                                  <p style="color: red;" *ngIf="jobcontrolHasError('maxLength', 'customerContact')">Contact No
+                                    should have at
+                                    least 11 digits</p>
+                            </div>
+                            <div class="inputWithIcon">
+                                <textarea type="text" class="cust-contact" name="address" [(ngModel)]="jobObj.address" formControlName="address"  placeholder="Enter Address" id="" cols="48" rows="4"></textarea>
+                            </div>
+                        
+                            </div>
+                            <!-- <li>-{{invoiceData.address}}</li>
+                            <li>-{{invoiceData.customerEmail}}</li>
+                            <li>-{{invoiceData.customerContact}}</li> -->
+                        </ul>
+                        </div>
+                        <!-- </div>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-md-4">
+                    <div class="view-container">
+                      <div class="form-group">
+                        <!-- <div class="card">
+                          <div class="card-body"> -->
+                        <label for="" class=" h5"><strong>Job Details</strong></label>
+                        <hr>
+                        <div class="row">
+                          <div class="col-4">
+                            <b>Job ID:-</b>
+                            <br>
+                            <b>Item Type:-</b>
+                            <br>
+                            <b>Brand:-</b>
+                            <br>
+                            <b>Serial No:-</b>
+                          </div>
+                          <div class="col-8">
+                            {{jobObj.id}}
+                            <br>
+                            {{jobObj.itemType}}
+                            <br>
+                            {{jobObj.brand}}
+                            <br>
+                            {{jobObj.serialNo}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- </div>
+                      </div> -->
+                  </div>
+                </div>
+
+              </div>
+              <div class="demo-tab-content">
+                <div class="modal-header cust-color" style="padding:1%; ">
+                  <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+
+                    <span style="color:aliceblue; text-align: justify;"> Invoice Items</span>
+
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-10" style="padding-left: 5%;">
+                            <div class="table-responsive angular-bootstrap-table">
+                              <table class="table table-head-custom table-vertical-center">
+                                <thead>
+                                  <th>
+                                    NAME
+                                  </th>
+                                 
+                                  <th>
+                                    QUANTITY
+                                  </th>
+                                   <th>
+                                 UNIT PRICE
+                                  </th>
+                                   <th>
+                                TOTAL PRICE
+                              </th>
+                                  <!-- <th>ACTIONS</th> -->
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    *ngFor="let item of dataList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
+
+                                    <td>{{item.name}}</td>
+                                    <td>
+                                      <div class="cust-div" *ngIf="item.service !=1;else service">
+                                        <!-- <span [hidden]="item.quantity <= 1" (click)="decrement(item)"
+                                                  class="minus "><i class="fa fa-minus cust-minus"
+                                                    aria-hidden="true"></i></span> -->
+                                        <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" /> -->
+                                        <!-- <span (click)="increment(item,i)" class="plus "><i
+                                                    class="fa fa-plus cust-plus"></i></span> -->
+                                        <label class="form-label"> {{item.quantity}}</label>
+                                      </div>
+                                      <ng-template #service>
+                                        <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" />  -->
+                                        <label class="form-label"> {{item.quantity}}</label>
+                                        <!-- <input disabled class="cust-txt" type="text" value="1" /> -->
+                                      </ng-template>
+                                    </td>
+                                    <td *ngIf="item.unitPrice!=null && item.unitPrice!=undefined;else showPrice">
+                                      £{{item.unitPrice}}</td>
+                                    <ng-template #showPrice>
+                                      <td style=" padding-top: 2%; width: 30%;">
+                                        <div class="input-group">
+                                          <label class="form-label"> £{{item.price}}</label>
+                                        </div>
+                                      </td>
+                                    </ng-template>
+                                    <td style=" padding-top: 2%; width: 30%;">
+
+                                      <div class="input-group">
+                                        <!-- <input type="number" class="form-control" (input)="priceVal=$event.target.value"
+                                          [(value)]="item.price" (keyup.enter)="editPrice(item,$event.target.value)"
+                                          [disabled]="indexOfelement != editMode" [name]="item.price"> -->
+                                        <label class="form-label"> £{{item.price}}</label>
+
+                                        <!-- <span class="">
+                                          <div class="col-sm-8" *ngIf="indexOfelement != editMode">
+                                            <button class="btn btn-default"
+                                              (click)="editModeCheck(i,indexOfelement,item)">
+                                              <span class="material-icons">
+                                                create
+                                              </span>
+                                            </button>
+                                          </div>
+                                          <div class="col-sm-4" *ngIf="indexOfelement == editMode">
+                                            <button class="btn btn-default"
+                                              (click)="editModeSave(i,indexOfelement,item)">
+                                              <span class="material-icons">
+                                                done
+                                              </span>
+                                            </button>
+                                          </div>
+                                        </span> -->
+                                      </div>
+                                    </td>
+                                   
+                                    <!-- <td>
+
+                                      <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                        (click)="deleteData(item)">
+                                        <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                          class="svg-icon svg-icon-md svg-icon-danger">
+                                        </span>
+                                      </a>
+                                    </td> -->
+                                  </tr>
+                                  <tr *ngFor="let item of dataList1">
+                                    <td>{{item.name}}</td>
+                                    <td>
+                                      <div class="cust-div">
+                                        <label class="form-label"> {{item.quantity}}</label>
+                                      </div>
+                                    </td>
+                                    <td *ngIf="item.unitPrice!=null && item.unitPrice!=undefined;else showPrice1">
+                                      £{{item.unitPrice}}</td>
+                                    <ng-template #showPrice1>
+                                      <td style=" padding-top: 2%; width: 30%;">
+                                        <div class="input-group">
+                                          <label class="form-label"> £{{item.price}}</label>
+                                        </div>
+                                      </td>
+                                    </ng-template> 
+                                    <td style=" padding-top: 2%; width: 30%;">
+                                      <div class="input-group">
+                                        <label class="form-label"> £{{item.price}}</label>
+                                      </div>
+                                    </td>
+                                    <!-- <td> 
+                                    <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                      (click)="deleteData(item)">
+                                      <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                        class="svg-icon svg-icon-md svg-icon-danger">
+                                      </span>
+                                    </a>
+                                  </td> -->
+                                  </tr>
+                                </tbody>
+                                <tfoot *ngIf="dataList.length > 5 || dataList1.length > 5">
+                                  <pagination-controls (pageChange)="p = $event"
+                                    class="d-flex justify-content-between align-items-center flex-wrap">
+                                  </pagination-controls>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="demo-tab-content">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-6">
+                      <!-- <div class="form-group "  >
+                      <label class="form-label"><strong> Payment Details</strong></label> 
+                        <textarea class="form-control form-control-lg " name="payemntDetails"
+                        placeholder="Make a  note of any damage NOT related to the repair here (e.g scratch on the case)."
+                        autocomplete="off"
+                        formControlName="payemntDetails" cols="8" rows="5"></textarea>
+                    </div> -->
+
+                      <!-- <div class="view-container"> -->
+                      <div class="form-group row">
+                        <div class="col-8">
+                          <!-- <div class="card">
+                          <div class="card-body"> -->
+                          <label for="" class=" sidebar-title-nmt h6"><strong>Payment Details</strong></label>
+                          <textarea class="form-control form-control-lg " name="paymentDetails"
+                            placeholder="Enter Payment Details." autocomplete="off" formControlName="paymentDetails"
+                            cols="8" rows="5"></textarea>
+                        </div>
+                        <!-- </div>
+                        </div> -->
+                      </div>
+                      <!-- </div> -->
+                    </div>
+                    <div class="col-6">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-group" style="display: inline;">
+                            <label class="form-label"><strong>Sub-Total Price </strong></label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                              </div>
+                              <input type="number" class="form-control" name="price" formControlName="price" disabled
+                                aria-label="price" aria-describedby="basic-addon1">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group" style="display: inline;">
+                            <label class="form-label"><strong>Discount Total </strong></label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                              </div>
+                              <input type="number" (keyup)="keyFunc($event)" class="form-control" name="discount"
+                                formControlName="discount" aria-label="price" [(ngModel)]="invoiceData.discount"
+                                aria-describedby="basic-addon1">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="row">
+                  
+                    </div> -->
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-group" style="display: inline;">
+                            <label class="form-label"><strong>Invoice Total </strong></label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                              </div>
+                              <input type="number" class="form-control" name="totalPrice" formControlName="totalPrice"
+                                disabled aria-label="price" aria-describedby="basic-addon1">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group" style="display: inline;">
+                            <label class="form-label"><strong>Total Paid </strong></label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                              </div>
+                              <input type="number" class="form-control" name="deposit" formControlName="deposit"
+                                disabled aria-label="price" [(ngModel)]="jobObj.deposit"
+                                aria-describedby="basic-addon1">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="row">
+                   
+                    </div> -->
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-group" style="display: inline;">
+                            <label class="form-label"><strong>Total Due </strong></label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                              </div>
+                              <input type="number" class="form-control" name="pendingPrice"
+                                formControlName="pendingPrice" disabled aria-label="price"
+                                aria-describedby="basic-addon1">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6" *ngIf="invoiceData.extraDeposit !=null && invoiceData.extraDeposit !=0">
+                          <div class="form-group" style="display: inline;">
+                            <label class="form-label"><strong>Extra Deposit </strong></label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text cust-groupbox" id="basic-addon1">£</span>
+                              </div>
+                              <input type="number" class="form-control" name="extraDeposit"
+                                formControlName="extraDeposit" disabled aria-label="price"
+                                aria-describedby="basic-addon1">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="demo-tab-content">
+                <!-- <div class="modal-header cust-color" style="padding:1%; ">
+                  <div class="modal-title h3 " style="margin: 0 auto;" id="example-modal-sizes-title-lg">
+                    <span style="color:aliceblue; text-align: justify;"> Invoice Payments</span>
+                  </div>
+                </div> -->
+                <div class="card-header">
+                  <div class="card-title">
+                    <h3 class="card-label">Invoice Payments</h3>
+                  </div>
+                  <div class="card-title" *ngIf=" invoiceData.paymentStatus != 'completed'">
+                    <div class=" row">
+
+                      <div class="col-5">
+                        <div class="card-toolbar">
+                          <button type="button" class="btn btn-primary" (click)="editPaymentModal()">+ Add
+                            Payment</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-10" style="padding-left: 5%;">
+                            <div class="table-responsive angular-bootstrap-table">
+                              <table class="table table-head-custom table-vertical-center">
+                                <thead>
+                                  <th>
+                                    DATE
+                                  </th>
+                                  <th>
+                                    ADDED BY
+                                  </th>
+                                  <th>
+                                    PAYMENT TYPE
+                                  </th>
+                                  <th>
+                                    PAYMENT REFERENCE
+                                  </th>
+                                  <th>
+                                    PAYMENT AMOUNT
+                                  </th>
+                                  <!-- <th>ACTIONS</th> -->
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    *ngFor="let item of paymentList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
+
+                                    <td>{{item.createdDate | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{item.addedBy}}</td>
+                                    <td>{{item.paymentType}}</td>
+                                    <td>{{item.paymentReference}}</td>
+                                    <td>£{{item.amount}}</td>
+
+                                    <!-- <td >
+                                   
+                                    <a title="Delete Job" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="editDeleteJob(job)">
+                                      <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                        class="svg-icon svg-icon-md svg-icon-danger">
+                                      </span>
+                                    </a>
+                                  </td> -->
+
+                                    <a title="Edit Payment" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                      (click)="editPayment(item)">
+                                      <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                        cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                                      </span>
+                                    </a>
+                                  </tr>
+                                </tbody>
+                                <tfoot *ngIf="paymentList.length > 5">
+                                  <pagination-controls (pageChange)="p = $event"
+                                    class="d-flex justify-content-between align-items-center flex-wrap">
+                                  </pagination-controls>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <ng-container>
+                  <button type="submit" (click)="updateInvoice(1)"
+                    [ngStyle]=" {'width':isLoading$ == true ? '10%':'7%'}" class="btn btn-custom btn-elevate">Update
+                    <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 10%;"></span>
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="demo-tab-content" *ngIf="isJobShow == true">
+  <div class="card">
+    <div class="card-body">
+      <div class="modal-header">
+        <div class="modal-title h4" id="example-modal-sizes-title-lg">
+          <!-- <ng-container *ngIf="customer">
+          <ng-container *ngIf="customer.id">Edit</ng-container>
+          <ng-container *ngIf="!customer.id">Create</ng-container>
+       
+          <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+        </ng-container> -->
+          Add More Products
+        </div>
+      </div>
+      <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+        <!-- <ng-container *ngIf="isLoading$ | async">
+        <div class="overlay-layer bg-transparent">
+          <div class="spinner spinner-lg spinner-success"></div>
+        </div>
+      </ng-container> -->
+        <ng-container>
+          <form action="#" class="form form-label-right" [formGroup]="repairAssignForm">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group cust-height">
+                  <label class="form-label">Select Product </label>
+                  <div class="row">
+                    <div class="col-6">
+                      <!-- <div class="form-control form-control-lg">   -->
+                      <mat-form-field>
+                        <mat-select (selectionChange)="selectProduct($event.value)"
+                          [class.is-invalid]="repairassignControlInvalid('name')" formControlName="name" name="name"
+                          placeholder="Select Product" [(ngModel)]="jobObj.product">
+                          <mat-option>
+                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl" [searching]="searching">
+                            </ngx-mat-select-search>
+                          </mat-option>
+                          <mat-option *ngFor="let pro of filteredProductMulti | async" [value]="pro.product">
+                            {{pro.product}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- </div> -->
+                      <div class="invalid-feedback" *ngIf="repairassigncontrolHasError('required', 'name')">Product name
+                        is
+                        required
+                      </div>
+
+                    </div>
+                    <div class="col-6">
+                      <button type="button" tooltip="Add Product " placement="top" show-delay="100"
+                        (click)="editProductModal()" style="padding: 12px;" class="btn btn-sm btn-primary"><i
+                          class="fa fa-plus" aria-hidden="true"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="row">
+                  <div class="form-group cust-height">
+                    <label class="form-label">Assigned To </label>
+                    <div class="row">
+                      <div class="col-12">
+                        <mat-form-field>
+                          <mat-select (selectionChange)="selectAssignTo($event.value)" formControlName="assignedTo"
+                            name="assignedTo" [class.is-invalid]="repairassignControlInvalid('assignedTo')"
+                            placeholder="Choose a staff member to assign this job to">
+                            <mat-option>
+                              <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="assignToMultiFilterCtrl" [searching]="searching">
+                              </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let assign of filteredassignToMulti | async" [value]="assign.assignTo">
+                              {{assign.assignTo}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <div class="invalid-feedback" *ngIf="repairassigncontrolHasError('required', 'assignedTo')">
+                          Assign is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group cust-height" style="display: inline;">
+                  <label class="form-label"> Price</label>
+                  <div class="row">
+                    <div class="col-6">
+                      <input type="number" class="form-control form-control-lg form-control-solid " name="price"
+                        placeholder="Enter Price" autocomplete="off"
+                        [class.is-invalid]="repairassignControlInvalid('price')" formControlName="price" required />
+                      <div class="invalid-feedback" *ngIf="repairassigncontrolHasError('required', 'price')">Price is
+                        required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group cust-height" style="display: inline;">
+                  <label class="form-label"> Quantity</label>
+                  <div class="row">
+                    <div class="col-6">
+                      <input type="number" class="form-control" name="quantity" formControlName="quantity" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-light btn-elevate mr-2"
+          (click)="closeAddRepariAssignModal()">Cancel</button>
+
+        <ng-container>
+          <button type="submit" (click)="addRepairAssignment()" [ngStyle]=" {'width':isLoading$ == true ? '15%':'8%'}"
+            class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+              style="margin: 15%;"></span>
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Repair Information Modal -->
+
+<ng-template #openRepairItem let-modal>
+
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+
+      <span style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update Repair Information</span>
+
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+          <div class="overlay-layer bg-transparent">
+            <div class="spinner spinner-lg spinner-success"></div>
+          </div>
+        </ng-container>-->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="itemRepairForm">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="form-group cust-height">
+                <label class="form-label">Storage Location </label>
+                <mat-form-field class="col-12">
+                  <mat-select (selectionChange)="selectStorageLocation($event.value)"
+                    [class.is-invalid]="repairControlInvalid('storageLocation')" formControlName="storageLocation"
+                    name="storageLocation" placeholder="Select Location">
+                    <mat-option>
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="LocationMultiFilterCtrl" [searching]="searching">
+                      </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let location of filteredLocationMulti | async"
+                      [value]="location.storageLocation">
+                      {{location.storageLocation}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="invalid-feedback" *ngIf="repaircontrolHasError('required', 'storageLocation')">
+                  StorageLocation is
+                  required
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-6">
+            <div class="form-group cust-height">
+              <div class="row">
+                <div class="col-10">
+                  <label class="form-label">Barcode</label>
+                  <input type="text" class="form-control form-control-lg form-control-solid" name="barcode"
+                    placeholder="Enter a custom barcode here if required" autocomplete="off"
+                    formControlName="barcode" />
+                  <div class="invalid-feedback" *ngIf="isCustomerSelectcontrolHasError('required', 'serialNo')">SerialNo is
+                  required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group cust-height">
+              <label> Repair Description</label>
+              <textarea class="form-control form-control-lg " name="repairDescription"
+                placeholder="Enter a description of the repair, or details of the problem" autocomplete="off"
+                formControlName="repairDescription" cols="8" rows="5"></textarea>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group cust-height" style="display: inline;">
+              <label class="form-label"> Deposit</label>
+              <input type="number" class="form-control" name="deposit" formControlName="deposit">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeUpdateJob()">Cancel</button>
+          <!-- <ng-container>
+            <button type="submit" (click)="updateRepairInfo()" [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Update <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+          </ng-container> -->
+        </div>
+      </form>
+    </ng-container>
+  </div> 
+</ng-template> 
+<!-- Confirm Box -->
+<ng-template #confrimBox let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+    </div>
+  </div>
+
+  <div class="modal-body">
+    <ng-container>
+      <h4>Are you sure to delete this job?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <!-- <ng-container>
+      <div class="text-center">
+        <button class="btn btn-danger" (click)="deleteJob()" data-entity="user" id="userDeleteButton"><span
+            class="fa fa-trash"></span> Delete</button>
+      </div>
+      <button type="button" (click)="closeDeleteJob()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container> -->
+
+    <ng-container>
+
+      <button class="btn btn-danger" [ngStyle]=" {'width':isLoading$ == true ? '25%':'20%'}" (click)="deleteJob()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isLoading$ == true}" style="margin: 10%;"></span></button>
+
+      <button type="button" (click)="closeDeleteJob()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+
+</ng-template>
+
+<!-- Confirm Box -->
+
+<!-- Product Modal -->
+
+<ng-template #productopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+        <ng-container *ngIf="customer.id">Edit</ng-container>
+        <ng-container *ngIf="!customer.id">Create</ng-container>
+     
+        <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+      </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Product</span>
+
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 340px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+     <div class="overlay-layer bg-transparent">
+       <div class="spinner spinner-lg spinner-success"></div>
+     </div>
+   </ng-container>  -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="productGroup">
+
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Product Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="productName"
+              placeholder="Enter Product Name" autocomplete="off"
+              [class.is-invalid]="isProductControlInvalid('productName')" formControlName="productName" required />
+            <div class="invalid-feedback" *ngIf="ProductcontrolHasError('required', 'productName')">Product Name is
+              required</div>
+
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Sell Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="sellPrice"
+              placeholder="Enter Sell Price" [class.is-invalid]="isProductControlInvalid('sellPrice')"
+              formControlName="productName" autocomplete="off" formControlName="sellPrice" />
+            <div class="invalid-feedback" *ngIf="ProductcontrolHasError('required', 'sellPrice')">Sell Price is
+              required</div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Cost Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="costPrice"
+              placeholder="Enter Cost Price" autocomplete="off" formControlName="costPrice" />
+          </div>
+        </div>
+
+        <!-- <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <label class="form-label"> Quantity</label>
+            <input type="number" class="form-control form-control-lg form-control-solid" name="quantity"
+              placeholder="Enter Quantity" autocomplete="off" formControlName="quantity" />
+          </div>
+        </div> -->
+
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeProductModal()">Cancel</button>
+
+    <ng-container>
+      <button type="submit" (click)="addProduct()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+        class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+          style="margin: 17%;"></span></button>
+    </ng-container>
+  </div>
+
+</ng-template>
+
+<!-- Product Modal -->
+
+
+<!-- Add Accompanying Item Modal -->
+<ng-template #acItemopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+       <ng-container *ngIf="customer.id">Edit</ng-container>
+       <ng-container *ngIf="!customer.id">Create</ng-container>
+    
+       <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+     </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Accompanying Item</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="ACItemsGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Accompanying Item Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="accompanyingName" required
+              placeholder="Enter Accompanying Item Name" autocomplete="off"
+              [class.is-invalid]="isACitemsControlInvalid('accompanyingName')" formControlName="accompanyingName" />
+            <div class="invalid-feedback" *ngIf="isACitemscontrolHasError('required', 'accompanyingName')">Accompanying
+              Item
+              Name is required</div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeACItem()">Cancel</button>
+
+          <ng-container>
+            <button type="submit" (click)="addACItem()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Accompanying Item Modal -->
+
+
+<!-- Add Brand Modal -->
+<ng-template #brandopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+       <ng-container *ngIf="customer.id">Edit</ng-container>
+       <ng-container *ngIf="!customer.id">Create</ng-container>
+    
+       <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+     </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Brand</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="brandGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Brand Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="brandName" required
+              placeholder="Enter Brand Name" autocomplete="off" [class.is-invalid]="isBrandControlInvalid('brandName')"
+              formControlName="brandName" />
+            <div class="invalid-feedback" *ngIf="isBrandcontrolHasError('required', 'brandName')">Brand Name is required
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeBrand()">Cancel</button>
+          <ng-container>
+            <button type="submit" (click)="addBrand()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Brand Modal -->
+
+<!-- Add Item Type Modal -->
+<ng-template #itemopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+       <ng-container *ngIf="customer.id">Edit</ng-container>
+       <ng-container *ngIf="!customer.id">Create</ng-container>
+    
+       <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+     </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Item Type</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="itemTypeGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Item Type</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="itemTypeName" required
+              placeholder="Enter Item Name" autocomplete="off" [class.is-invalid]="isItemControlInvalid('itemTypeName')"
+              formControlName="itemTypeName" />
+            <div class="invalid-feedback" *ngIf="isItemcontrolHasError('required', 'itemTypeName')">Item Name is
+              required</div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeItemTypeModal()">Cancel</button>
+
+          <ng-container>
+            <button type="submit" (click)="addItemType()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Item Type Modal -->
+
+<!-- Add Storage Location Modal -->
+<ng-template #storageopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+             <ng-container *ngIf="customer.id">Edit</ng-container>
+             <ng-container *ngIf="!customer.id">Create</ng-container> 
+             <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+           </ng-container> -->
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Storage</span>
+
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+            <div class="overlay-layer bg-transparent">
+              <div class="spinner spinner-lg spinner-success"></div>
+            </div>
+          </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="locationGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Storage Location</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="storageName" required
+              placeholder="Enter Storage Location" autocomplete="off"
+              [class.is-invalid]="storageLocationSelectControlInvalid('storageName')" formControlName="storageName" />
+            <div class="invalid-feedback" *ngIf="storageLocationSelectcontrolHasError('required', 'storageName')">
+              Storage Location required
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeLocation()">Cancel</button>
+
+          <ng-container>
+            <button type="submit" (click)="addLocation()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Storage Location Modal -->
+
+
+<!-- Add Service Modal -->
+<ng-template #serviceopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+       <ng-container *ngIf="customer.id">Edit</ng-container>
+       <ng-container *ngIf="!customer.id">Create</ng-container>
+    
+       <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+     </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Service</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="ServiceformGroup">
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control form-control-lg form-control-solid" name="serviceName"
+              placeholder="Enter Service Name" autocomplete="off"
+              [class.is-invalid]="isServiceControlInvalid('serviceName')" formControlName="serviceName" required />
+            <div class="invalid-feedback" *ngIf="isServicecontrolHasError('required', 'serviceName')">Name is required
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+          <div class="form-group cust-height">
+            <!-- <p>Please only enter numbers in the estimated time box below, and then select the time type below (e.g. Hours, Days, Weeks etc.)</p> -->
+            <label class="form-label"> Price</label>
+            <input type="number" class="form-control form-control-lg form-control-solid " name="price"
+              placeholder="Enter Price" autocomplete="off" [class.is-invalid]="isServiceControlInvalid('price')"
+              formControlName="price" required />
+            <div class="invalid-feedback" *ngIf="isServicecontrolHasError('required', 'price')">Price is required</div>
+
+          </div>
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeServiceModal()">Cancel</button>
+
+          <ng-container>
+            <button type="submit" (click)="addService()" [ngStyle]=" {'width':isLoading$ == true ? '20%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Service Modal -->
+
+<!-- Confirm Box -->
+<ng-template #confrimSalesBox let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> -->
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+       >Yes</button> -->
+
+
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDelete$ == true ? '25%':'20%'}" (click)="deleteItem()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isDelete$ == true}" style="margin: 10%;"></span></button>
+
+      <button type="button" (click)="closeDeleteItem()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+
+      <div class="text-center">
+        <button class="btn btn-danger" (click)="deleteItem()" data-entity="user" id="userDeleteButton"><span
+            class="fa fa-trash"></span> Delete</button>
+      </div>
+
+      <!-- <button type="submit" (click)="closeDelete()"  class="btn btn-custom btn-elevate"
+           >No</button> -->
+
+      <button type="button" (click)="closeDeleteItem()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->
+
+<!-- Confirm Box -->
+<ng-template #confrimAttachment let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> -->
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+
+  <div class="modal-body">
+    <!-- <ng-container *ngIf="isDeleting">
+       <h4>Product is deleting...</h4>
+      </ng-container> -->
+
+    <ng-container>
+      <h4>Are you sure to delete this Attachment?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <ng-container>
+      <!-- <button type="submit" (click)="deleteUserRole()"  class="btn btn-custom btn-elevate"
+         >Yes</button> -->
+
+      <div class="text-center">
+        <button class="btn btn-danger" (click)="deleteImage()" data-entity="user" id="userDeleteButton"><span
+            class="fa fa-trash"></span> Delete</button>
+      </div>
+
+      <!-- <button type="submit" (click)="closeDelete()"  class="btn btn-custom btn-elevate"
+           >No</button> -->
+
+      <button type="button" (click)="closeDeleteAttachment()" class="btn btn-default"
+        data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->
+
+
+<!-- Confirm Box -->
+<ng-template #confrimInvoice let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+            <ng-container *ngIf="customer.id">Edit</ng-container>
+            <ng-container *ngIf="!customer.id">Create</ng-container>
+         
+            <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+          </ng-container> -->
+      <span class="h4"> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Confirmation</span>
+
+    </div>
+  </div>
+
+
+  <div class="modal-body">
+
+    <ng-container>
+      <h4>Are you sure to Create Invoice for this Job?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <ng-container>
+      <ng-container>
+        <button type="submit" (click)="createInvoice()" [ngStyle]=" {'width':isInvoice$ == true ? '15%':'12%'}"
+          class="btn btn-custom btn-elevate">Yes <span [ngClass]="{spinner:isInvoice$ == true}"
+            style="margin: 17%;"></span></button>
+      </ng-container>
+      <button type="button" (click)="closeinvoice()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->
+
+
+<!-- Add Payment Modal -->
+
+<ng-template #openPaymentModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+          <ng-container *ngIf="customer.id">Edit</ng-container>
+          <ng-container *ngIf="!customer.id">Create</ng-container>
+       
+          <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+        </ng-container> -->
+
+      <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Payment</span>
+      <span *ngIf="isFlag == 2" style="color:aliceblue;"> <i class="fas fa-edit"  aria-hidden="true"></i> Update Payment</span>
+
+    </div>
+  </div>
+  <div class="demo-tab-content">
+    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
+      <!-- <ng-container *ngIf="isLoading$ | async">
+              <div class="overlay-layer bg-transparent">
+                  <div class="spinner spinner-lg spinner-success"></div>
+              </div>
+          </ng-container> -->
+
+      <ng-container>
+        <form action="#" class="form form-label-right" [formGroup]="paymentForm">
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label"><strong> Payment Type </strong></label>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="col-10">
+                      <mat-select (selectionChange)="selectpaymentType($event.value)" formControlName="paymentType"
+                        name="paymentType" [(ngModel)]="paymentObj.paymentType" placeholder="Select Payment Type">
+                        <mat-option>
+                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
+                          </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let item of filteredpaymentTypeMulti | async" [value]="item.paymentType">
+                          {{item.paymentType}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'bookedBy')">
+                              Booked By is required
+                            </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label">Payment Reference</label>
+                <input type="text" class="form-control form-control-lg form-control-solid" name="paymentReference"
+                  placeholder="Enter Payment Reference" autocomplete="off" formControlName="paymentReference" />
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label">Amount Due</label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="dueAmount" disabled
+                  autocomplete="off" formControlName="dueAmount" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group cust-height">
+                <label class="form-label">Payment Amount</label>
+                <input type="number" class="form-control form-control-lg form-control-solid" name="amount"
+                  placeholder="Enter Payment Amount" autocomplete="off"
+                  [class.is-invalid]="PaymentControlInvalid('amount')" formControlName="amount" />
+                <!-- <div class="valid-feedback" *ngIf="isControlValid('jobTitle')">Job Title was entered
+                        correct</div> -->
+                <div class="invalid-feedback" *ngIf="PaymentcontrolHasError('required', 'amount')">Payment Amount
+                  is required</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button>
+
+    <ng-container *ngIf="isFlag == 1" >
+      <button type="submit" (click)="addPayment()" [ngStyle]=" {'width':isPayment$ == true ? '25%':'17%'}"
+        class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isPayment$ == true}"
+          style="margin: 17%;"></span></button>
+
+    </ng-container>
+    <ng-container *ngIf="isFlag == 2" >
+      <button type="submit" (click)="updatePayment()" [ngStyle]=" {'width':isPayment$ == true ? '25%':'17%'}"
+        class="btn btn-custom btn-elevate">Save <span [ngClass]="{spinner:isPayment$ == true}"
+          style="margin: 17%;"></span></button>
+
+    </ng-container>
+  </div>
+
+</ng-template>
+<!--  Add Payment Modal -->

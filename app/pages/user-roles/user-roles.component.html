@@ -1,0 +1,236 @@
+<div class="d-flex align-items-center font-weight-bold my-2 ">
+  <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;"
+      class="flaticon2-gear"></i></span> &nbsp;&nbsp;
+  <a class="navi-text" routerLink="/settings">Back To Settings</a>
+</div>
+
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">User Roles</h3>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-primary" (click)="editModal()">+ Add User Role</button>
+
+    </div>
+  </div>
+  <div class="card-body">
+    <!-- begin: Filtration form -->
+    <!-- <div class="form form-label-right">
+            <div class="form-group row">
+              <div class="col-lg-4">
+                <div class="row" [formGroup]="filterGroup">
+                  <div class="col-lg-6">
+                    <select class="form-control" name="status" placeholder="Filter by Status" formControlName="status">
+                      <option value="">All</option>
+                      <option value="1">Susspended</option>
+                      <option value="2">Active</option>
+                      <option value="3">Pending</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
+                  </div>
+                  <div class="col-lg-6">
+                    <select class="form-control" placeholder="Filter by Type" name="type" formControlName="type">
+                      <option value="">All</option>
+                      <option value="1">Business</option>
+                      <option value="2">Individual</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Type</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2" [formGroup]="searchGroup">
+                <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+                  formControlName="searchTerm" /><small class="form-text text-muted"><b>Search</b> in all fields</small>
+              </div>
+            </div>
+          </div> -->
+    <!-- end: Filtration form -->
+
+    <!-- begin: Grouping -->
+    <!-- <ng-container *ngIf="grouping.getSelectedRowsCount()"> -->
+    <!-- <div class="form">
+              <div class="row align-items-center form-group-actions margin-top-20 margin-bottom-20">
+                <div class="col-xl-12">
+                  <div class="form-group form-group-inline">
+                    <div class="form-label form-label-no-wrap">
+                      <label class="font-bold font-danger"><span>Selected records count:
+                          <b>{{ grouping.getSelectedRowsCount() }}</b></span></label>
+                    </div>
+                    <div>
+                      <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-1"
+                        (click)="deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete All
+                      </button>&nbsp;
+                      <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                        (click)="fetchSelected()">
+                        <i class="fa fa-stream"></i> Fetch Selected
+                      </button>&nbsp;
+                      <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                        (click)="updateStatusForSelected()">
+                        <i class="fa fa-sync-alt"></i> Update Status
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+    <!-- </ng-container> -->
+    <!-- end: Grouping -->
+
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            ID
+          </th>
+          <th>
+            ROLE NAME
+            <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
+            ROLE DESCRIPTION
+          </th>
+
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let userRoles of userRolesService.items$ | async">
+            <td>{{ userRoles.id }}</td>
+            <td>{{ userRoles.roleName }}</td>
+            <td>{{ userRoles.description }}</td>
+            <td>
+
+              <a title="Edit User Role" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                (click)="editUserRole(userRoles)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+
+              <a title="Delete User Role" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="editDelete(userRoles)">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+  </div>
+</div>
+
+
+
+<!-- Add Brand Modal -->
+<ng-template #userroleopenModal let-modal>
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+         <ng-container *ngIf="customer.id">Edit</ng-container>
+         <ng-container *ngIf="!customer.id">Create</ng-container>
+      
+         <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+       </ng-container> -->
+
+      <span style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add User Role</span>
+    </div>
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
+        <div class="overlay-layer bg-transparent">
+          <div class="spinner spinner-lg spinner-success"></div>
+        </div>
+      </ng-container> -->
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="userRoleGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Role Name</label>
+            <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid"
+              name="roleName" required placeholder="Enter Role " autocomplete="off"
+              [class.is-invalid]="isControlInvalid('roleName')" formControlName="roleName" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'roleName')">Role is required
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Role Description</label>
+            <textarea name="description" class="form-control  form-control-solid" cols="5" rows="2"
+              placeholder="Enter Description" formControlName="description"></textarea>
+            <!-- <input type="text" class="form-control form-control-lg form-control-solid" name="roleDescription" required
+                placeholder="Enter Description" autocomplete="off"  formControlName="roleDescription" />  -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeModal()">Cancel</button>
+
+          <ng-container *ngIf="isFlag == 1">
+            <button type="submit" (click)="addRole()" [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+          <ng-container *ngIf="isFlag == 2">
+            <button type="submit" (click)="updateuserRoles()" [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Update <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+
+
+</ng-template>
+<!-- Add Brand Modal -->
+
+<!-- Confirm Box -->
+<ng-template #confrimBox let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
+              <ng-container *ngIf="customer.id">Edit</ng-container>
+              <ng-container *ngIf="!customer.id">Create</ng-container>
+           
+              <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+            </ng-container> -->
+      <span> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+  <div class="modal-body">
+    <!-- <ng-container *ngIf="isDeleting">
+         <h4>Role is deleting...</h4>
+        </ng-container> -->
+
+    <ng-container *ngIf="!isDeleting">
+      <h4>Are you sure to delete this role?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+
+    <ng-container>
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDeleting  == true ? '25%':'20%'}" (click)="deleteUserRole()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isDeleting== true}" style="margin: 10%;"></span></button>
+
+      <button type="button" (click)="closeDelete()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->

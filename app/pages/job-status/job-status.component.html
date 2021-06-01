@@ -1,0 +1,329 @@
+<div class="d-flex align-items-center font-weight-bold my-2 "  >
+  <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;" class="flaticon2-gear"></i></span> &nbsp;&nbsp;
+  <a   class="navi-text" routerLink="/settings">Back To Settings</a > 
+</div>
+<div class="card card-custom gutter-b"  >
+    <div class="card-header">
+      <div class="card-title">
+        <h3 class="card-label">Job Status</h3>
+      </div>
+      <div class="card-toolbar">
+        <button type="button" class="btn btn-primary" (click)="editModal()">+ Add</button>
+  
+      </div>
+      <!-- <div class=" row">
+        <div class="col-8" [formGroup]="searchGroup">
+          <div class="card-toolbar">  
+         
+            <div class="form-group has-search">
+              <span class="fa fa-search form-control-feedback"></span>
+              <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+              formControlName="searchTerm" />
+            </div>
+        </div>
+        </div>
+          <div class="col-4">
+            <div class="card-toolbar">
+              <button type="button" class="btn btn-primary" (click)="editModal()">Add</button>
+        
+            </div>
+          </div> 
+      </div> -->
+    </div>
+    <div class="card-body">
+      <!-- begin: Filtration form -->
+      <div class="form form-label-right">
+            <div class="form-group row">
+              <!-- <div class="col-lg-4">
+                <div class="row"  >
+                  <div class="col-lg-6">
+                    <select class="form-control" name="status" placeholder="Filter by Status"  >
+                      <option value="">All</option>
+                      <option value="1">Susspended</option>
+                      <option value="2">Active</option>
+                      <option value="3">Pending</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
+                  </div>
+                  <div class="col-lg-6">
+                    <select class="form-control" placeholder="Filter by Type" name="type"  >
+                      <option value="">All</option>
+                      <option value="1">Business</option>
+                      <option value="2">Individual</option>
+                    </select><small class="form-text text-muted"><b>Filter</b> by Type</small>
+                  </div>
+                </div>
+              </div> -->
+              <!-- <div class="col-lg-6" style="" [formGroup]="searchGroup">
+                <input type="text" class="form-control" name="searchTerm" placeholder="Search" value=""
+                  formControlName="searchTerm" /><small class="form-text text-muted"><b>Search</b> in all fields</small>
+              </div> -->
+            </div>
+          </div>
+      <!-- end: Filtration form -->
+  
+      <!-- begin: Grouping -->
+      <!-- <ng-container *ngIf="grouping.getSelectedRowsCount()"> -->
+      <!-- <div class="form">
+              <div class="row align-items-center form-group-actions margin-top-20 margin-bottom-20">
+                <div class="col-xl-12">
+                  <div class="form-group form-group-inline">
+                    <div class="form-label form-label-no-wrap">
+                      <label class="font-bold font-danger"><span>Selected records count:
+                          <b>{{ grouping.getSelectedRowsCount() }}</b></span></label>
+                    </div>
+                    <div>
+                      <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-1"
+                        (click)="deleteSelected()">
+                        <i class="fa fa-trash"></i> Delete All
+                      </button>&nbsp;
+                      <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                        (click)="fetchSelected()">
+                        <i class="fa fa-stream"></i> Fetch Selected
+                      </button>&nbsp;
+                      <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                        (click)="updateStatusForSelected()">
+                        <i class="fa fa-sync-alt"></i> Update Status
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+      <!-- </ng-container> -->
+      <!-- end: Grouping -->
+  
+      <!-- begin:Table -->
+      <div class="table-responsive angular-bootstrap-table">
+        <table class="table table-head-custom table-vertical-center overflow-hidden">
+          <thead>
+            <!-- <th class="selection-cell-header" data-row-selection="true">
+                  <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectAllRows()"
+                      [checked]="grouping.checkAreAllRowsSelected()" /><span></span></label>
+                </th> -->
+              <th>
+                ID
+                <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+                      (sort)="sort($event)"></app-sort-icon>
+              </th>
+            <th>
+              STATUS TYPE
+              <app-sort-icon column="statusType" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+                    (sort)="sort($event)"></app-sort-icon>
+            </th>
+            <th>
+                STATUS STAGE
+              <app-sort-icon column="statusStage" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+                    (sort)="sort($event)"></app-sort-icon>
+            </th>
+            <th>
+                STATUS COLOR
+              <!-- <app-sort-icon column="statusColor" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+                    (sort)="sort($event)"></app-sort-icon> -->
+            </th>   
+            <th>ACTIONS</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let jobStatus of jobStatusService.items$ | async">
+                  <!-- <td class="selection-cell">
+                    <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
+                        [checked]="grouping.isRowSelected(customer.id)" />
+                      <span></span>
+                    </label>
+                  </td> -->
+                  <td>{{ jobStatus.id }}</td>
+                  <td style="text-transform: capitalize;">{{ jobStatus.statusType }} </td>
+                  <td style="text-transform: capitalize;">{{ jobStatus.statusStage }}</td>
+                  <td [ngStyle]="{'color':jobStatus.statusColor}">{{ jobStatus.statusColor }}</td> 
+                  <!-- <td>
+                    <span class="label label-lg label-inline" [class.label-light-danger]="customer.status === 1"
+                      [class.label-light-success]="customer.status === 2" [class.label-light-primary]="customer.status === 3">
+                      <ng-container *ngIf="customer.status === 1">Suspended</ng-container>
+                      <ng-container *ngIf="customer.status === 2">Active</ng-container>
+                      <ng-container *ngIf="customer.status === 3">Pending</ng-container>
+                    </span>
+                  </td> -->
+                  <!-- <td>
+                    <span class="label label-dot label-primary mr-2" [class.label-success]="customer.type === 1"
+                      [class.label-primary]="customer.type === 2"></span>&nbsp;<span class="font-bold font-primary">
+                      <ng-container *ngIf="customer.type === 1">Business</ng-container>
+                      <ng-container *ngIf="customer.type === 2">Individual</ng-container>
+                    </span>
+                  </td> -->
+                  <td>
+      
+                    <a title="Edit Job Status" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                      (click)="editJobStatus(jobStatus)">
+                      <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                        class="svg-icon svg-icon-md svg-icon-primary">
+                      </span>
+                    </a>
+      
+                    <a title="Delete Job Status" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                      (click)="editDelete(jobStatus)">
+                      <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                        class="svg-icon svg-icon-md svg-icon-danger">
+                      </span>
+                    </a>
+                  </td>
+                </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- end: Table -->
+      <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+    </div>
+  </div>
+
+
+    <!-- Add Job Status Modal -->
+<ng-template #statusopenModal let-modal>
+    <div class="modal-header cust-color">
+      <div class="modal-title h4" id="example-modal-sizes-title-lg">
+        <!-- <ng-container *ngIf="customer">
+         <ng-container *ngIf="customer.id">Edit</ng-container>
+         <ng-container *ngIf="!customer.id">Create</ng-container>
+      
+         <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+       </ng-container> -->
+  
+        <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Job Status</span>
+        <span *ngIf="isFlag == 2" style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update Job Status</span>
+
+      </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+      <!-- <ng-container *ngIf="isLoading$ | async">
+        <div class="overlay-layer bg-transparent">
+          <div class="spinner spinner-lg spinner-success"></div>
+        </div>
+      </ng-container> -->
+      <ng-container>
+        <form action="#" class="form form-label-right" [formGroup]="jobStatusGroup">
+          <div class="form-group cust-height">
+            <div class="col-lg-12">
+              <label class="form-label">Status Type</label>
+              <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg  " name="statusType" required
+                placeholder="Enter Status Type" autocomplete="off" [class.is-invalid]="isControlInvalid('statusType')"
+                 formControlName="statusType" />
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'statusType')">Status Type is required
+              </div>
+  
+            </div>
+          </div>
+          <!-- <div class="form-group cust-height">
+            <div class="col-lg-12">
+              <label class="form-label">Status Stage</label>
+              <input type="text" class="form-control form-control-lg form-control-solid" name="statusStage" required
+                placeholder="Enter Stage Name" autocomplete="off" [class.is-invalid]="isControlInvalid('statusStage')"
+                  formControlName="statusStage" />
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'statusStage')">Status Stage is required
+              </div>
+  
+            </div>
+          </div> -->
+
+          <div class="form-group cust-height">  
+            <label class="form-label">Status Stage</label> 
+            <div class="col-lg-12">
+                <mat-form-field class="col-12">
+                  <mat-select   (selectionChange)="selectStage($event.value)" [class.is-invalid]="isControlInvalid('statusStage')" style="text-transform: capitalize;"  formControlName="statusStage" name="statusStage"  placeholder="Select StatusStage" >
+                     <mat-option>
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'"  [formControl]="stageMultiFilterCtrl" [searching]="searching"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option  *ngFor="let cust of filteredstageMulti | async" style="text-transform: capitalize;" [value]="cust.stage">
+                      {{cust.stage}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> 
+                <div class="invalid-feedback" *ngIf="controlHasError('required', 'statusStage')">Status Stage is required
+                </div>
+           </div>
+            </div>
+          <div class="form-group cust-height"  >
+            <label class="form-label"> Status Colour</label>
+            <!-- <input type="text" autocomplete="off" name="deposit" formControlName="deposit"> -->
+            <!-- <label class="form-label"> Deposit</label> --> 
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <!-- <span class="input-group-text" id="basic-addon1">£</span> --> 
+                <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
+                <ngx-mat-color-picker #picker></ngx-mat-color-picker>
+              </div>
+              <input type="text"  matInput [ngxMatColorPicker]="picker" [formControl]="colorCtr" class="form-control" name="statusColor"
+                formControlName="statusColor" [class.is-invalid]="isControlInvalid('statusColor')"   aria-describedby="basic-addon1">
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'statusColor')">Status Color is required
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeStatus()">Cancel</button>
+        
+            <ng-container *ngIf="isFlag == 1"> 
+              <button type="submit" (click)="addjobStatus()"  [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"  class="btn btn-custom btn-elevate"
+                >Submit <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button>
+          </ng-container>
+
+          <ng-container *ngIf="isFlag == 2"> 
+            <button type="submit" (click)="updatejobStatus()"  [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"  class="btn btn-custom btn-elevate"
+            >Update <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button>
+        </ng-container>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+  
+  
+  </ng-template>
+  <!-- Add Job Status Modal -->
+
+    <!-- Confirm Box -->
+    <ng-template #confrimBox let-modal>
+
+      <div class="modal-header ">
+        <div class="modal-title h4" id="example-modal-sizes-title-lg">
+          <!-- <ng-container *ngIf="customer">
+              <ng-container *ngIf="customer.id">Edit</ng-container>
+              <ng-container *ngIf="!customer.id">Create</ng-container>
+           
+              <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
+            </ng-container> --> 
+           <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+  
+        </div>
+      </div>
+      
+      <!-- <div class="modal-footer">
+         <ng-container> 
+          <button type="submit" (click)="deleteJobStatus()"  class="btn btn-primary btn-elevate"
+           >Yes</button>
+  
+           <button type="submit" (click)="closeDelete()"  class="btn btn-primary btn-elevate"
+             >No</button>
+        </ng-container>
+     
+      </div> -->
+      <div class="modal-body">
+        <!-- <ng-container *ngIf="isDeleting">
+         <h4>job status is deleting...</h4>
+        </ng-container> -->
+      
+        <ng-container  >
+        <h4>Are you sure to  delete this job status?</h4>
+        </ng-container>
+      </div>
+      
+      <div class="modal-footer"> 
+        <ng-container> 
+          <button class="btn btn-danger" [ngStyle]=" {'width':isDeleting  == true ? '25%':'20%'}" (click)="deleteJobStatus()"
+          data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+            [ngClass]="{spinner:isDeleting == true}" style="margin: 10%;"></span></button>
+          
+          <button type="button" (click)="closeDelete()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </ng-container>
+     
+      </div>
+    </ng-template>
+    
+    <!-- Confirm Box -->
+  
