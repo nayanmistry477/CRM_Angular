@@ -59,20 +59,18 @@
           </th>
           <th>
             CREATED AT
+            <app-sort-icon column="createdDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
             DUE AT
+            <app-sort-icon column="createdDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>ACTIONS</th>
         </thead>
         <tbody>
-          <tr *ngFor="let invoice of invoiceService.items$ | async">
-            <!-- <td class="selection-cell">
-                    <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
-                        [checked]="grouping.isRowSelected(customer.id)" />
-                      <span></span>
-                    </label>
-                  </td> -->
+          <tr *ngFor="let invoice of invoiceService.items$ | async"> 
             <td>{{invoice.invoiceID}}</td>
             <td>{{invoice.invoiceTo}}</td>
             <td>
@@ -89,14 +87,7 @@
             <td>{{invoice.jobId}}</td>
             <td> £{{invoice.subTotal}}</td>
             <td>{{invoice.createdDate | date:'dd/MM/yyyy'}}</td>
-            <td>{{invoice.dueDate | date:'dd/MM/yyyy'}}</td>
-            <!-- <td>
-                    <span class="label label-dot label-primary mr-2" [class.label-success]="customer.type === 1"
-                      [class.label-primary]="customer.type === 2"></span>&nbsp;<span class="font-bold font-primary">
-                      <ng-container *ngIf="customer.type === 1">Business</ng-container>
-                      <ng-container *ngIf="customer.type === 2">Individual</ng-container>
-                    </span>
-                  </td> -->
+            <td>{{invoice.dueDate | date:'dd/MM/yyyy'}}</td> 
             <td>
               <a title="Send Invoice" tooltip="Generate Invoice" class="btn btn-icon btn-light btn-hover-danger btn-sm"
                 (click)="getInvoiceValues(invoice)">
@@ -129,8 +120,8 @@
       </table>
     </div>
     <!-- end: Table -->
-    <!-- <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
-            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator> -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
   </div>
 </div>
 
@@ -338,12 +329,16 @@
                         <br>
                         <b>Brand:-</b>
                         <br>
+                        <b>Model:-</b>
+                        <br>
                         <b>Serial No:-</b>
                       </div>
                       <div class="col-8">
                         {{jobObj.id}}
                         <br>
                         {{jobObj.itemType}}
+                        <br>
+                        {{jobObj.modelNo}}
                         <br>
                         {{jobObj.brand}}
                         <br>
@@ -781,7 +776,7 @@
                                       formControlName="product" name="product" [(ngModel)]="jobObj.product"
                                       placeholder="Select Product">
                                       <mat-option>
-                                        <ngx-mat-select-search [formControl]="productMultiFilterCtrl"
+                                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl"
                                           [searching]="searching">
                                         </ngx-mat-select-search>
                                       </mat-option>
@@ -822,7 +817,7 @@
                                       formControlName="service" name="service" placeholder="Select Service"
                                       [(ngModel)]="jobObj.service">
                                       <mat-option>
-                                        <ngx-mat-select-search [formControl]="serviceMultiFilterCtrl"
+                                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="serviceMultiFilterCtrl"
                                           [searching]="searching">
                                         </ngx-mat-select-search>
                                       </mat-option>
@@ -1159,7 +1154,7 @@
                   [class.is-invalid]="isControlInvalid('customer')" formControlName="customer" name="customer"
                   placeholder="Select Customer">
                   <mat-option>
-                    <ngx-mat-select-search [formControl]="customerMultiFilterCtrl" [searching]="searching">
+                    <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="customerMultiFilterCtrl" [searching]="searching">
                     </ngx-mat-select-search>
                   </mat-option>
                   <mat-option *ngFor="let cust of filteredCustomerMulti | async" [value]="cust">
@@ -1178,7 +1173,7 @@
                 <mat-select (selectionChange)="selectJob($event.value)" formControlName="job" name="job"
                   placeholder="Select Job">
                   <mat-option>
-                    <ngx-mat-select-search [formControl]="jobMultiFilterCtrl" [searching]="searching">
+                    <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="jobMultiFilterCtrl" [searching]="searching">
                     </ngx-mat-select-search>
                   </mat-option>
                   <mat-option>None</mat-option>
@@ -1254,7 +1249,7 @@
                       <mat-select (selectionChange)="selectpaymentType($event.value)" formControlName="paymentType"
                         name="paymentType" [(ngModel)]="paymentObj.paymentType" placeholder="Select Payment Type">
                         <mat-option>
-                          <ngx-mat-select-search [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
+                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
                           </ngx-mat-select-search>
                         </mat-option>
                         <mat-option *ngFor="let item of filteredpaymentTypeMulti | async" [value]="item.paymentType">

@@ -100,7 +100,7 @@
                                              formControlName="encryptiontype"
                                             name="encryptiontype" placeholder="Select Encryption Type">
                                             <mat-option>
-                                                <ngx-mat-select-search [formControl]="encryptionTypeMultiFilterCtrl"
+                                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="encryptionTypeMultiFilterCtrl"
                                                     [searching]="searching"></ngx-mat-select-search>
                                             </mat-option>
                                             <mat-option *ngFor="let sup of filteredencryptionTypeMulti | async" [value]="sup.encryption">

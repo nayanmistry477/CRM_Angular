@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ItemTypeService } from 'src/app/modules/auth/_services/itemType.service';
 import { BrandService } from 'src/app/modules/auth/_services/brand.service';
 import { AccompanyingService } from 'src/app/modules/auth/_services/accompanying.service';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
 import { StorageService } from 'src/app/modules/auth/_services/storage.service';
 import { ProductService } from 'src/app/modules/auth/_services/product.service';
@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
 import { resolve } from '@angular/compiler-cli/src/ngtsc/file_system';
 import { promises } from 'fs';
 import { element, promise } from 'protractor';
-import { DesclaimerService } from 'src/app/modules/auth/_services/desclaimer.service';
+import { DisclaimerService } from 'src/app/modules/auth/_services/disclaimer.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
 interface Discount {
@@ -348,11 +348,11 @@ export class CreateComponent implements OnInit {
     public jobStatusService: JobStatusService,
     public servicesService: ServicesService,
     private router: Router,
-    private desclaimerService: DesclaimerService,
+    private desclaimerService: DisclaimerService,
     public http: HttpClient,
     private elementRef: ElementRef,
     private renderer: Renderer2,
-    public userService: EmployeeService,
+    public userService: UserService,
     public technicianService: TechnicianService,
     public customerService: CustomersService, public cdr: ChangeDetectorRef) {
     this.modalService.dismissAll()
@@ -392,7 +392,7 @@ export class CreateComponent implements OnInit {
     this.getAllStorageLocation();
     this.getAllProducts();
     this.getAllServices();
-    this.getDesclaimer();
+    this.getDisclaimer();
     // this.fileterCustomerContact()
  
     // load the initial bank list 
@@ -474,6 +474,7 @@ export class CreateComponent implements OnInit {
       brand: [this.job.brand, Validators.compose([Validators.required])],
       acItems: [this.job.acItems, Validators.compose([Validators.required])],
       serialNo: [this.job.serialNo],
+      modelNo:[''],
       damageAssesment: [this.job.damageAssesment,],
       password: [this.job.password],
       itemComment: [this.job.itemComment,],
@@ -562,9 +563,9 @@ export class CreateComponent implements OnInit {
     }
   }
   disclaimer: any = {}
-  getDesclaimer() {
+  getDisclaimer() {
 
-    this.desclaimerService.getDesclaimer()
+    this.desclaimerService.getDisclaimer()
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -636,35 +637,7 @@ export class CreateComponent implements OnInit {
       this.itemVal.filter(item => item.itemType.toLowerCase().indexOf(search) > -1 || item.itemType.toUpperCase().indexOf(search) > -1)
     );
   }
-  // fileterCustomerContact() {
-
-  //   this.customerContactMultiFilterCtrl.valueChanges
-  //     .pipe(
-  //       filter(search => !!search),
-  //       tap(() => this.searching = true),
-  //       takeUntil(this._onDestroy),
-  //       debounceTime(200),
-  //       map(search => {
-  //         if (!this.customerVal) {
-  //           return [];
-  //         }
-
-  //         // simulate server fetching and filtering data
-  //         return this.customerVal.filter(cust => cust.mobile.toString().indexOf(search) > -1);
-  //       }),
-  //       delay(500)
-  //     )
-  //     .subscribe(filteredBanks => {
-  //       this.searching = false;
-  //       this.filteredCustomerContactMulti.next(filteredBanks);
-
-  //     },
-  //       error => {
-  //         // no errors in our simulated example
-  //         this.searching = false;
-  //         // handle error...
-  //       });
-  // }
+   
   selectReferredBy(val) {
     // console.log(val)
   }
@@ -738,8 +711,7 @@ export class CreateComponent implements OnInit {
               str = { id: element.id, email: element.email, contactNo: element.contactNo, address: element.address, name: element.firstName + ' ' + element.lastName };
               list.push(str);
             });
-            this.customerVal = list;
-            // this.filteredCustomerMulti.next(this.customerVal.slice());
+            this.customerVal = list; 
             this.customerMultiFilterCtrl.valueChanges
               .pipe(
                 takeUntil(this._onDestroy))
@@ -777,9 +749,7 @@ export class CreateComponent implements OnInit {
           // simulate server fetching and filtering data
           sch =  this.customerVal.filter(cust => cust.name.toLowerCase().indexOf( search.toLowerCase()) > -1 || cust.name.toUpperCase().indexOf( search.toLowerCase()) > -1 );
 
-          
-        // this.customerVal.filter(cust => cust.name.toLowerCase().indexOf( search.toLowerCase()) > -1 || cust.name.toUpperCase().indexOf( search.toLowerCase()) > -1 || cust.email.toLowerCase().indexOf( search.toLowerCase()) > -1 || cust.contactNo.toString().indexOf( search.toLowerCase()) > -1);
-          // console.log(sch)
+           
         }),
         delay(500)
       )
@@ -875,10 +845,7 @@ export class CreateComponent implements OnInit {
             } else {
               this.totalQty = 0
             }
-            this.cdr.markForCheck();
-
-            // this.saleQty = data.result[0].saleQty;
-
+            this.cdr.markForCheck(); 
 
           }
         },
@@ -1077,48 +1044,8 @@ export class CreateComponent implements OnInit {
         error => {
           // this.showError(error.statusText);
           console.log(error);
-        });
-
-    // if (this.productData == undefined) {
-    //   // job.quantity++
-    //   // //  this.quantity ++ 
-    //   // this.sum = Number(this.sum) + Number(job.price)
-
-    //   // this.dataList.forEach(element => {
-    //   //   if (element.id === job.id) element.price = Number(element.price) + Number(job.price);
-    //   // })
-
-    //   var id = {
-    //     id: job.id
-    //   }
-    //   this.productService.getProductByProductID(id)
-    //     .subscribe(
-    //       data => {
-
-    //         if (data.status == 0) {
-    //           this.toastr.error(data.message)
-    //         } else {
-
-    //           this.incPrice = data.result[0].sellPrice;
-    //           // this.toastr.error('Service is already added in job');
-    //           job.quantity++
-    //           this.sum = Number(this.sum) + Number(this.incPrice);
-    //           this.dataList.forEach(element => {
-    //             if (element.id === job.id) {
-    //               element.price = Number(element.price) + Number(this.incPrice);
-
-    //             }
-    //           });
-    //           this.cdr.markForCheck()
-    //         }
-    //       },
-    //       error => {
-    //         console.log(error);
-    //       });
-    // }
-    // else {
+        }); 
  
-    // }
     this.cdr.markForCheck();
 
   }
@@ -1150,15 +1077,7 @@ export class CreateComponent implements OnInit {
               job.quantity--
 
 
-              if (this.productData.id == job.id) {
-                // this.sum = Number(this.sum) - Number(this.productData.sellPrice)
-      
-                // this.dataList.forEach(element => {
-      
-                //   if (JSON.parse(element.id) === this.productData.id) element.price = Number(element.price) - Number(this.productData.sellPrice)
-      
-                //   console.log(element.price)
-                // })
+              if (this.productData.id == job.id) { 
                 this.sum = Number(this.sum) - Number(this.productData.sellPrice)
                 this.dataList.forEach(element => {
       
@@ -1170,9 +1089,7 @@ export class CreateComponent implements OnInit {
               }
       
               // this.JobformGroup.controls['price'].setValue(this.sum)
-              this.cdr.markForCheck();
-              // this.saleQty = data.result[0].saleQty;
-
+              this.cdr.markForCheck(); 
 
             }
           },
@@ -1180,127 +1097,11 @@ export class CreateComponent implements OnInit {
             // this.showError(error.statusText);
             console.log(error);
           });
-      // if (this.productData == undefined) {
-      //   var id = {
-      //     id: job.id
-      //   }
-      //   var price
-      //   this.productService.getProductByProductID(id)
-      //     .subscribe(
-      //       data => {
-
-      //         if (data.status == 0) {
-      //           this.toastr.error(data.message)
-
-      //         } else {
-
-      //           // console.log(data)
-
-      //           this.decrementPrice = data.result[0].sellPrice;
-
-      //           job.quantity--
-      //           //  this.quantity ++ 
-      //           //  console.log(Number(this.dataList[i].quantity))
-      //           //  this.sum = Number(this.dataList[i].quantity) * Number(this.orgPrice)
-      //           this.sum = Number(this.sum) - Number(this.decrementPrice)
-
-
-      //           this.dataList.forEach(element => {
-      //             if (element.id === job.id) {
-
-      //               element.price = Number(element.price) - Number(this.decrementPrice);
-      //             }
-
-      //             this.cdr.markForCheck()
-      //           })
-      //         }
-      //       },
-      //       error => {
-      //         console.log(error);
-      //       });
-
-
-      // }
-
-      // else {
-      //   job.quantity--
-
-
-      //   if (this.productData.id == job.id) {
-      //     // this.sum = Number(this.sum) - Number(this.productData.sellPrice)
-
-      //     // this.dataList.forEach(element => {
-
-      //     //   if (JSON.parse(element.id) === this.productData.id) element.price = Number(element.price) - Number(this.productData.sellPrice)
-
-      //     //   console.log(element.price)
-      //     // })
-      //     this.sum = Number(this.sum) - Number(this.productData.sellPrice)
-      //     this.dataList.forEach(element => {
-
-      //       if (JSON.parse(element.id) === this.productData.id) {
-      //         element.price = Number(element.price) - Number(this.productData.sellPrice);
-      //       }
-      //     });
-      //     // console.log(this.sum);
-      //   }
-
-      //   // this.JobformGroup.controls['price'].setValue(this.sum)
-      //   this.cdr.markForCheck();
-
-      // }
+      
     }
   }
 
-  // async decrement(job) {
-  //   if (job.quantity <= 0 && job.quantity == -1) {
-  //     job.quantity = 1;
-  //     this.sum = 0;
-  //   } else {
-
-  //     var valData = {
-  //       productID: job.id
-  //     }
-
-  //     this.productService.getAllPurchaseCount(valData)
-  //       .subscribe(
-  //         data => {
-  //           if (data.status == 0) {
-  //             this.toastr.error(data.message)
-
-  //           } else {
-  //             // console.log(data)
-
-  //             if (data.result != -1) {
-  //               this.totalQty = data.result[0].totalQty
-  //               this.productData = data.result[0].product
-  //             } else {
-  //               this.totalQty = 0
-  //             }
-
-  //             // this.saleQty = data.result[0].saleQty;
-
-
-  //           }
-  //         },
-  //         error => {
-  //           // this.showError(error.statusText);
-  //           console.log(error);
-  //         });
-  //     job.quantity--
-
-  //     if (this.productData.id == job.id) {
-  //       this.sum = Number(this.sum) - Number(this.productData.sellPrice)
-
-  //       this.dataList.forEach(element => {
-
-  //         if (element.id === this.productData.id) element.price = Number(element.price) - Number(this.productData.sellPrice)
-  //       })
-  //     }
-  //     this.cdr.markForCheck();
-
-  //   }
-  // }
+  
   editText: any = {};
   indexVal: number;
   editModeCheck(i, x, data) {
@@ -1342,11 +1143,7 @@ export class CreateComponent implements OnInit {
         }
       }
 
-    });
-
-    // this.dataList.push( this.dataList)
-    // console.log(this.dataList)
-
+    }); 
 
   }
   priceVal: string;
@@ -2382,6 +2179,7 @@ export class CreateComponent implements OnInit {
         allData.append('accompanying', getval);
         allData.append('damageAsses', this.step2FormGroup.value.damageAssesment);
         allData.append('serialNo', this.step2FormGroup.value.serialNo);
+        allData.append('modelNo', this.step2FormGroup.value.modelNo);
         allData.append('password', this.step2FormGroup.value.password);
         allData.append('itemComment', this.step2FormGroup.value.itemComment);
         allData.append('underWarranty', this.step2FormGroup.value.warranty);
@@ -2413,7 +2211,7 @@ export class CreateComponent implements OnInit {
         this.isLoading$ = true;
         //  console.log(this.step3FormGroup.value)
 
-        this.servicesService.createWizardService(allData)
+        this.servicesService.createJobService(allData)
           .subscribe(
             data => {
               // console.log(data.data.status)
@@ -2545,7 +2343,7 @@ export class CreateComponent implements OnInit {
 
       const serviceObj = this.ServiceformGroup.value;
       this.isLoading$ = true;
-      this.servicesService.createOnlyService(serviceObj)
+      this.servicesService.createService(serviceObj)
         .subscribe(
           data => {
             if (data.data.status == 0) {

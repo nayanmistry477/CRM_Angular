@@ -58,17 +58,13 @@
           </th>
           <th>
             CREATED AT
+            <app-sort-icon column="createdDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
           </th> 
           <th>ACTIONS</th>
         </thead>
         <tbody>
-          <tr *ngFor="let quote of quotationService.items$ | async">
-            <!-- <td class="selection-cell">
-                    <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
-                        [checked]="grouping.isRowSelected(customer.id)" />
-                      <span></span>
-                    </label>
-                  </td> -->
+          <tr *ngFor="let quote of quotationService.items$ | async"> 
             <td>{{quote.quoteID}}</td>
             <td>{{quote.invoiceID}}</td>
             <td>{{quote.quoteTo}}</td>   
@@ -106,8 +102,8 @@
       </table>
     </div>
     <!-- end: Table -->
-    <!-- <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
-            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator> -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
   </div>
 </div>
 
@@ -616,6 +612,10 @@
               </div>
               <div class="overlay overlay-block cursor-default modal-body" style="min-height: 200px;">
                 <div class="row">
+                  <button type="button" 
+                  (click)="addProductManualModal()"  
+                  class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add product manually
+                </button>
                   <div class="col-12">
                     <div class="card">
                       <div class="card-body">
@@ -630,7 +630,7 @@
                                       formControlName="product" name="product" [(ngModel)]="quoteData.product"
                                       placeholder="Select Product">
                                       <mat-option>
-                                        <ngx-mat-select-search [formControl]="productMultiFilterCtrl"
+                                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl"
                                           [searching]="searching">
                                         </ngx-mat-select-search>
                                       </mat-option>
@@ -657,12 +657,12 @@
                                         class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                       </button>
                                     </div>
-                                    <div class="col-4">
+                                    <!-- <div class="col-4">
                                       <button type="button" tooltip="Add One Time Product" placement="top" show-delay="100"
                                         (click)="addProductManualModal()" style="padding: 12px;"
                                         class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i>
                                       </button>
-                                    </div>
+                                    </div> -->
                                   
                                   </div>
                                 </div>
@@ -677,7 +677,7 @@
                                       formControlName="service" name="service" placeholder="Select Service"
                                       [(ngModel)]="quoteData.service">
                                       <mat-option>
-                                        <ngx-mat-select-search [formControl]="serviceMultiFilterCtrl"
+                                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="serviceMultiFilterCtrl"
                                           [searching]="searching">
                                         </ngx-mat-select-search>
                                       </mat-option>
@@ -1001,7 +1001,7 @@
                   [class.is-invalid]="isControlInvalid('customer')" formControlName="customer" name="customer"
                   placeholder="Select Customer">
                   <mat-option>
-                    <ngx-mat-select-search [formControl]="customerMultiFilterCtrl" [searching]="searching">
+                    <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="customerMultiFilterCtrl" [searching]="searching">
                     </ngx-mat-select-search>
                   </mat-option>
                   <mat-option *ngFor="let cust of filteredCustomerMulti | async" [value]="cust">

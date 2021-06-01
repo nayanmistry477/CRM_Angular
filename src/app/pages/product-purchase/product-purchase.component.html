@@ -113,58 +113,30 @@
                   (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
-            QUANTITY
-            <!-- <app-sort-icon column="lastName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-                  (sort)="sort($event)"></app-sort-icon> -->
+            QUANTITY 
           </th>
           <th>
             PURCHASED DATE
+            <app-sort-icon column="purchaseDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
             SUPPLIER
             <!-- <app-sort-icon column="email" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
                   (sort)="sort($event)"></app-sort-icon> -->
           </th>
-
-          <!-- <th> -->
-          <!-- IS STOCK OPEN -->
-          <!-- <app-sort-icon column="status" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-                  (sort)="sort($event)"></app-sort-icon> -->
-          <!-- </th> -->
+ 
 
           <th>ACTIONS</th>
         </thead>
         <tbody>
-          <tr *ngFor="let proObj of productpurchaseService.items$ | async">
-            <!-- <td class="selection-cell">
-                  <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
-                      [checked]="grouping.isRowSelected(customer.id)" />
-                    <span></span>
-                  </label>
-                </td> -->
+          <tr *ngFor="let proObj of productpurchaseService.items$ | async"> 
             <td>{{proObj.id }}</td>
             <td>{{proObj.product}}</td>
             <td>{{proObj.quantity}}</td>
             <td>{{proObj.purchaseDate | date: 'dd/MM/yyyy'}}</td>
-            <td>{{proObj.supplier}}</td>
-            <!-- <td>{{ proObj.isStock }}</td> -->
-
-            <!-- <td>{{ proObj.isActive }}</td> -->
-            <!-- <td>
-                  <span class="label label-lg label-inline" [class.label-light-danger]="customer.status === 1"
-                    [class.label-light-success]="customer.status === 2" [class.label-light-primary]="customer.status === 3">
-                    <ng-container *ngIf="customer.status === 1">Suspended</ng-container>
-                    <ng-container *ngIf="customer.status === 2">Active</ng-container>
-                    <ng-container *ngIf="customer.status === 3">Pending</ng-container>
-                  </span>
-                </td> -->
-            <!-- <td>
-                  <span class="label label-dot label-primary mr-2" [class.label-success]="customer.type === 1"
-                    [class.label-primary]="customer.type === 2"></span>&nbsp;<span class="font-bold font-primary">
-                    <ng-container *ngIf="customer.type === 1">Business</ng-container>
-                    <ng-container *ngIf="customer.type === 2">Individual</ng-container>
-                  </span>
-                </td> -->
+            <td>{{proObj.supplier}}</td> 
+           
             <td>
 
               <a title="Edit Product Purchase" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
@@ -230,7 +202,7 @@
                       [class.is-invalid]="isControlInvalid('product')" formControlName="product"
                       [(ngModel)]="porductPurchaseObj.product" name="product" placeholder="Select Product">
                       <mat-option>
-                        <ngx-mat-select-search [formControl]="productMultiFilterCtrl" [searching]="searching">
+                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl" [searching]="searching">
                         </ngx-mat-select-search>
                       </mat-option>
                       <mat-option>None</mat-option>
@@ -310,7 +282,7 @@
                       [class.is-invalid]="isControlInvalid('supplier')" formControlName="supplier" name="supplier"
                       [(ngModel)]="porductPurchaseObj.supplier" placeholder="Select Supplier">
                       <mat-option>
-                        <ngx-mat-select-search [formControl]="supplierMultiFilterCtrl" [searching]="searching">
+                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="supplierMultiFilterCtrl" [searching]="searching">
                         </ngx-mat-select-search>
                       </mat-option>
                       <mat-option *ngFor="let sup of filteredSupplierMulti | async" [value]="sup.supplier">

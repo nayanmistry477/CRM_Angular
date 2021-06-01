@@ -196,8 +196,8 @@
       </table>
     </div>
     <!-- end: Table -->
-    <!-- <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
-          [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator> -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+          [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
   </div>
 </div>
 
@@ -348,7 +348,7 @@
                   <mat-form-field class="col-12">
                     <mat-select (selectionChange)="selectCategory($event.value)" [class.is-invalid]="isControlInvalid('category')" formControlName="category" [(ngModel)]="productObj.category" name="category"   placeholder="Select Category" >
                        <mat-option>
-                        <ngx-mat-select-search  [formControl]="categoryMultiFilterCtrl" [searching]="searching"></ngx-mat-select-search>
+                        <ngx-mat-select-search [placeholderLabel]="'Search...'"  [formControl]="categoryMultiFilterCtrl" [searching]="searching"></ngx-mat-select-search>
                       </mat-option>
                       <mat-option  *ngFor="let pro of filteredcategoryMulti | async" [value]="pro.category">
                         {{pro.category}}

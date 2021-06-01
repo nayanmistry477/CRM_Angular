@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AuthService, UserModel } from '../../auth';
-import { EmployeeService } from '../../auth/_services/employee.service';
+import { UserService } from '../../auth/_services/user.service';
 
 @Component({
   selector: 'app-personal-information',
@@ -20,7 +20,7 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
 
   constructor(private userService: AuthService,
-    public empService:EmployeeService,
+    public empService:UserService,
     private toastr: ToastrService,
     private fb: FormBuilder) {
     this.isLoading$ = this.userService.isLoadingSubject.asObservable();

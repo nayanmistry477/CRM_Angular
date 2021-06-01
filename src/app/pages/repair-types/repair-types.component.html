@@ -220,7 +220,7 @@
                   [class.is-invalid]="isRepairTypeControlInvalid('timeType')" formControlName="timeType"
                   name="timeType" placeholder="Select Time Type">
                   <mat-option>
-                    <ngx-mat-select-search [formControl]="timeTypeMultiFilterCtrl" [searching]="searching">
+                    <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="timeTypeMultiFilterCtrl" [searching]="searching">
                     </ngx-mat-select-search>
                   </mat-option>
                   <mat-option *ngFor="let time of filteredtimeTypeMulti | async" [value]="time">

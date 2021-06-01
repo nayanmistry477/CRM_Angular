@@ -55,7 +55,7 @@ const routes: Routes = [
       {
         path: 'user',
         loadChildren: () =>
-          import('./employee/employee.module').then((m) => m.EmployeeModule),
+          import('./user/user.module').then((m) => m.UserModule),
       },
      
       {
@@ -126,7 +126,7 @@ const routes: Routes = [
       {
         path: 'disclaimer',
         loadChildren: () =>
-          import('./disclaimer/desclaimer.module').then((m) => m.DesclaimerModule),
+          import('./disclaimer/disclaimer.module').then((m) => m.DisclaimerModule),
       },
       {
         path: 'invoice-payment-methods',

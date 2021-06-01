@@ -43,8 +43,8 @@
         <thead>
           <th>
             ID
-            <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-              (sort)="sort($event)"></app-sort-icon>
+            <!-- <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon> -->
           </th>
           <th>
             CUSTOMER
@@ -53,19 +53,20 @@
           </th>
           <th>
             CREATED DATE
-
+            <app-sort-icon column="createdDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
           </th>
        
           <th>
             EST COMPLETION DATE
-            <!-- <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-              (sort)="sort($event)"></app-sort-icon> -->
+            <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
           </th>
 
           <th>
             COMPLETED DATE
-            <!-- <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-              (sort)="sort($event)"></app-sort-icon> -->
+            <app-sort-icon column="completedDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
             PRICE
@@ -131,8 +132,8 @@
       </table>
     </div>
     <!-- end: Table -->
-    <!-- <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
-            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator> -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
   </div>
 </div>
 
@@ -221,7 +222,7 @@
                                         formControlName="jobStatus" name="jobStatus"
                                         style="text-transform: capitalize;" placeholder="Select Job Status">
                                         <mat-option>
-                                            <ngx-mat-select-search [formControl]="jobStatusMultiFilterCtrl"
+                                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="jobStatusMultiFilterCtrl"
                                                 [searching]="searching">
                                             </ngx-mat-select-search>
                                         </mat-option>
@@ -429,7 +430,7 @@
                               [class.is-invalid]="jobControlInvalid('itemType')" formControlName="itemType"
                               name="itemType" [(ngModel)]="jobObj.itemType" placeholder="Select Item">
                               <mat-option>
-                                <ngx-mat-select-search [formControl]="itemMultiFilterCtrl" [searching]="searching">
+                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="itemMultiFilterCtrl" [searching]="searching">
                                 </ngx-mat-select-search>
                               </mat-option>
                               <mat-option *ngFor="let item of filteredItemMulti | async" [value]="item.itemType">
@@ -457,7 +458,7 @@
                               [class.is-invalid]="jobControlInvalid('brand')" formControlName="brand" name="brand"
                               [(ngModel)]="jobObj.brand" placeholder="Select Brand">
                               <mat-option>
-                                <ngx-mat-select-search [formControl]="brandMultiFilterCtrl" [searching]="searching">
+                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="brandMultiFilterCtrl" [searching]="searching">
                                 </ngx-mat-select-search>
                               </mat-option>
                               <mat-option *ngFor="let brands of filteredBrandMulti | async" [value]="brands.brand">
@@ -487,7 +488,7 @@
                               name="accompanying" [(ngModel)]="jobObj.accompanying"
                               placeholder="Select Accompanying Items">
                               <mat-option>
-                                <ngx-mat-select-search [formControl]="ACItemsMultiFilterCtrl" [searching]="searching">
+                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="ACItemsMultiFilterCtrl" [searching]="searching">
                                 </ngx-mat-select-search>
                               </mat-option>
                               <mat-option *ngFor="let accItems of filteredACItemsMulti | async"
@@ -548,7 +549,7 @@
                               [class.is-invalid]="jobControlInvalid('bookedBy')" formControlName="bookedBy"
                               name="bookedBy" [(ngModel)]="jobObj.bookedBy" placeholder="Select Boooked by">
                               <mat-option>
-                                <ngx-mat-select-search [formControl]="bookedByMultiFilterCtrl" [searching]="searching">
+                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="bookedByMultiFilterCtrl" [searching]="searching">
                                 </ngx-mat-select-search>
                               </mat-option>
                               <mat-option *ngFor="let item of filteredbookedByMulti | async" [value]="item.bookedBy">
@@ -572,7 +573,7 @@
                               [class.is-invalid]="jobControlInvalid('storageLocation')"
                               formControlName="storageLocation" name="storageLocation" placeholder="Select Location">
                               <mat-option>
-                                <ngx-mat-select-search [formControl]="LocationMultiFilterCtrl" [searching]="searching">
+                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="LocationMultiFilterCtrl" [searching]="searching">
                                 </ngx-mat-select-search>
                               </mat-option>
                               <mat-option *ngFor="let location of filteredLocationMulti | async"
@@ -660,7 +661,7 @@
                               name="assignedTo" [(ngModel)]="jobObj.assignedTo"
                               placeholder="Choose a staff member to assign this job to">
                               <mat-option>
-                                <ngx-mat-select-search [formControl]="assignToMultiFilterCtrl" [searching]="searching">
+                                <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="assignToMultiFilterCtrl" [searching]="searching">
                                 </ngx-mat-select-search>
                               </mat-option>
                               <mat-option *ngFor="let assign of filteredassignToMulti | async"
@@ -674,8 +675,15 @@
                           </div> -->
                         </div>
                       </div>
+                    </div> 
+                    <div class="form-group cust-height">
+                      <label class="form-label"><strong> Model </strong></label>
+                      <input type="text" class="form-control form-control-lg  " name="modelNo" [(ngModel)]="jobObj.modelNo"
+                        placeholder="Enter Model" autocomplete="off" formControlName="modelNo" />
+                      <!-- <div class="invalid-feedback" *ngIf="Step2FormSelectcontrolHasError('required', 'serialNo')">Serial No is
+                          required
+                        </div> -->
                     </div>
-                    <br>
                     <div class="form-group cust-height">
                       <label class="form-label"><strong> Serial No </strong></label>
                       <input type="text" class="form-control form-control-lg  " name="serialNo" [(ngModel)]="jobObj.serialNo"
@@ -898,7 +906,7 @@
                                         formControlName="product" name="product" [(ngModel)]="jobObj.product"
                                         placeholder="Select Product">
                                         <mat-option>
-                                          <ngx-mat-select-search [formControl]="productMultiFilterCtrl"
+                                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl"
                                             [searching]="searching">
                                           </ngx-mat-select-search>
                                         </mat-option>
@@ -944,7 +952,7 @@
                                         formControlName="service" name="service" placeholder="Select Service"
                                         [(ngModel)]="jobObj.service">
                                         <mat-option>
-                                          <ngx-mat-select-search [formControl]="serviceMultiFilterCtrl"
+                                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="serviceMultiFilterCtrl"
                                             [searching]="searching">
                                           </ngx-mat-select-search>
                                         </mat-option>
@@ -1353,6 +1361,8 @@
                             <br>
                             <b>Brand:-</b>
                             <br>
+                            <b>Model:-</b>
+                            <br>
                             <b>Serial No:-</b>
                           </div>
                           <div class="col-8">
@@ -1361,6 +1371,8 @@
                             {{jobObj.itemType}}
                             <br>
                             {{jobObj.brand}}
+                            <br>
+                            {{jobObj.modelNo}}
                             <br>
                             {{jobObj.serialNo}}
                           </div>
@@ -1808,7 +1820,7 @@
                           [class.is-invalid]="repairassignControlInvalid('name')" formControlName="name" name="name"
                           placeholder="Select Product" [(ngModel)]="jobObj.product">
                           <mat-option>
-                            <ngx-mat-select-search [formControl]="productMultiFilterCtrl" [searching]="searching">
+                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl" [searching]="searching">
                             </ngx-mat-select-search>
                           </mat-option>
                           <mat-option>None</mat-option>
@@ -1843,7 +1855,7 @@
                             name="assignedTo" [class.is-invalid]="repairassignControlInvalid('assignedTo')"
                             placeholder="Choose a staff member to assign this job to">
                             <mat-option>
-                              <ngx-mat-select-search [formControl]="assignToMultiFilterCtrl" [searching]="searching">
+                              <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="assignToMultiFilterCtrl" [searching]="searching">
                               </ngx-mat-select-search>
                             </mat-option>
                             <mat-option *ngFor="let assign of filteredassignToMulti | async" [value]="assign.assignTo">
@@ -1933,7 +1945,7 @@
                     [class.is-invalid]="repairControlInvalid('storageLocation')" formControlName="storageLocation"
                     name="storageLocation" placeholder="Select Location">
                     <mat-option>
-                      <ngx-mat-select-search [formControl]="LocationMultiFilterCtrl" [searching]="searching">
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="LocationMultiFilterCtrl" [searching]="searching">
                       </ngx-mat-select-search>
                     </mat-option>
                     <mat-option *ngFor="let location of filteredLocationMulti | async"
@@ -2405,7 +2417,7 @@
                       <mat-select (selectionChange)="selectpaymentType($event.value)" formControlName="paymentType"
                         name="paymentType" [(ngModel)]="paymentObj.paymentType" placeholder="Select Payment Type">
                         <mat-option>
-                          <ngx-mat-select-search [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
+                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
                           </ngx-mat-select-search>
                         </mat-option>
                         <mat-option *ngFor="let item of filteredpaymentTypeMulti | async" [value]="item.paymentType">

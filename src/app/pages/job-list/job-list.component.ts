@@ -223,39 +223,39 @@ export class JobListComponent implements OnInit {
     this.deleteObj = val;
   }
 
-  deleteProduct() {
-    this.isDeleting = true;
-    console.log(this.deleteObj)
-    const index = this.productList.indexOf(this.deleteObj, 0);
-    if (index > -1) {
-      this.productList.splice(index, 1); 
-    } 
-    this.serviceService.deleteProductList(this.deleteObj)
-      .subscribe(
-        data => {
-          console.log(data.data.status)
-          if (data.data.status == 0) {
-            this.toastr.error(data.data.message)
-            this.isLoading$ = false;
-            this.isDeleting = false;
-          } else {
-            this.toastr.success(data.data.message)
+  // deleteProduct() {
+  //   this.isDeleting = true;
+  //   console.log(this.deleteObj)
+  //   const index = this.productList.indexOf(this.deleteObj, 0);
+  //   if (index > -1) {
+  //     this.productList.splice(index, 1); 
+  //   } 
+  //   this.serviceService.deleteProductList(this.deleteObj)
+  //     .subscribe(
+  //       data => {
+  //         console.log(data.data.status)
+  //         if (data.data.status == 0) {
+  //           this.toastr.error(data.data.message)
+  //           this.isLoading$ = false;
+  //           this.isDeleting = false;
+  //         } else {
+  //           this.toastr.success(data.data.message)
 
-            this.modalService.dismissAll()
-            this.serviceService.fetch();
-            this.isDeleting = false;
+  //           this.modalService.dismissAll()
+  //           this.serviceService.fetch();
+  //           this.isDeleting = false;
 
-          }
-        },
-        error => {
-          // this.showError(error.statusText);
-          console.log(error);
-        });
-  }
+  //         }
+  //       },
+  //       error => {
+  //         // this.showError(error.statusText);
+  //         console.log(error);
+  //       });
+  // }
 
-  closeDeleteProduct() {
-    this.modalService.dismissAll();
-  }
+  // closeDeleteProduct() {
+  //   this.modalService.dismissAll();
+  // }
 
   addProductItem() {
     this.cdr.markForCheck()

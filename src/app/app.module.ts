@@ -28,7 +28,7 @@ import { CategoryService } from './modules/auth/_services/category.service';
 import { StorageService } from './modules/auth/_services/storage.service';
 import { BrandService } from './modules/auth/_services/brand.service';
 import { ItemTypeService } from './modules/auth/_services/itemType.service';
-import { EmployeeService } from './modules/auth/_services/employee.service';
+import { UserService } from './modules/auth/_services/user.service';
 import { UserRolesService } from './modules/auth/_services/userRoles.service';
 import { ReferredByService } from './modules/auth/_services/referredBy.service';
 import { JobStatusService } from './modules/auth/_services/jobStatus.service';
@@ -36,7 +36,7 @@ import { EmailSettingsService } from './modules/auth/_services/emailSettings.ser
 import { FileUploadModule } from 'ng2-file-upload';
 import { JobService } from './modules/auth/_services/job.service';
 import { InvoiceService } from './modules/auth/_services/invoice.service';
-import { DesclaimerService } from './modules/auth/_services/desclaimer.service';
+import { DisclaimerService } from './modules/auth/_services/disclaimer.service';
 import { AssignedService } from './modules/auth/_services/assigned.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
@@ -94,14 +94,14 @@ function appInitializer(authService: AuthService) {
         StorageService,
         BrandService,
         ItemTypeService,
-        EmployeeService,
+        UserService,
         UserRolesService,
         ReferredByService,
         JobStatusService,
         JobService,
         EmailSettingsService,
         InvoiceService,
-        DesclaimerService,
+        DisclaimerService,
         AssignedService,
         TechnicianService,
         ReportService,

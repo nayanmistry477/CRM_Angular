@@ -11,7 +11,7 @@ import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
 import { GroupingState, PaginatorState, SortState } from 'src/app/_metronic/shared/crud-table';
 import { StorageService } from 'src/app/modules/auth/_services/storage.service';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 import { ProductService } from 'src/app/modules/auth/_services/product.service';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -28,7 +28,7 @@ import { TechnicianService } from 'src/app/modules/auth/_services/technicians.se
 import { Chart } from 'chart.js'
 import { ProductPurchaseService } from 'src/app/modules/auth/_services/product-purchase.service';
 import { Router } from '@angular/router';
-import { DesclaimerService } from 'src/app/modules/auth/_services/desclaimer.service';
+import { DisclaimerService } from 'src/app/modules/auth/_services/disclaimer.service';
 import { PaymentService } from 'src/app/modules/auth/_services/payment.service';
 import { ReportService } from 'src/app/modules/auth/_services/reports.service';
 
@@ -199,7 +199,7 @@ export class DashboardComponent implements OnInit {
     public ACCItemService: AccompanyingService,
     private cdr: ChangeDetectorRef,
     public jobStatusSService: JobStatusService,
-    public userService: EmployeeService,
+    public userService: UserService,
     public productService: ProductService,
     private sanitizer: DomSanitizer,
     public http: HttpClient,
@@ -209,7 +209,7 @@ export class DashboardComponent implements OnInit {
     public emailService: EmailSettingsService,
     public technicianService: TechnicianService,
     public router:Router,
-    private desclaimerService: DesclaimerService,
+    private desclaimerService: DisclaimerService,
     public paymentService:PaymentService,
     public storageLocationService: StorageService,
     public reportService:ReportService,
@@ -305,6 +305,7 @@ export class DashboardComponent implements OnInit {
       brand: ['', Validators.compose([Validators.required])],
       accompanying: ['', Validators.compose([Validators.required])],
       serialNo: [''],
+      modelNo:[''],
       damageAsses: [''],
       underWarranty: [''],
       itemComment: [''],
@@ -410,7 +411,7 @@ export class DashboardComponent implements OnInit {
     this.getAllProducts();
     this.getAllServices();
     this.getAllBookedByUser();  
-    this.getDesclaimer();
+    this.getDisclaimer();
     this.getCompanyDetails();
     
     this.searchForm();
@@ -645,7 +646,7 @@ export class DashboardComponent implements OnInit {
     this.isShow = true
     this.getProducts_ServiceByJobID(job.id) 
     this.getManualProductByJobID(job.id);
-    this.getJobByInvoiceID(job.id)
+    this.getInvoiceByjobID(job.id)
     // this.getPaymentById(job.id)
     
 
@@ -668,6 +669,7 @@ export class DashboardComponent implements OnInit {
     this.JobformGroup.controls['brand'].setValue(this.jobObj.brand);
     this.JobformGroup.controls['underWarranty'].setValue(this.jobObj.underWarranty);
     this.JobformGroup.controls['serialNo'].setValue(this.jobObj.serialNo);
+    this.JobformGroup.controls['modelNo'].setValue(this.jobObj.modelNo);
     this.JobformGroup.controls['accompanying'].setValue(getval);
     this.JobformGroup.controls['itemComment'].setValue(this.jobObj.itemComment);
     this.JobformGroup.controls['customer'].setValue(this.jobObj.customer);
@@ -751,11 +753,11 @@ export class DashboardComponent implements OnInit {
     console.log(val)
   }
   public isInvoice: Boolean = false;
-  getJobByInvoiceID(id) {
+  getInvoiceByjobID(id) {
     var val = {
       id: id
     }
-    this.InvoiceService.getJobByInvoiceID(val)
+    this.InvoiceService.getInvoiceByjobID(val)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -873,7 +875,7 @@ export class DashboardComponent implements OnInit {
           } else {
 
             this.toastr.success(data.data.message)
-            this.getJobByInvoiceID(this.jobObj.id);
+            this.getInvoiceByjobID(this.jobObj.id);
             this.isInvoice$ = false;
             this.modalService.dismissAll();
             this.cdr.markForCheck();
@@ -1009,9 +1011,9 @@ export class DashboardComponent implements OnInit {
   selectpaymentType(val) {
 
   }
-  getDesclaimer() {
+  getDisclaimer() {
 
-    this.desclaimerService.getDesclaimer()
+    this.desclaimerService.getDisclaimer()
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -1154,7 +1156,7 @@ export class DashboardComponent implements OnInit {
               }
             } else {
               this.toastr.success(data.data.message)
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
               this.updateJob('Invoice')
               this.isLoading$ = false;
 
@@ -1613,7 +1615,7 @@ export class DashboardComponent implements OnInit {
         }
         // console.log(this.sum)
 
-        this.jobService.updateJobData(obj)
+        this.jobService.updateJobService(obj)
           .subscribe(
             data => {
               if (data.data.status == 0) {
@@ -1653,7 +1655,7 @@ export class DashboardComponent implements OnInit {
                   // setTimeout(() => {
                   //   window.location.reload()
                   // }, 700)
-                  this.getJobByInvoiceID(this.jobObj.id);
+                  this.getInvoiceByjobID(this.jobObj.id);
                 }
 
               }
@@ -1703,7 +1705,7 @@ export class DashboardComponent implements OnInit {
           }
           // console.log(this.sum)
     
-          this.jobService.updateJobData(obj)
+          this.jobService.updateJobService(obj)
             .subscribe(
               data => {
                 if (data.data.status == 0) {
@@ -1743,7 +1745,7 @@ export class DashboardComponent implements OnInit {
                     // setTimeout(() => {
                     //   window.location.reload()
                     // }, 700)
-                    this.getJobByInvoiceID(this.jobObj.id);
+                    this.getInvoiceByjobID(this.jobObj.id);
                   }
     
                 }
@@ -1785,7 +1787,7 @@ export class DashboardComponent implements OnInit {
         if (this.JobformGroup.value.estDate == null) {
           obj.estDate = ""
         } 
-        this.jobService.updateJobData(obj)
+        this.jobService.updateJobService(obj)
           .subscribe(
             data => {
               if (data.data.status == 0) {
@@ -1811,7 +1813,7 @@ export class DashboardComponent implements OnInit {
                   this.paymentForm.reset();
                   this.jobService.fetch();
                   this.JobformGroup.untouched; 
-                  this.getJobByInvoiceID(this.jobObj.id);
+                  this.getInvoiceByjobID(this.jobObj.id);
                 }
   
               }
@@ -2064,7 +2066,7 @@ export class DashboardComponent implements OnInit {
 
       const serviceObj = this.ServiceformGroup.value;
       this.isLoading$ = true;
-      this.servicesService.createOnlyService(serviceObj)
+      this.servicesService.createService(serviceObj)
         .subscribe(
           data => {
             if (data.data.status == 0) {
@@ -2671,9 +2673,14 @@ export class DashboardComponent implements OnInit {
     var obj = this.invoiceData;
     obj.duePrice = this.totalSum;
     // obj.email = 'nayanmistry477@gmail.com'
-    obj.username =this.emailSettings.username;
+    obj.username = this.emailSettings.username;
     obj.password = this.emailSettings.password;
+    obj.host = this.emailSettings.server;
+    obj.isSSL = this.emailSettings.isSSL;
+    obj.port = this.emailSettings.port;
+    obj.encryptiontype	 = this.emailSettings.encryptiontype;
     obj.email = this.jobObj.customerEmail;
+    
     obj.items = this.dataList;
     obj.items1 = this.dataList1;
     obj.totalPrice = this.invoiceTotal;

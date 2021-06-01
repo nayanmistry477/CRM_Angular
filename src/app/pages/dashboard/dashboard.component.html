@@ -363,16 +363,10 @@
                                 CUSTOMER
                                 <app-sort-icon column="email" [activeColumn]="sorting.column"
                                     [activeDirection]="sorting.direction" (sort)="sort($event)"></app-sort-icon>
-                            </th>
-                            <!-- <th>
-                    BOOKED IN BY 
-                </th> -->
+                            </th> 
                             <th>
                                 ASSIGNED TO
-                            </th>
-                            <!-- <th>
-                    PRICE 
-                </th> -->
+                            </th> 
                             <th>
                                 STATUS
                             </th>
@@ -524,7 +518,7 @@
                                                     formControlName="jobStatus" name="jobStatus"
                                                     style="text-transform: capitalize;" placeholder="Select Job Status">
                                                     <mat-option>
-                                                        <ngx-mat-select-search [formControl]="jobStatusMultiFilterCtrl"
+                                                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="jobStatusMultiFilterCtrl"
                                                             [searching]="searching">
                                                         </ngx-mat-select-search>
                                                     </mat-option>
@@ -1091,8 +1085,14 @@
                                                     </div> -->
                                                 </div>
                                             </div>
-                                        </div>
-                                        <br>
+                                        </div> 
+                                         <div class="form-group cust-height">
+                                            <label class="form-label"><strong> Model </strong></label>
+                                            <input type="text" class="form-control form-control-lg  " name="modelNo"
+                                                placeholder="Enter Model" autocomplete="off"
+                                                [(ngModel)]="jobObj.modelNo" formControlName="modelNo" />
+                                       
+                                        </div> 
                                         <div class="form-group cust-height">
                                             <label class="form-label"><strong> Serial No </strong></label>
                                             <input type="text" class="form-control form-control-lg  " name="serialNo"
@@ -1101,10 +1101,7 @@
                                             <!-- <div class="invalid-feedback" *ngIf="Step2FormSelectcontrolHasError('required', 'serialNo')">Serial No is
                                           required
                                          </div> -->
-                                        </div>
-
-
-
+                                        </div> 
                                         <div class="form-group cust-height">
                                             <label class="form-label"><strong> Repair Comment </strong></label>
                                             <textarea class="form-control form-control-lg " name="itemComment"
@@ -1986,7 +1983,7 @@
                                                     formControlName="product" name="product" [(ngModel)]="jobObj.product"
                                                     placeholder="Select Product">
                                                     <mat-option>
-                                                      <ngx-mat-select-search [formControl]="productMultiFilterCtrl"
+                                                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl"
                                                         [searching]="searching">
                                                       </ngx-mat-select-search>
                                                     </mat-option>
@@ -2032,7 +2029,7 @@
                                                     formControlName="service" name="service" placeholder="Select Service"
                                                     [(ngModel)]="jobObj.service">
                                                     <mat-option>
-                                                      <ngx-mat-select-search [formControl]="serviceMultiFilterCtrl"
+                                                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="serviceMultiFilterCtrl"
                                                         [searching]="searching">
                                                       </ngx-mat-select-search>
                                                     </mat-option>
@@ -2518,6 +2515,8 @@
                                                         <br>
                                                         <b>Brand:-</b>
                                                         <br>
+                                                        <b>Model:-</b>
+                                                        <br>
                                                         <b>Serial No:-</b>
                                                     </div>
                                                     <div class="col-8">
@@ -2526,6 +2525,8 @@
                                                         {{jobObj.itemType}}
                                                         <br>
                                                         {{jobObj.brand}}
+                                                        <br>
+                                                        {{jobObj.modelNo}}
                                                         <br>
                                                         {{jobObj.serialNo}}
                                                     </div>
@@ -2997,7 +2998,7 @@
                                                     formControlName="name" name="name" placeholder="Select Product"
                                                     [(ngModel)]="jobObj.product">
                                                     <mat-option>
-                                                        <ngx-mat-select-search [formControl]="productMultiFilterCtrl"
+                                                        <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl"
                                                             [searching]="searching">
                                                         </ngx-mat-select-search>
                                                     </mat-option>
@@ -3135,7 +3136,7 @@
                                         formControlName="storageLocation" name="storageLocation"
                                         placeholder="Select Location">
                                         <mat-option>
-                                            <ngx-mat-select-search [formControl]="LocationMultiFilterCtrl"
+                                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="LocationMultiFilterCtrl"
                                                 [searching]="searching">
                                             </ngx-mat-select-search>
                                         </mat-option>
@@ -3749,7 +3750,7 @@
                                                 formControlName="paymentType" name="paymentType"
                                                 [(ngModel)]="paymentObj.paymentType" placeholder="Select Payment Type">
                                                 <mat-option>
-                                                    <ngx-mat-select-search [formControl]="paymentTypeMultiFilterCtrl"
+                                                    <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="paymentTypeMultiFilterCtrl"
                                                         [searching]="searching">
                                                     </ngx-mat-select-search>
                                                 </mat-option>

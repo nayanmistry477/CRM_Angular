@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../_services/auth.service';
 import { first } from 'rxjs/operators';
-import { EmployeeService } from '../_services/employee.service';
+import { UserService } from '../_services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { EmailSettingsService } from '../_services/emailSettings.service';
 
@@ -29,7 +29,7 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    public employeeService:EmployeeService,
+    public employeeService:UserService,
     public cdr:ChangeDetectorRef,
     public emailService:EmailSettingsService,
     private toastr:ToastrService,

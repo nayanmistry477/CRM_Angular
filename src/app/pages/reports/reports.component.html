@@ -270,7 +270,7 @@
                           [(ngModel)]="jobObj.technician" 
                             name="technician" placeholder="Select Technician">
                           <mat-option>
-                            <ngx-mat-select-search [formControl]="TechnicianMultiFilterCtrl" [searching]="searching">
+                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="TechnicianMultiFilterCtrl" [searching]="searching">
                             </ngx-mat-select-search>
                           </mat-option>
                           <mat-option value="">None</mat-option>
@@ -702,7 +702,7 @@
                         [(ngModel)]="jobObj.jobStatus" 
                           name="jobStatus" placeholder="Select Status">
                         <mat-option>
-                          <ngx-mat-select-search [formControl]="JobStatusMultiFilterCtrl" [searching]="searching">
+                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="JobStatusMultiFilterCtrl" [searching]="searching">
                           </ngx-mat-select-search>
                         </mat-option>
                         <mat-option value="">None</mat-option>

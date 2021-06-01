@@ -11,7 +11,7 @@ import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
 import { GroupingState, PaginatorState, SortState } from 'src/app/_metronic/shared/crud-table';
 import { StorageService } from 'src/app/modules/auth/_services/storage.service';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 import { ProductService } from 'src/app/modules/auth/_services/product.service';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -22,7 +22,7 @@ import { Gallery, ImageItem, ImageSize, ThumbnailsPosition } from '@ngx-gallery/
 import { InvoiceService } from 'src/app/modules/auth/_services/invoice.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { EmailSettingsService } from 'src/app/modules/auth/_services/emailSettings.service';
-import { DesclaimerService } from 'src/app/modules/auth/_services/desclaimer.service';
+import { DisclaimerService } from 'src/app/modules/auth/_services/disclaimer.service';
 import { Moment } from 'moment';
 import * as moment from "moment";
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
@@ -177,14 +177,14 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     public jobStatusSService: JobStatusService,
     public InvoiceService: InvoiceService,
     public emailService: EmailSettingsService,
-    public userService: EmployeeService,
+    public userService: UserService,
     public productService: ProductService,
     private sanitizer: DomSanitizer,
     public http: HttpClient,
     public servicesService: ServicesService,
     public gallery: Gallery,
     public router:Router,
-    private desclaimerService: DesclaimerService,
+    private desclaimerService: DisclaimerService,
     public technicianService: TechnicianService,
     public storageLocationService: StorageService,
     public paymentService:PaymentService,
@@ -249,7 +249,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getAllServices();
     this.getAllBookedByUser();
     this.getAllJobStatus();
-    this.getDesclaimer();
+    this.getDisclaimer();
     this.getCompanyDetails();
     this.getAllEmailSettings();
     this.searchForm();
@@ -279,6 +279,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
       brand: ['', Validators.compose([Validators.required])],
       accompanying: ['', Validators.compose([Validators.required])],
       serialNo: [''],
+      modelNo: [''],
       damageAsses: [''],
       underWarranty: [''],
       itemComment: [''],
@@ -647,6 +648,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
   productData: any;
   temp: any;
   public dataList = []
+  public dataList1 = [];
   listPro: any = {}
 
   selectProduct(val) {
@@ -690,7 +692,8 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
   backToMain() {
     this.isShow = false;
     this.jobObj = {};
-    this.dataList = []
+    this.dataList = [];
+    this.dataList1 = [];
     this.list = {};
     this.listPro = {};
     this.jobService.fetch()
@@ -703,7 +706,9 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.isShow = true
     this.getProducts_ServiceByJobID(job.id) 
-    this.getJobByInvoiceID(job.id)
+    this.getInvoiceByjobID(job.id)
+    this.getManualProductByJobID(job.id);
+
     // this.getPaymentById(job.id)
 
     this.selectedIndex = 0;
@@ -726,6 +731,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.JobformGroup.controls['brand'].setValue(this.jobObj.brand);
     this.JobformGroup.controls['underWarranty'].setValue(this.jobObj.underWarranty);
     this.JobformGroup.controls['serialNo'].setValue(this.jobObj.serialNo);
+    this.JobformGroup.controls['modelNo'].setValue(this.jobObj.modelNo); 
     this.JobformGroup.controls['accompanying'].setValue(getval);
     this.JobformGroup.controls['itemComment'].setValue(this.jobObj.itemComment);
     this.JobformGroup.controls['customer'].setValue(this.jobObj.customer);
@@ -781,9 +787,9 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(error);
         });
   }
-  getDesclaimer() {
+  getDisclaimer() {
 
-    this.desclaimerService.getDesclaimer()
+    this.desclaimerService.getDisclaimer()
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -802,11 +808,11 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public isInvoice: Boolean = false;
- async  getJobByInvoiceID(id) {
+ async  getInvoiceByjobID(id) {
     var val = {
       id: id
     }
-    this.InvoiceService.getJobByInvoiceID(val)
+    this.InvoiceService.getInvoiceByjobID(val)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -938,7 +944,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
 
             this.toastr.success(data.data.message)
-            this.getJobByInvoiceID(this.jobObj.id);
+            this.getInvoiceByjobID(this.jobObj.id);
             this.isInvoice$ = false;
             this.modalService.dismissAll();
             this.cdr.markForCheck();
@@ -1166,7 +1172,76 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   }
+ //For Manual Product 
+ editMode1: any;
+ editModeCheck1(i, x, data) {
+   if (i == x) {
+     this.editMode1 = x;
+     console.log(this.editMode1);
+     return false;
+   }
 
+ }
+
+ priceVal1: string;
+ editModeSave1(i, x, item) {
+   if (Number(this.priceVal1) <= 0) {
+     this.toastr.error('Please enter valid amount');
+   } else {
+
+     if (this.priceVal1 == undefined) {
+       // console.log("Price:" + this.priceVal);
+       this.editMode1 = false;
+       if (i == x) {
+         if (this.editMode1 != false) {
+           this.editMode1 = x;
+         } else {
+           this.editMode1 = null;
+         }
+       }
+     } else {
+       // console.log("Price:" + this.priceVal); 
+       this.editMode1 = false;
+
+       if (i == x) {
+         if (this.editMode1 != false) {
+           this.editMode1 = x;
+         } else {
+           this.editMode1 = null;
+           this.editPrice1(item, this.priceVal1);
+         }
+       }
+     }
+   }
+ }
+
+ editPrice1(item, newPrice) {
+
+   this.dataList1.forEach(element => {
+     if (element.id == item.id) {
+       var total;
+
+       if (Number(newPrice) >= Number(item.price)) {
+         this.sum = this.jobObj.price;
+         var old = this.sum - Number(item.price);
+         this.sum = Number(old) + Number(newPrice);
+         this.jobObj.price = this.sum;
+
+       }
+       if (Number(newPrice <= Number(item.price))) {
+         this.sum = this.jobObj.price;
+         total = Number(item.price) - Number(newPrice);
+         this.sum = this.sum - total;
+         this.jobObj.price = this.sum;
+         // console.log(this.sum)
+       }
+       if (element.id == item.id) {
+         element.price = Number(newPrice); 
+       }
+     }
+
+   }); 
+ }
   deleteObj: any = {}
   editDeleteJob(job) {
     // console.log(job)
@@ -1340,7 +1415,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             } else {
               this.toastr.success(data.data.message)
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
               this.updateJob('Invoice')
               this.isLoading$ = false;
              
@@ -1394,7 +1469,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(obj) 
     // console.log(this.sum)
 
-    this.jobService.updateJobData(obj)
+    this.jobService.updateJobService(obj)
       .subscribe(
         data => {
           if (data.data.status == 0) {
@@ -1412,7 +1487,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               this.updateInvoice('updateInvoice')
 
               this.cdr.markForCheck()
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
             } else {
               if (v == 'updateRepair') {
                 setTimeout(() => {
@@ -1428,7 +1503,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               // setTimeout(()=>{
               //   window.location.reload()
               // },700)
-              this.getJobByInvoiceID(this.jobObj.id);
+              this.getInvoiceByjobID(this.jobObj.id);
             }
 
 
@@ -1479,7 +1554,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(obj) 
     // console.log(this.sum)
 
-    this.jobService.updateJobData(obj)
+    this.jobService.updateJobService(obj)
       .subscribe(
         data => {
           if (data.data.status == 0) {
@@ -1497,7 +1572,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               this.updateInvoice('updateInvoice')
 
               this.cdr.markForCheck()
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
             } else {
               if (v == 'updateRepair') {
                 setTimeout(() => {
@@ -1513,7 +1588,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               // setTimeout(()=>{
               //   window.location.reload()
               // },700)
-              this.getJobByInvoiceID(this.jobObj.id);
+              this.getInvoiceByjobID(this.jobObj.id);
             }
 
 
@@ -1559,7 +1634,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(obj) 
     // console.log(this.sum)
 
-    this.jobService.updateJobData(obj)
+    this.jobService.updateJobService(obj)
       .subscribe(
         data => {
           if (data.data.status == 0) {
@@ -1577,7 +1652,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               this.updateInvoice('updateInvoice')
 
               this.cdr.markForCheck()
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
             } else {
               if (v == 'updateRepair') {
                 setTimeout(() => {
@@ -1593,7 +1668,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
               // setTimeout(()=>{
               //   window.location.reload()
               // },700)
-              this.getJobByInvoiceID(this.jobObj.id);
+              this.getInvoiceByjobID(this.jobObj.id);
             }
 
 
@@ -1640,13 +1715,18 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
     var obj = this.invoiceData;
     obj.duePrice = this.totalSum;
-    obj.username =this.emailSettings.username;
+    obj.username = this.emailSettings.username;
     obj.password = this.emailSettings.password;
+    obj.host = this.emailSettings.server;
+    obj.isSSL = this.emailSettings.isSSL;
+    obj.port = this.emailSettings.port;
+    obj.encryptiontype	 = this.emailSettings.encryptiontype;
     // obj.email = 'nayanmistry477@gmail.com'
-    obj.email = this.invoiceData.customerEmail
-    obj.items = this.dataList
+    obj.email = this.invoiceData.customerEmail;
+    obj.items = this.dataList;
+    obj.items1 = this.dataList1;
     obj.totalPrice = this.invoiceTotal
-    console.log(obj)
+    console.log(obj);
     this.isMailSent = true;
     this.emailService.sendMail(obj)
       .subscribe(
@@ -1831,7 +1911,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const serviceObj = this.ServiceformGroup.value;
       this.isLoading$ = true;
-      this.servicesService.createOnlyService(serviceObj)
+      this.servicesService.createService(serviceObj)
         .subscribe(
           data => {
             if (data.data.status == 0) {
@@ -2635,7 +2715,48 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
   }
+  getManualProductByJobID(item) {
+    var data = {
+      jobID: item
+    }
+    this.productService.getManualProductByJobID(data)
+      .subscribe(
+        data => {
+          // console.log(data.data.status)
+          if (data.status == 0) {
+            // this.toastr.error(data.message)
+            this.isLoading$ = false;
+          } else {
 
+            // this.dataList = data.result
+
+            if (data.result.length > 0) {
+              var str = {};
+              var list = [];
+              data.result.forEach(element => {
+
+                str = { productID: element.productID, serviceID: element.serviceID, id: element.id, quoteID: element.quoteID, jobID: element.jobID, invoiceID: element.invoiceID, name: element.name, quantity: element.quantity, unitPrice: element.unitPrice, price: element.sellPrice }
+
+                list.push(str);
+                // console.log(this.dataList)
+
+              });
+              this.dataList1 = list;
+              this.cdr.markForCheck();
+            } else {
+              this.dataList1 = [];
+              this.cdr.markForCheck();
+            }
+            this.cdr.markForCheck();
+
+          }
+        },
+        error => {
+          // this.showError(error.statusText);
+          console.log(error);
+        });
+
+  }
   filterProduct() {
     if (!this.productVal) {
       return;

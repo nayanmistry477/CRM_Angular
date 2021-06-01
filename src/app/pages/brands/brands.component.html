@@ -97,11 +97,7 @@
       <!-- begin:Table -->
       <div class="table-responsive angular-bootstrap-table">
         <table class="table table-head-custom table-vertical-center overflow-hidden">
-          <thead>
-            <!-- <th class="selection-cell-header" data-row-selection="true">
-                  <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectAllRows()"
-                      [checked]="grouping.checkAreAllRowsSelected()" /><span></span></label>
-                </th> -->
+          <thead> 
             <th>
              ID
               <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
@@ -115,30 +111,9 @@
             <th>ACTIONS</th>
           </thead>
           <tbody>
-            <tr *ngFor="let brand of brandService.items$ | async">
-                  <!-- <td class="selection-cell">
-                    <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
-                        [checked]="grouping.isRowSelected(customer.id)" />
-                      <span></span>
-                    </label>
-                  </td> -->
+            <tr *ngFor="let brand of brandService.items$ | async"> 
                   <td>{{ brand.id }}</td>
-                  <td>{{ brand.brandName }}</td> 
-                  <!-- <td>
-                    <span class="label label-lg label-inline" [class.label-light-danger]="customer.status === 1"
-                      [class.label-light-success]="customer.status === 2" [class.label-light-primary]="customer.status === 3">
-                      <ng-container *ngIf="customer.status === 1">Suspended</ng-container>
-                      <ng-container *ngIf="customer.status === 2">Active</ng-container>
-                      <ng-container *ngIf="customer.status === 3">Pending</ng-container>
-                    </span>
-                  </td> -->
-                  <!-- <td>
-                    <span class="label label-dot label-primary mr-2" [class.label-success]="customer.type === 1"
-                      [class.label-primary]="customer.type === 2"></span>&nbsp;<span class="font-bold font-primary">
-                      <ng-container *ngIf="customer.type === 1">Business</ng-container>
-                      <ng-container *ngIf="customer.type === 2">Individual</ng-container>
-                    </span>
-                  </td> -->
+                  <td>{{ brand.brandName }}</td>  
                   <td>
       
                     <a title="Edit Brand " class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"

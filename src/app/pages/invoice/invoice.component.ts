@@ -8,7 +8,7 @@ import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CustomersService } from 'src/app/modules/auth/_services/customer.service';
 import { EmailSettingsService } from 'src/app/modules/auth/_services/emailSettings.service';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 import { InvoiceService } from 'src/app/modules/auth/_services/invoice.service';
 import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
@@ -153,7 +153,7 @@ export class InvoiceComponent implements OnInit {
     private toastr: ToastrService,
     public productService: ProductService,
     public emailService: EmailSettingsService,
-    public userService: EmployeeService,
+    public userService: UserService,
     public customerService: CustomersService,
     public servicesService: ServicesService,
     public paymentService:PaymentService,
@@ -161,16 +161,16 @@ export class InvoiceComponent implements OnInit {
     private modalService: NgbModal, private cdr: ChangeDetectorRef) {
     this.modalService.dismissAll()
     
+  
+  }
+  isShow: boolean = false;
+  user: any = {}
+  ngOnInit(): void {
     const sb = this.invoiceService.isLoading$.subscribe(res => this.isLoading = res);
     this.grouping = this.invoiceService.grouping;
     this.paginator = this.invoiceService.paginator;
     this.sorting = this.invoiceService.sorting;
     this.invoiceService.fetch();
-  }
-  isShow: boolean = false;
-  user: any = {}
-  ngOnInit(): void {
-
     var token = JSON.parse(localStorage.getItem('token'));
     this.user = token.user;
 
@@ -331,7 +331,7 @@ export class InvoiceComponent implements OnInit {
       
       this.cdr.markForCheck();
     } 
-    // this.getJobByInvoiceID(data.jobId)
+    // this.getInvoiceByjobID(data.jobId)
 
   }
   isPercentageBox:boolean = false;
@@ -1498,9 +1498,9 @@ deletePaymentObj:any={}
       this.sum = Number(this.invoiceData.subTotal) - Number(this.deleVal.price)
       this.invoiceData.totalPrice = this.sum
       this.InvoiceForm.controls['totalPrice'].setValue(this.invoiceData.totalPrice)
-       this.totalSum = Number(this.invoiceTotal) - Number(this.invoiceData.deposit);
-        this.InvoiceForm.controls['pendingPrice'].setValue(this.totalSum);
-        this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
+      this.totalSum = Number(this.invoiceTotal) - Number(this.invoiceData.deposit);
+      this.InvoiceForm.controls['pendingPrice'].setValue(this.totalSum);
+      this.paymentForm.controls['dueAmount'].setValue(this.totalSum);
       this.isDelete$ = true;
       this.jobService.deleteItem(this.deleVal)
         .subscribe(
@@ -1848,7 +1848,7 @@ deletePaymentObj:any={}
       var data2 = {
         invoiceID: invoice.invoiceID
       }
-      this.servicesService.getProducts_ServiceByinvoiceID(data2)
+      this.invoiceService.getProducts_ServiceByinvoiceID(data2)
         .subscribe(
           data => {
             // console.log(data.data.status)
@@ -2016,7 +2016,7 @@ deletePaymentObj:any={}
     var data = {
       invoiceID: item
     }
-    this.servicesService.getProducts_ServiceByinvoiceID(data)
+    this.invoiceService.getProducts_ServiceByinvoiceID(data)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -2463,7 +2463,7 @@ deletePaymentObj:any={}
                 this.isLoading$ = false;
 
               }
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
 
 
             }
@@ -2578,7 +2578,7 @@ deletePaymentObj:any={}
             
             }
           
-            // this.getJobByInvoiceID(this.jobObj.id);
+            // this.getInvoiceByjobID(this.jobObj.id);
 
 
           }
@@ -2680,7 +2680,7 @@ deletePaymentObj:any={}
 
       const serviceObj = this.ServiceformGroup.value;
       this.isLoading$ = true;
-      this.servicesService.createOnlyService(serviceObj)
+      this.servicesService.createService(serviceObj)
         .subscribe(
           data => {
             if (data.data.status == 0) {
@@ -3103,7 +3103,7 @@ deletePaymentObj:any={}
             console.log(error);
           });
     } else {
-      this.servicesService.updateProduct_ServiceFinalInvoice(list)
+      this.invoiceService.updateProduct_ServiceFinalInvoice(list)
         .subscribe(
           data => {
             if (data.data.status == 0) {
@@ -3154,7 +3154,7 @@ deletePaymentObj:any={}
     console.log(this.jobObj)
     // console.log(this.sum)
 
-    this.jobService.updateJobData(this.jobObj)
+    this.jobService.updateJobService(this.jobObj)
       .subscribe(
         data => {
           if (data.data.status == 0) {
@@ -3387,7 +3387,7 @@ deletePaymentObj:any={}
       var val1 = {
         invoiceID: invoice.invoiceID
       }
-      this.servicesService.getProducts_ServiceByinvoiceID(val1)
+      this.invoiceService.getProducts_ServiceByinvoiceID(val1)
         .subscribe(
           data => {
             // console.log(data.data.status)

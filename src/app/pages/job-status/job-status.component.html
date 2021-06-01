@@ -229,7 +229,7 @@
                 <mat-form-field class="col-12">
                   <mat-select   (selectionChange)="selectStage($event.value)" [class.is-invalid]="isControlInvalid('statusStage')" style="text-transform: capitalize;"  formControlName="statusStage" name="statusStage"  placeholder="Select StatusStage" >
                      <mat-option>
-                      <ngx-mat-select-search  [formControl]="stageMultiFilterCtrl" [searching]="searching"></ngx-mat-select-search>
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'"  [formControl]="stageMultiFilterCtrl" [searching]="searching"></ngx-mat-select-search>
                     </mat-option>
                     <mat-option  *ngFor="let cust of filteredstageMulti | async" style="text-transform: capitalize;" [value]="cust.stage">
                       {{cust.stage}}

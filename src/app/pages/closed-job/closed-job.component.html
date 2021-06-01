@@ -45,19 +45,20 @@
           </th>
           <th>
             CREATED DATE
-
+            <app-sort-icon column="createdDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+            (sort)="sort($event)"></app-sort-icon>
           </th>
        
           <th>
             EST COMPLETION DATE
-            <!-- <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-              (sort)="sort($event)"></app-sort-icon> -->
+            <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
           </th>
 
           <th>
             COMPLETED DATE
-            <!-- <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-              (sort)="sort($event)"></app-sort-icon> -->
+            <app-sort-icon column="estDate" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
             PRICE
@@ -123,8 +124,8 @@
       </table>
     </div>
     <!-- end: Table -->
-    <!-- <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
-            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator> -->
+    <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
   </div>
 </div>
 
@@ -210,7 +211,7 @@
                                       formControlName="jobStatus" name="jobStatus"
                                       style="text-transform: capitalize;" placeholder="Select Job Status">
                                       <mat-option>
-                                          <ngx-mat-select-search [formControl]="jobStatusMultiFilterCtrl"
+                                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="jobStatusMultiFilterCtrl"
                                               [searching]="searching">
                                           </ngx-mat-select-search>
                                       </mat-option>
@@ -527,82 +528,55 @@
                         <div class="row">
                           <div class="col-7">
                             <div class="form-group">
-                              <label class="form-label"><strong>Storage Location: </strong></label>
-                              &nbsp;&nbsp;&nbsp;&nbsp;
-                              <label class="form-label">{{jobObj.storageLocation}}</label>
-                              <!-- <div class="form-group ">
-                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
-                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
-                            </div> -->
+                              <label class="form-label"><strong>Model: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.modelNo}}</label> 
 
                             </div>
                           </div>
                           <div class="col-5">
                             <div class="form-group">
-                              <label class="form-label"><strong>Est Completion Date: </strong></label>
-
-                              <label class="form-label">{{jobObj.estDate | date: 'dd/MM/yyyy'}}</label>
-                              <!-- <div class="form-group ">
-                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
-                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
-                            </div> -->
+                              <label class="form-label"><strong>Warranty: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label" *ngIf="jobObj.underWarranty == 'true'else no">Yes</label>
+                              <ng-template #no>
+                                <label class="form-label">No</label> 
+                              </ng-template> 
 
                             </div>
+                         
                           </div>
                        
 
                         </div>
                         <div class="row">
                           <div class="col-7">
-                            <div class="form-group">
-
+                            <div class="form-group"> 
                               <label class="form-label"><strong>Accompanying Items: </strong></label>
                               &nbsp;&nbsp;&nbsp;&nbsp;
-                              <label class="form-label">{{jobObj.accompanying}}</label>
-                              <!-- <div class="form-group ">
-                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
-                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
-                            </div> -->
-
+                              <label class="form-label">{{jobObj.accompanying}}</label>  
                             </div>
                           </div>
                           <div class="col-5">
                             <div class="form-group">
                               <label class="form-label"><strong>Completed Date: </strong></label>
                               &nbsp;&nbsp;
-                              <label class="form-label">{{jobObj.completedDate | date: 'dd/MM/yyyy'}}</label>
-                              <!-- <div class="form-group ">
-                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
-                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
-                            </div> -->
-
-                            </div>
-
+                              <label class="form-label">{{jobObj.completedDate | date: 'dd/MM/yyyy'}}</label> 
+                            </div> 
                           </div>
-                        </div>
-
-
+                        </div> 
                         <div class="row">
-                          <div class="col-12">
-
+                          <div class="col-12"> 
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-7">
                             <div class="form-group">
-                              <label class="form-label"><strong>Warranty: </strong></label> &nbsp;&nbsp;&nbsp;&nbsp;
-                              <label class="form-label" *ngIf="jobObj.underWarranty == 'true'else no">Yes</label>
-                              <ng-template #no>
-                                <label class="form-label">No</label>
-
-                              </ng-template>
-
-                              <!-- <div class="form-group ">
-                              <input type="text" class=" form-control   form-control-solid" name="customerContact"
-                                placeholder="Enter Contact No" autocomplete="off" formControlName="customerContact" />
-                            </div> -->
+                              <label class="form-label"><strong>Storage Location: </strong></label>
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                              <label class="form-label">{{jobObj.storageLocation}}</label> 
 
                             </div>
+                         
+                          
                             <div class="row">
                               <div class="col-12">
 
@@ -615,13 +589,16 @@
                                     autocomplete="off" formControlName="damageAsses" cols="8" rows="3"></textarea>
 
                                 </div>
-                              </div>
+                              </div> 
+                            </div>
+                          </div>  
+                          <div class="col-5">
+                            <div class="form-group">
+                              <label class="form-label"><strong>Est Completion Date: </strong></label> 
+                              <label class="form-label">{{jobObj.estDate | date: 'dd/MM/yyyy'}}</label> 
 
                             </div>
                           </div>
-                       
-
-
                         </div>
                       </div>
 
@@ -644,249 +621,8 @@
 
                           </div>
                         </div>
-                      </div>
-                      <!-- <div class="col-lg-4" style="float: left;">
-                    <div class="form-group cust-height">
-                      <label class="form-label">Item Type </label>
-                      <div class="row">
-                        <div class="col-8">
-                          <mat-form-field class="col-12">
-                            <mat-select (selectionChange)="selectItem($event.value)"
-                              [class.is-invalid]="jobControlInvalid('itemType')" formControlName="itemType"
-                              name="itemType" [(ngModel)]="jobObj.itemType" placeholder="Select Item">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="itemMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let item of filteredItemMulti | async" [value]="item.itemType">
-                                {{item.itemType}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'itemType')">
-                            Item is required
-                          </div>
-                        </div> 
-                      </div>
-                    </div>
-                    <div class="form-group cust-height">
-                      <label class="form-label">Brand </label>
-                      <div class="row">
-                        <div class="col-8">
-                          <mat-form-field class="col-12">
-                            <mat-select (selectionChange)="selectBrand($event.value)"
-                              [class.is-invalid]="jobControlInvalid('brand')" formControlName="brand" name="brand"
-                              [(ngModel)]="jobObj.brand" placeholder="Select Brand">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="brandMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let brands of filteredBrandMulti | async" [value]="brands.brand">
-                                {{brands.brand}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'brand')">
-                            Brand is required
-                          </div> 
-                        </div>
-                        
-                      </div>
-                    </div>
-                    <div class="form-group cust-height">
-                      <label class="form-label">Accompanying Items </label>
-                      <div class="row">
-                        <div class="col-8">
-                          <mat-form-field class="col-12">
-                            <mat-select (selectionChange)="selectACItems($event.value)" multiple
-                              [class.is-invalid]="jobControlInvalid('accompanying')" formControlName="accompanying"
-                              name="accompanying" [(ngModel)]="jobObj.accompanying"
-                              placeholder="Select Accompanying Items">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="ACItemsMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let accItems of filteredACItemsMulti | async"
-                                [value]="accItems.acItems">
-                                {{accItems.acItems}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'accompanying')">
-                            Accompanying Item is required
-                          </div>
-                        </div>
-                    
-                      </div>
-                    </div>
-                    <div class="form-group cust-height">
-                      <div class="row">
-                        <div class="col-10">
-                          <label class="form-label">Barcode</label>
-                          <input type="text" class="form-control form-control-lg form-control-solid" name="barcode"
-                            placeholder="Enter a custom barcode here if required" autocomplete="off"
-                            formControlName="barcode" /> 
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group cust-height" style="display: inline;">
-                      <label class="form-label"> Damage Assessment</label>
-                      <textarea class="form-control form-control-lg form-control-solid" name="damageAsses"
-                        placeholder="Make a  note of any damage NOT related to the repair here (e.g scratch on the case)."
-                        autocomplete="off" formControlName="damageAsses" cols="8" rows="5"></textarea>
-                    </div>
-                  </div>
-                  <div class="col-lg-4" style="float: left;">
-                    <div class="form-group cust-height">
-                      <label class="form-label"> Booked In By </label>
-                      <div class="row">
-                        <div class="col-12">
-                          <mat-form-field class="col-10">
-                            <mat-select (selectionChange)="selectBookedBy($event.value)"
-                              [class.is-invalid]="jobControlInvalid('bookedBy')" formControlName="bookedBy"
-                              name="bookedBy" [(ngModel)]="jobObj.bookedBy" placeholder="Select Boooked by">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="bookedByMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let item of filteredbookedByMulti | async" [value]="item.bookedBy">
-                                {{item.bookedBy}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'bookedBy')">
-                            Booked By is required
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-group cust-height">
-                      <label class="form-label"> Storage Location </label>
-                      <div class="row">
-                        <div class="col-12">
-                          <mat-form-field class="col-10">
-                            <mat-select (selectionChange)="selectStorageLocation($event.value)"
-                              [(ngModel)]="jobObj.storageLocation"
-                              [class.is-invalid]="jobControlInvalid('storageLocation')"
-                              formControlName="storageLocation" name="storageLocation" placeholder="Select Location">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="LocationMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let location of filteredLocationMulti | async"
-                                [value]="location.storageLocation">
-                                {{location.storageLocation}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'storageLocation')">
-                            StorageLocation is
-                            required
-                          </div>
-                        </div>
-                       
-                      </div>
-                    </div> 
-                    <div class="form-group cust-height">
-                      <label class="form-label"> Job Status </label>
-                      <div class="row">
-                        <div class="col-10">
-                          <mat-form-field class="col-12">
-                            <mat-select (selectionChange)="selectJobStatus($event.value)" [(ngModel)]="jobObj.jobStatus"
-                              [class.is-invalid]="jobControlInvalid('jobStatus')" formControlName="jobStatus"
-                              name="jobStatus" style="text-transform: capitalize;" placeholder="Select Job Status">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="jobStatusMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let jobstatus of filteredjobStatusMulti | async"
-                                [value]="jobstatus.jobStatus" style="text-transform: capitalize;">
-                                {{jobstatus.jobStatus}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'jobStatus')">
-                            Job
-                            Status is required
-                          </div>
-                        </div>  
-                      </div>
-                    </div>
-                    <div class="form-group cust-height">
-                      <label class="form-label"> Est Completion Date</label>
-                      <input type="date" class="form-control form-control-lg form-control-solid" name="estDate"
-                        autocomplete="off" [ngModel]="jobObj.estDate | date:'y-MM-dd'" formControlName="estDate" />
-                    </div>
-                    <div class="form-group cust-height">
-                      <label> Repair Description</label>
-                      <textarea class="form-control form-control-lg " name="repairDescription"
-                        placeholder="Enter a description of the repair, or details of the problem" autocomplete="off"
-                        formControlName="repairDescription" cols="8" rows="5"></textarea>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-4" style="float: left;">
-                    <div class="form-group cust-height">
-                      <label class="form-label">Assigned To </label>
-                      <div class="row">
-                        <div class="col-12">
-                          <mat-form-field class="col-8">
-                            <mat-select (selectionChange)="selectAssignTo($event.value)" formControlName="assignedTo"
-                              name="assignedTo" [(ngModel)]="jobObj.assignedTo"
-                              placeholder="Choose a staff member to assign this job to">
-                              <mat-option>
-                                <ngx-mat-select-search [formControl]="assignToMultiFilterCtrl" [searching]="searching">
-                                </ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let assign of filteredassignToMulti | async"
-                                [value]="assign.assignTo">
-                                {{assign.assignTo}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <div class="invalid-feedback" *ngIf="jobcontrolHasError('required', 'assignedTo')">
-                            Assign is required
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group cust-height">
-                      <label class="form-label"> Serial No</label>
-                      <input type="text" class="form-control form-control-lg form-control-solid" name="serialNo"
-                        placeholder="Enter Serial No" autocomplete="off" formControlName="serialNo" />
-                   
-                    </div>
-                    <div class="form-group cust-height">
-                      <label class="form-label">Password</label>
-                      <input type="text" class="form-control form-control-lg form-control-solid" name="password"
-                        placeholder="Enter Password" autocomplete="off" formControlName="password" />
-                      
-                    </div>  
-                    <div class="form-group cust-height" style="display: inline;">
-                      <label class="form-label"> Repair Comment</label>
-                      <textarea class="form-control form-control-lg form-control-solid" name="itemComment"
-                        placeholder="Any comments relating the item (e.g the battery does not  last long)."
-                        autocomplete="off" formControlName="itemComment" cols="10" rows="2"></textarea>
-                    </div>
-                    <div class="form-group cust-height">
-
-                    </div>
-                    <div class="form-group cust-height">
-                      <label class="form-label">Under Warranty </label>
-                      <div class="col-lg-9 col-xl-4">
-
-                        <label class="checkbox checkbox-lg checkbox-inline">
-                          <input type="checkbox" name="underWarranty" (change)="changeWarranty($event.target.checked)"
-                            autocomplete="off" formControlName="underWarranty" />
-                          <span></span>
-                        </label>
-
-                      </div>
-                    </div>
-                  </div>  -->
-                    </div>
+                      </div> 
+                   </div>
                   </div>
                 </div>
 
@@ -1092,8 +828,46 @@
                                           </a>
                                         </td> -->
                                       </tr>
+                                      <tr *ngFor="let product of dataList1 | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index"> 
+                                        <!-- <td *ngIf="product.productID == null && product.serviceID == null">{{ product.name }}</td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null">£{{ product.price }}</td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null">{{ product.quantity }}</td>
+    
+                                        <td  *ngIf="product.productID == null && product.serviceID == null">
+                                          <a title="Edit Product"
+                                            class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                            (click)="editProductManualModal(product)">
+                                            <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                              cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                                            </span>
+                                          </a>
+    
+                                          <a title="Delete Product" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                            (click)="editDeletemodalManual(product)">
+                                            <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                                              cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                                            </span>
+                                          </a>
+                                        </td> -->
+                                        <td *ngIf="product.productID == null && product.serviceID == null">{{product.name}}
+    
+                                        </td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null" style=" padding-top: 2%; width: 30%;">
+    
+                                          <div class="input-group">
+                                            <label class="form-label"> £{{product.price}}</label>
+                                          </div>
+                                        </td>
+                                        <td *ngIf="product.productID == null && product.serviceID == null">
+                                          <div class="cust-div"  >
+                                            <label class="form-label"> {{product.quantity}}</label>
+                                          </div>
+                                       
+                                        </td>
+                       
+                                      </tr>
                                     </tbody>
-                                    <tfoot *ngIf="dataList.length > 5">
+                                    <tfoot *ngIf="dataList.length > 5  || dataList1.length > 5">
                                       <pagination-controls (pageChange)="p = $event"
                                         class="d-flex justify-content-between align-items-center flex-wrap">
                                       </pagination-controls>
@@ -1355,12 +1129,16 @@
                                   <th>
                                     NAME
                                   </th>
-                                  <th>
-                                    PRICE
-                                  </th>
+                                 
                                   <th>
                                     QUANTITY
                                   </th>
+                                   <th>
+                                 UNIT PRICE
+                                  </th>
+                                   <th>
+                                TOTAL PRICE
+                              </th>
                                   <!-- <th>ACTIONS</th> -->
                                 </thead>
                                 <tbody>
@@ -1368,6 +1146,31 @@
                                     *ngFor="let item of dataList | paginate: { itemsPerPage: 10, currentPage: p };index as indexOfelement; let i = index ">
 
                                     <td>{{item.name}}</td>
+                                    <td>
+                                      <div class="cust-div" *ngIf="item.service !=1;else service">
+                                        <!-- <span [hidden]="item.quantity <= 1" (click)="decrement(item)"
+                                                  class="minus "><i class="fa fa-minus cust-minus"
+                                                    aria-hidden="true"></i></span> -->
+                                        <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" /> -->
+                                        <!-- <span (click)="increment(item,i)" class="plus "><i
+                                                    class="fa fa-plus cust-plus"></i></span> -->
+                                        <label class="form-label"> {{item.quantity}}</label>
+                                      </div>
+                                      <ng-template #service>
+                                        <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" />  -->
+                                        <label class="form-label"> {{item.quantity}}</label>
+                                        <!-- <input disabled class="cust-txt" type="text" value="1" /> -->
+                                      </ng-template>
+                                    </td>
+                                    <td *ngIf="item.unitPrice!=null && item.unitPrice!=undefined;else showPrice">
+                                      £{{item.unitPrice}}</td>
+                                    <ng-template #showPrice>
+                                      <td style=" padding-top: 2%; width: 30%;">
+                                        <div class="input-group">
+                                          <label class="form-label"> £{{item.price}}</label>
+                                        </div>
+                                      </td>
+                                    </ng-template>
                                     <td style=" padding-top: 2%; width: 30%;">
 
                                       <div class="input-group">
@@ -1396,22 +1199,7 @@
                                         </span> -->
                                       </div>
                                     </td>
-                                    <td>
-                                      <div class="cust-div" *ngIf="item.service !=1;else service">
-                                        <!-- <span [hidden]="item.quantity <= 1" (click)="decrement(item)"
-                                                  class="minus "><i class="fa fa-minus cust-minus"
-                                                    aria-hidden="true"></i></span> -->
-                                        <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" /> -->
-                                        <!-- <span (click)="increment(item,i)" class="plus "><i
-                                                    class="fa fa-plus cust-plus"></i></span> -->
-                                        <label class="form-label"> {{item.quantity}}</label>
-                                      </div>
-                                      <ng-template #service>
-                                        <!-- <input disabled class="cust-txt" type="text" [value]="item.quantity" />  -->
-                                        <label class="form-label"> {{item.quantity}}</label>
-                                        <!-- <input disabled class="cust-txt" type="text" value="1" /> -->
-                                      </ng-template>
-                                    </td>
+                                   
                                     <!-- <td>
 
                                       <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
@@ -1422,8 +1210,38 @@
                                       </a>
                                     </td> -->
                                   </tr>
+                                  <tr *ngFor="let item of dataList1">
+                                    <td>{{item.name}}</td>
+                                    <td>
+                                      <div class="cust-div">
+                                        <label class="form-label"> {{item.quantity}}</label>
+                                      </div>
+                                    </td>
+                                    <td *ngIf="item.unitPrice!=null && item.unitPrice!=undefined;else showPrice1">
+                                      £{{item.unitPrice}}</td>
+                                    <ng-template #showPrice1>
+                                      <td style=" padding-top: 2%; width: 30%;">
+                                        <div class="input-group">
+                                          <label class="form-label"> £{{item.price}}</label>
+                                        </div>
+                                      </td>
+                                    </ng-template> 
+                                    <td style=" padding-top: 2%; width: 30%;">
+                                      <div class="input-group">
+                                        <label class="form-label"> £{{item.price}}</label>
+                                      </div>
+                                    </td>
+                                    <!-- <td> 
+                                    <a title="Delete" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                                      (click)="deleteData(item)">
+                                      <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                                        class="svg-icon svg-icon-md svg-icon-danger">
+                                      </span>
+                                    </a>
+                                  </td> -->
+                                  </tr>
                                 </tbody>
-                                <tfoot *ngIf="dataList.length > 5">
+                                <tfoot *ngIf="dataList.length > 5 || dataList1.length > 5">
                                   <pagination-controls (pageChange)="p = $event"
                                     class="d-flex justify-content-between align-items-center flex-wrap">
                                   </pagination-controls>
@@ -1697,7 +1515,7 @@
                           [class.is-invalid]="repairassignControlInvalid('name')" formControlName="name" name="name"
                           placeholder="Select Product" [(ngModel)]="jobObj.product">
                           <mat-option>
-                            <ngx-mat-select-search [formControl]="productMultiFilterCtrl" [searching]="searching">
+                            <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="productMultiFilterCtrl" [searching]="searching">
                             </ngx-mat-select-search>
                           </mat-option>
                           <mat-option *ngFor="let pro of filteredProductMulti | async" [value]="pro.product">
@@ -1731,7 +1549,7 @@
                             name="assignedTo" [class.is-invalid]="repairassignControlInvalid('assignedTo')"
                             placeholder="Choose a staff member to assign this job to">
                             <mat-option>
-                              <ngx-mat-select-search [formControl]="assignToMultiFilterCtrl" [searching]="searching">
+                              <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="assignToMultiFilterCtrl" [searching]="searching">
                               </ngx-mat-select-search>
                             </mat-option>
                             <mat-option *ngFor="let assign of filteredassignToMulti | async" [value]="assign.assignTo">
@@ -1821,7 +1639,7 @@
                     [class.is-invalid]="repairControlInvalid('storageLocation')" formControlName="storageLocation"
                     name="storageLocation" placeholder="Select Location">
                     <mat-option>
-                      <ngx-mat-select-search [formControl]="LocationMultiFilterCtrl" [searching]="searching">
+                      <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="LocationMultiFilterCtrl" [searching]="searching">
                       </ngx-mat-select-search>
                     </mat-option>
                     <mat-option *ngFor="let location of filteredLocationMulti | async"
@@ -2454,7 +2272,7 @@
                       <mat-select (selectionChange)="selectpaymentType($event.value)" formControlName="paymentType"
                         name="paymentType" [(ngModel)]="paymentObj.paymentType" placeholder="Select Payment Type">
                         <mat-option>
-                          <ngx-mat-select-search [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
+                          <ngx-mat-select-search [placeholderLabel]="'Search...'" [formControl]="paymentTypeMultiFilterCtrl" [searching]="searching">
                           </ngx-mat-select-search>
                         </mat-option>
                         <mat-option *ngFor="let item of filteredpaymentTypeMulti | async" [value]="item.paymentType">

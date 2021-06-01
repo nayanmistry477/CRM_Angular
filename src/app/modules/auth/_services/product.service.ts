@@ -111,15 +111,15 @@ export class ProductService extends TableService<any> implements OnDestroy {
         headers: httpHeaders,
       });  
   } 
-  updateProductOnJob(product) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/updateProductOnJob`,product, {
-        headers: httpHeaders,
-      });
+  // updateProductOnJob(product) {
+  //   const httpHeaders = new HttpHeaders({
+  //       Authorization: `Bearer ${this.token}`
+  //     });
+  //     return this.http.post<any>(`${API_USERS_URL}/updateProductOnJob`,product, {
+  //       headers: httpHeaders,
+  //     });
  
-  }
+  // }
   
   getAllProducts() {
     const httpHeaders = new HttpHeaders({

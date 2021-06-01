@@ -1,41 +1,42 @@
-<div class="d-flex align-items-center font-weight-bold my-2 "  >
-  <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;" class="flaticon2-gear"></i></span> &nbsp;&nbsp;
-  <a   class="navi-text" routerLink="/settings">Back To Settings</a > 
+<div class="d-flex align-items-center font-weight-bold my-2 ">
+  <span class="navi-icon" routerLink="/settings"><i style="font-size: 25px;color: #483d8b;"
+      class="flaticon2-gear"></i></span> &nbsp;&nbsp;
+  <a class="navi-text" routerLink="/settings">Back To Settings</a>
 </div>
 
 <div class="card card-custom gutter-b">
-    <div class="card-header">
-      <div class="card-title">
-        <h3 class="card-label">Storage Locations</h3>
-      </div>
-      <!-- <div class="card-toolbar">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Storage Locations</h3>
+    </div>
+    <!-- <div class="card-toolbar">
         <button type="button" class="btn btn-primary" (click)="editModal()">Add</button>
   
       </div> -->
 
-      <div class=" row">
-        <div class="col-8" [formGroup]="searchGroup">
-          <div class="card-toolbar">
+    <div class=" row">
+      <div class="col-8" [formGroup]="searchGroup">
+        <div class="card-toolbar">
           <!-- <small class="form-text text-muted"><b>Search</b> in all fields</small> -->
-         
-            <div class="form-group has-search">
-              <span class="fa fa-search form-control-feedback"></span>
-              <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
+
+          <div class="form-group has-search">
+            <span class="fa fa-search form-control-feedback"></span>
+            <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
               formControlName="searchTerm" />
-            </div>
+          </div>
         </div>
+      </div>
+      <div class="col-4">
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-primary" (click)="editModal()">+ Add</button>
+
         </div>
-          <div class="col-4">
-            <div class="card-toolbar">
-              <button type="button" class="btn btn-primary" (click)="editModal()">+ Add</button>
-        
-            </div>
-          </div> 
       </div>
     </div>
-    <div class="card-body">
-      <!-- begin: Filtration form -->
-      <!-- <div class="form form-label-right">
+  </div>
+  <div class="card-body">
+    <!-- begin: Filtration form -->
+    <!-- <div class="form form-label-right">
             <div class="form-group row">
               <div class="col-lg-4">
                 <div class="row" [formGroup]="filterGroup">
@@ -62,11 +63,11 @@
               </div>
             </div>
           </div> -->
-      <!-- end: Filtration form -->
-  
-      <!-- begin: Grouping -->
-      <!-- <ng-container *ngIf="grouping.getSelectedRowsCount()"> -->
-      <!-- <div class="form">
+    <!-- end: Filtration form -->
+
+    <!-- begin: Grouping -->
+    <!-- <ng-container *ngIf="grouping.getSelectedRowsCount()"> -->
+    <!-- <div class="form">
               <div class="row align-items-center form-group-actions margin-top-20 margin-bottom-20">
                 <div class="col-xl-12">
                   <div class="form-group form-group-inline">
@@ -92,151 +93,131 @@
                 </div>
               </div>
             </div> -->
-      <!-- </ng-container> -->
-      <!-- end: Grouping -->
-  
-      <!-- begin:Table -->
-      <div class="table-responsive angular-bootstrap-table">
-        <table class="table table-head-custom table-vertical-center overflow-hidden">
-          <thead>
-            <!-- <th class="selection-cell-header" data-row-selection="true">
-                  <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectAllRows()"
-                      [checked]="grouping.checkAreAllRowsSelected()" /><span></span></label>
-                </th> -->
-                <th>
-                  ID
-                  <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-                  (sort)="sort($event)"></app-sort-icon>
-                </th>
-            <th>
+    <!-- </ng-container> -->
+    <!-- end: Grouping -->
+
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th>
+            ID
+            <app-sort-icon column="id" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+          <th>
             STORAGE LOCATION
-              <app-sort-icon column="	storageName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
-                    (sort)="sort($event)"></app-sort-icon>
-            </th>     
-  
-            <th>ACTIONS</th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let storage of storageService.items$ | async">
-                  <!-- <td class="selection-cell">
-                    <label class="checkbox checkbox-single"><input type="checkbox" (click)="grouping.selectRow(customer.id)"
-                        [checked]="grouping.isRowSelected(customer.id)" />
-                      <span></span>
-                    </label>
-                  </td> -->
-                  <td>{{ storage.id }}</td>
-                  <td>{{ storage.storageName }}</td> 
-                  <!-- <td>
-                    <span class="label label-lg label-inline" [class.label-light-danger]="customer.status === 1"
-                      [class.label-light-success]="customer.status === 2" [class.label-light-primary]="customer.status === 3">
-                      <ng-container *ngIf="customer.status === 1">Suspended</ng-container>
-                      <ng-container *ngIf="customer.status === 2">Active</ng-container>
-                      <ng-container *ngIf="customer.status === 3">Pending</ng-container>
-                    </span>
-                  </td> -->
-                  <!-- <td>
-                    <span class="label label-dot label-primary mr-2" [class.label-success]="customer.type === 1"
-                      [class.label-primary]="customer.type === 2"></span>&nbsp;<span class="font-bold font-primary">
-                      <ng-container *ngIf="customer.type === 1">Business</ng-container>
-                      <ng-container *ngIf="customer.type === 2">Individual</ng-container>
-                    </span>
-                  </td> -->
-                  <td>
-      
-                    <a title="Edit Storage" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                      (click)="editStorage(storage)">
-                      <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
-                        class="svg-icon svg-icon-md svg-icon-primary">
-                      </span>
-                    </a>
-      
-                    <a title="Delete Storage" class="btn btn-icon btn-light btn-hover-danger btn-sm"
-                      (click)="editdelete(storage)">
-                      <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
-                        class="svg-icon svg-icon-md svg-icon-danger">
-                      </span>
-                    </a>
-                  </td>
-                </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- end: Table -->
-      <app-paginator *ngIf="storageService.items$ != null" class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
-            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+            <app-sort-icon column="	storageName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
+              (sort)="sort($event)"></app-sort-icon>
+          </th>
+
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let storage of storageService.items$ | async">
+            <td>{{ storage.id }}</td>
+            <td>{{ storage.storageName }}</td>
+            <td>
+
+              <a title="Edit Storage" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                (click)="editStorage(storage)">
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+
+              <a title="Delete Storage" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="editdelete(storage)">
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <!-- end: Table -->
+    <app-paginator *ngIf="storageService.items$ != null"
+      class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+      [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
   </div>
+</div>
 
 
-  <!-- Add Storage Location Modal -->
+<!-- Add Storage Location Modal -->
 <ng-template #storageopenModal let-modal>
-    <div class="modal-header cust-color">
-      <div class="modal-title h4" id="example-modal-sizes-title-lg">
-        <!-- <ng-container *ngIf="customer">
+  <div class="modal-header cust-color">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
          <ng-container *ngIf="customer.id">Edit</ng-container>
          <ng-container *ngIf="!customer.id">Create</ng-container> 
          <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
-       </ng-container> --> 
-        <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Storage</span>
-        <span *ngIf="isFlag == 2" style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update Storage</span>
+       </ng-container> -->
+      <span *ngIf="isFlag == 1" style="color:aliceblue;"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+        Storage</span>
+      <span *ngIf="isFlag == 2" style="color:aliceblue;"> <i class="fas fa-edit" aria-hidden="true"></i> Update
+        Storage</span>
 
-      </div>
     </div>
-    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
-      <!-- <ng-container *ngIf="isLoading$ | async">
+  </div>
+  <div class="overlay overlay-block cursor-default modal-body" style="min-height: 100px;">
+    <!-- <ng-container *ngIf="isLoading$ | async">
         <div class="overlay-layer bg-transparent">
           <div class="spinner spinner-lg spinner-success"></div>
         </div>
       </ng-container> -->
-      <ng-container>
-        <form action="#" class="form form-label-right" [formGroup]="locationGroup">
-          <div class="form-group cust-height">
-            <div class="col-lg-12">
-              <label class="form-label">Storage Location</label>
-              <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid" name="storageName" required
-                placeholder="Enter Storage Location" autocomplete="off" [class.is-invalid]="isControlInvalid('storageName')"
-                formControlName="storageName"  />
-              <div class="invalid-feedback" *ngIf="controlHasError('required', 'storageName')">Storage Location required
-              </div> 
+    <ng-container>
+      <form action="#" class="form form-label-right" [formGroup]="locationGroup">
+        <div class="form-group cust-height">
+          <div class="col-lg-12">
+            <label class="form-label">Storage Location</label>
+            <input type="text" pattern="^(\w+ ?)*$" class="form-control form-control-lg form-control-solid"
+              name="storageName" required placeholder="Enter Storage Location" autocomplete="off"
+              [class.is-invalid]="isControlInvalid('storageName')" formControlName="storageName" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'storageName')">Storage Location required
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeLocation()">Cancel</button>
-         
-            <ng-container *ngIf="isFlag == 1"> 
-              <button type="submit" (click)="addLocation()"  [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"  class="btn btn-custom btn-elevate"
-               >Submit <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light btn-elevate mr-2" (click)="closeLocation()">Cancel</button>
+
+          <ng-container *ngIf="isFlag == 1">
+            <button type="submit" (click)="addLocation()" [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Submit <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
           </ng-container>
 
-          <ng-container *ngIf="isFlag == 2"> 
-            <button type="submit" (click)="updateLocation()"  [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"  class="btn btn-custom btn-elevate"
-            >Update <span [ngClass]="{spinner:isLoading$ == true}" style="margin: 17%;"></span></button>
-        </ng-container>
-          </div>
-        </form>
-      </ng-container>
-    </div>
-  
-  
-  </ng-template>
-  <!-- Add Storage Location Modal --> 
-    <!-- Confirm Box -->
-    <ng-template #confrimBox let-modal>
+          <ng-container *ngIf="isFlag == 2">
+            <button type="submit" (click)="updateLocation()" [ngStyle]=" {'width':isLoading$ == true ? '25%':'17%'}"
+              class="btn btn-custom btn-elevate">Update <span [ngClass]="{spinner:isLoading$ == true}"
+                style="margin: 17%;"></span></button>
+          </ng-container>
+        </div>
+      </form>
+    </ng-container>
+  </div>
 
-      <div class="modal-header ">
-        <div class="modal-title h4" id="example-modal-sizes-title-lg">
-          <!-- <ng-container *ngIf="customer">
+
+</ng-template>
+<!-- Add Storage Location Modal -->
+<!-- Confirm Box -->
+<ng-template #confrimBox let-modal>
+
+  <div class="modal-header ">
+    <div class="modal-title h4" id="example-modal-sizes-title-lg">
+      <!-- <ng-container *ngIf="customer">
               <ng-container *ngIf="customer.id">Edit</ng-container>
               <ng-container *ngIf="!customer.id">Create</ng-container>
            
               <ng-container *ngIf="customer.id">'{{customer.firstName}} {{ customer.lastName }}'</ng-container>
-            </ng-container> --> 
-           <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
-  
-        </div>
-      </div>
-      
-      <!-- <div class="modal-footer">
+            </ng-container> -->
+      <span> <i class="fa fa-pencil-circle" aria-hidden="true"></i> Delete Confirmation</span>
+
+    </div>
+  </div>
+
+  <!-- <div class="modal-footer">
          <ng-container> 
           <button type="submit" (click)="deleteStorage()"  class="btn btn-primary btn-elevate"
            >Yes</button>
@@ -247,25 +228,25 @@
      
       </div> -->
 
-      <div class="modal-body"> 
-      
-        <ng-container  >
-        <h4>Are you sure to  delete this storage location?</h4>
-        </ng-container>
-      </div>
-      
-      <div class="modal-footer"> 
+  <div class="modal-body">
 
-        <ng-container> 
-          <button class="btn btn-danger" [ngStyle]=" {'width':isDeleting  == true ? '25%':'20%'}" (click)="deleteStorage()"
-          data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
-            [ngClass]="{spinner:isDeleting== true}" style="margin: 10%;"></span></button>
-          
-          <button type="button" (click)="closeDelete()" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </ng-container>
-     
-      </div>
-    
-    </ng-template>
-    
-    <!-- Confirm Box -->
+    <ng-container>
+      <h4>Are you sure to delete this storage location?</h4>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+
+    <ng-container>
+      <button class="btn btn-danger" [ngStyle]=" {'width':isDeleting  == true ? '25%':'20%'}" (click)="deleteStorage()"
+        data-entity="user" id="userDeleteButton"><span class="fa fa-trash"></span> Delete <span
+          [ngClass]="{spinner:isDeleting== true}" style="margin: 10%;"></span></button>
+
+      <button type="button" (click)="closeDelete()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </ng-container>
+
+  </div>
+
+</ng-template>
+
+<!-- Confirm Box -->

@@ -11,7 +11,7 @@ import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
 import { GroupingState, PaginatorState, SortState } from 'src/app/_metronic/shared/crud-table';
 import { StorageService } from 'src/app/modules/auth/_services/storage.service';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 import { ProductService } from 'src/app/modules/auth/_services/product.service';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
@@ -22,7 +22,7 @@ import { Gallery, ImageItem, ImageSize, ThumbnailsPosition } from '@ngx-gallery/
 import { InvoiceService } from 'src/app/modules/auth/_services/invoice.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { EmailSettingsService } from 'src/app/modules/auth/_services/emailSettings.service';
-import { DesclaimerService } from 'src/app/modules/auth/_services/desclaimer.service';
+import { DisclaimerService } from 'src/app/modules/auth/_services/disclaimer.service';
 import * as moment from "moment";
 import { MatDatepicker } from '@angular/material/datepicker';
 import { Moment } from 'moment';
@@ -186,7 +186,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     public ACCItemService: AccompanyingService,
     private cdr: ChangeDetectorRef,
     public jobStatusSService: JobStatusService,
-    public userService: EmployeeService,
+    public userService: UserService,
     public productService: ProductService,
     public emailService: EmailSettingsService,
     private sanitizer: DomSanitizer,
@@ -194,7 +194,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     public servicesService: ServicesService,
     public gallery: Gallery,
     public InvoiceService: InvoiceService,
-    private desclaimerService: DesclaimerService,
+    private desclaimerService: DisclaimerService,
     private elRef: ElementRef,
     public storageLocationService: StorageService,
     private ngZone: NgZone,
@@ -267,7 +267,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getAllServices();
     this.getAllBookedByUser();
     this.getAllJobStatus();
-    this.getDesclaimer();
+    this.getDisclaimer();
     this.getCompanyDetails();
     this.getAllEmailSettings();
     this.searchForm();
@@ -294,6 +294,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
       brand: ['', Validators.compose([Validators.required])],
       accompanying: ['', Validators.compose([Validators.required])],
       serialNo: [''],
+      modelNo:[''],
       damageAsses: [''],
       underWarranty: [''],
       itemComment: [''],
@@ -545,7 +546,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isShow = true
     this.getProducts_ServiceByJobID(job.id);
     this.getManualProductByJobID(job.id);
-    this.getJobByInvoiceID(job.id);
+    this.getInvoiceByjobID(job.id);
     // this.getPaymentById(job.id)
 
     this.selectedIndex = 0;
@@ -567,6 +568,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     this.JobformGroup.controls['brand'].setValue(this.jobObj.brand);
     this.JobformGroup.controls['underWarranty'].setValue(this.jobObj.underWarranty);
     this.JobformGroup.controls['serialNo'].setValue(this.jobObj.serialNo);
+    this.JobformGroup.controls['modelNo'].setValue(this.jobObj.modelNo);
     this.JobformGroup.controls['accompanying'].setValue(getval);
     this.JobformGroup.controls['itemComment'].setValue(this.jobObj.itemComment);
     this.JobformGroup.controls['customer'].setValue(this.jobObj.customer);
@@ -669,12 +671,12 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
         });
   }
   public isInvoice: Boolean = false;
-  async getJobByInvoiceID(id) {
+  async getInvoiceByjobID(id) {
     var val = {
       id: id
     }
 
-    this.InvoiceService.getJobByInvoiceID(val)
+    this.InvoiceService.getInvoiceByjobID(val)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -852,7 +854,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
 
             this.toastr.success(data.data.message)
-            this.getJobByInvoiceID(this.jobObj.id);
+            this.getInvoiceByjobID(this.jobObj.id);
             this.isInvoice$ = false;
             this.modalService.dismissAll()
             this.cdr.markForCheck() 
@@ -1073,7 +1075,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             } else {
               this.toastr.success(data.data.message);
-              // this.getJobByInvoiceID(this.jobObj.id);
+              // this.getInvoiceByjobID(this.jobObj.id);
               this.updateJob('Invoice');
               this.isLoading$ = false;
 
@@ -1570,7 +1572,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.JobformGroup.value.estDate == null) {
           obj.estDate = "";
         } 
-        this.jobService.updateJobData(obj)
+        this.jobService.updateJobService(obj)
           .subscribe(
             data => {
               if (data.data.status == 0) {
@@ -1597,7 +1599,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.paymentForm.reset();
                   this.jobService.fetch();
                   this.JobformGroup.untouched; 
-                  this.getJobByInvoiceID(this.jobObj.id);
+                  this.getInvoiceByjobID(this.jobObj.id);
                 }
 
               }
@@ -1643,7 +1645,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.JobformGroup.value.estDate == null) {
             obj.estDate = ""
           } 
-          this.jobService.updateJobData(obj)
+          this.jobService.updateJobService(obj)
             .subscribe(
               data => {
                 if (data.data.status == 0) {
@@ -1670,7 +1672,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.paymentForm.reset();
                     this.jobService.fetch();
                     this.JobformGroup.untouched; 
-                    this.getJobByInvoiceID(this.jobObj.id);
+                    this.getInvoiceByjobID(this.jobObj.id);
                   }
     
                 }
@@ -1712,7 +1714,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
           obj.estDate = ""
         } 
   
-        this.jobService.updateJobData(obj)
+        this.jobService.updateJobService(obj)
           .subscribe(
             data => {
               if (data.data.status == 0) {
@@ -1739,7 +1741,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.paymentForm.reset();
                   this.jobService.fetch();
                   this.JobformGroup.untouched; 
-                  this.getJobByInvoiceID(this.jobObj.id);
+                  this.getInvoiceByjobID(this.jobObj.id);
                 }
   
               }
@@ -1977,7 +1979,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const serviceObj = this.ServiceformGroup.value;
       this.isLoading$ = true;
-      this.servicesService.createOnlyService(serviceObj)
+      this.servicesService.createService(serviceObj)
         .subscribe(
           data => {
             if (data.data.status == 0) {
@@ -2413,9 +2415,9 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   disclaimer: any = {}
-  getDesclaimer() {
+  getDisclaimer() {
 
-    this.desclaimerService.getDesclaimer()
+    this.desclaimerService.getDisclaimer()
       .subscribe(
         data => {
           // console.log(data.data.status)

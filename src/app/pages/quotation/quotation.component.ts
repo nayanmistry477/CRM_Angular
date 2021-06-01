@@ -9,7 +9,7 @@ import { ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CustomersService } from 'src/app/modules/auth/_services/customer.service';
 import { EmailSettingsService } from 'src/app/modules/auth/_services/emailSettings.service';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 import { InvoiceService } from 'src/app/modules/auth/_services/invoice.service';
 import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
@@ -148,7 +148,7 @@ export class QuotationComponent implements OnInit {
     public productService: ProductService,
     public quotationService:QuotationService,
     public emailService: EmailSettingsService,
-    public userService: EmployeeService,
+    public userService: UserService,
     public customerService: CustomersService, 
     public servicesService: ServicesService,
     public InvoiceService: InvoiceService,
@@ -262,7 +262,7 @@ export class QuotationComponent implements OnInit {
       
       this.cdr.markForCheck();
     // } 
-    // this.getJobByInvoiceID(data.jobId)
+    // this.getInvoiceByjobID(data.jobId)
    
 
   }
@@ -738,7 +738,7 @@ export class QuotationComponent implements OnInit {
 
       const serviceObj = this.ServiceformGroup.value;
       this.isLoading$ = true;
-      this.servicesService.createOnlyService(serviceObj)
+      this.servicesService.createService(serviceObj)
         .subscribe(
           data => {
             if (data.data.status == 0) {
@@ -2322,10 +2322,9 @@ export class QuotationComponent implements OnInit {
         data => {
           if (data.data.status == 0) {
             // this.toastr.error(data.data.message);
-            this.isLoading$ = false;
-              setTimeout(() => { 
-              window.location.reload()
-            }, 700)
+            this.isLoading$ = false; 
+            this.invoiceID = id
+            this.updateQuoteDetails()
           } else {
             // this.toastr.success(data.data.message);
             // this.getManualProductByQuoteID(this.quoteData.quoteID);

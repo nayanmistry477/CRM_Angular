@@ -103,22 +103,22 @@ export class ServicesService extends TableService<any> implements OnDestroy {
  
   }
 
-  createOnlyService(service) {
+  // createOnlyService(service) {
+  //   const httpHeaders = new HttpHeaders({
+  //       Authorization: `Bearer ${this.token}`
+  //     });
+  //     return this.http.post<any>(`${API_USERS_URL}/createOnlyService`,service, {
+  //       headers: httpHeaders,
+  //     });
+
+  //   // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
+  // }
+
+  createJobService(service) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
-      return this.http.post<any>(`${API_USERS_URL}/createOnlyService`,service, {
-        headers: httpHeaders,
-      });
-
-    // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
-  }
-
-  createWizardService(service) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/createWizardService`,service, {
+      return this.http.post<any>(`${API_USERS_URL}/createJobService`,service, {
         headers: httpHeaders,
       });
 
@@ -154,15 +154,7 @@ export class ServicesService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-  getProducts_ServiceByinvoiceID(service) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/getProducts_ServiceByinvoiceID`,service, {
-        headers: httpHeaders,
-      }); 
- 
-  } 
+
   // updateSalesService(service) {
   //   const httpHeaders = new HttpHeaders({
   //       Authorization: `Bearer ${this.token}`
@@ -182,15 +174,7 @@ export class ServicesService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-  updateProduct_ServiceFinalInvoice(service) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/updateProduct_ServiceFinalInvoice`,service, {
-        headers: httpHeaders,
-      }); 
- 
-  } 
+  
   getServiceByServiceID(id) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`

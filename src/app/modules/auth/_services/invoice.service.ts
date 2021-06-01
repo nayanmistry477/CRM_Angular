@@ -86,12 +86,29 @@ export class InvoiceService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-  
-  getJobByInvoiceID(id) {
+  updateProduct_ServiceFinalInvoice(service) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
-      return this.http.post<any>(`${API_USERS_URL}/getJobByInvoiceID`,id, {
+      return this.http.post<any>(`${API_USERS_URL}/updateProduct_ServiceFinalInvoice`,service, {
+        headers: httpHeaders,
+      }); 
+ 
+  }
+  getProducts_ServiceByinvoiceID(service) {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.post<any>(`${API_USERS_URL}/getProducts_ServiceByinvoiceID`,service, {
+        headers: httpHeaders,
+      }); 
+ 
+  } 
+  getInvoiceByjobID(id) {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.post<any>(`${API_USERS_URL}/getInvoiceByjobID`,id, {
         headers: httpHeaders,
       });  
   } 

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { UserModel } from '../_models/user.model';
 import { first } from 'rxjs/operators';
-import { EmployeeService } from '../_services/employee.service';
+import { UserService } from '../_services/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    public employeeService:EmployeeService
+    public employeeService:UserService
   ) {
     this.isLoading$ = this.authService.isLoading$;
     // redirect to home if already logged in

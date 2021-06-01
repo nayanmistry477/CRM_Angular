@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { AuthService, UserModel } from '../../auth';
-import { EmployeeService } from '../../auth/_services/employee.service';
+import { UserService } from '../../auth/_services/user.service';
 interface DropDownList {
   code: any
   text: any
@@ -548,7 +548,7 @@ export class AccountInformationComponent implements OnInit, OnDestroy {
     { code: "ZMK", text: "Zambia Kwacha – ZMK" },
   ]
 
-  constructor(private userService: AuthService, public employeeService: EmployeeService, private cdr: ChangeDetectorRef, private toastr: ToastrService, private fb: FormBuilder) {
+  constructor(private userService: AuthService, public employeeService: UserService, private cdr: ChangeDetectorRef, private toastr: ToastrService, private fb: FormBuilder) {
     this.isLoading$ = this.userService.isLoadingSubject.asObservable();
     this.getCompanyDetails();
   }

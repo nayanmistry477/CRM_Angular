@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { ConfirmPasswordValidator } from 'src/app/modules/auth';
-import { EmployeeService } from 'src/app/modules/auth/_services/employee.service';
+import { UserService } from 'src/app/modules/auth/_services/user.service';
 
 @Component({
   selector: 'app-recovery-password',
@@ -16,7 +16,7 @@ export class RecoveryPasswordComponent implements OnInit,OnDestroy {
   user: any; 
   subscriptions: Subscription[] = [];
   isLoading$:  boolean;
-  constructor( private router:Router, private fb: FormBuilder,private activatedRoute: ActivatedRoute,public toastr:ToastrService,public cdr:ChangeDetectorRef,private empService:EmployeeService) {
+  constructor( private router:Router, private fb: FormBuilder,private activatedRoute: ActivatedRoute,public toastr:ToastrService,public cdr:ChangeDetectorRef,private userService:UserService) {
     
    
   }
@@ -51,7 +51,7 @@ export class RecoveryPasswordComponent implements OnInit,OnDestroy {
     this.isLoading$ = true;
     setTimeout(() => {
    
-      this.empService.recoveryPassword(data)
+      this.userService.recoveryPassword(data)
       .subscribe(
         data => {
           // console.log(data.data.status)

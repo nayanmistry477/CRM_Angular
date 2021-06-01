@@ -61,25 +61,25 @@ export class JobService extends TableService<any> implements OnDestroy {
  
 //   } 
  
-updateJobData(service) {
+updateJobService(service) {
   const httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
-    return this.http.post<any>(`${environment.apiUrl}/services/updateJobData`,service, {
+    return this.http.post<any>(`${environment.apiUrl}/services/updateJobService`,service, {
       headers: httpHeaders,
     });
 
 }
 
-updateJobStatus(service) {
-  const httpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
-    });
-    return this.http.post<any>(`${environment.apiUrl}/services/updateJobStatus`,service, {
-      headers: httpHeaders,
-    });
+// updateJobStatus(service) {
+//   const httpHeaders = new HttpHeaders({
+//       Authorization: `Bearer ${this.token}`
+//     });
+//     return this.http.post<any>(`${environment.apiUrl}/services/updateJobStatus`,service, {
+//       headers: httpHeaders,
+//     });
 
-}
+// }
 // updateItemInfo(service) {
 //   const httpHeaders = new HttpHeaders({
 //       Authorization: `Bearer ${this.token}`

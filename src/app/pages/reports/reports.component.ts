@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { JobService } from 'src/app/modules/auth/_services/job.service';
 import { ReportService } from 'src/app/modules/auth/_services/reports.service';
 import { ItemTypeService } from 'src/app/modules/auth/_services/itemType.service';
-import { DesclaimerService } from 'src/app/modules/auth/_services/desclaimer.service';
+import { DisclaimerService } from 'src/app/modules/auth/_services/disclaimer.service';
 import { JobStatusService } from 'src/app/modules/auth/_services/jobStatus.service';
 @Component({
   selector: 'app-reports',
@@ -60,7 +60,7 @@ export class ReportsComponent implements OnInit {
 ];
 private itemVal: any[] = [];
   constructor(public toastr:ToastrService,    public jobStatusService: JobStatusService,
-    private desclaimerService: DesclaimerService,  public itemTypeService: ItemTypeService,public reportService:ReportService,public technicianService: TechnicianService, private elementRef: ElementRef,private emailSettings:EmailSettingsService,public cdr:ChangeDetectorRef,private productPurschase:ProductPurchaseService) {
+    private desclaimerService: DisclaimerService,  public itemTypeService: ItemTypeService,public reportService:ReportService,public technicianService: TechnicianService, private elementRef: ElementRef,private emailSettings:EmailSettingsService,public cdr:ChangeDetectorRef,private productPurschase:ProductPurchaseService) {
  
     this.dtOptions = {
       pagingType: 'full_numbers',
@@ -89,7 +89,7 @@ private itemVal: any[] = [];
     
     this.getAllItemTypes();
     this.getAllJobStatus() 
-    this.getDesclaimer(); 
+    this.getDisclaimer(); 
     // var script = document.createElement('script');
     // script.src = './assets/js/components/datatable-net.js';
     // script.type = 'text/javascript'; 
@@ -719,9 +719,9 @@ filterJobStatus() {
    
   }
     disclaimer: any = {}
-  getDesclaimer() {
+  getDisclaimer() {
 
-    this.desclaimerService.getDesclaimer()
+    this.desclaimerService.getDisclaimer()
       .subscribe(
         data => {
           // console.log(data.data.status)

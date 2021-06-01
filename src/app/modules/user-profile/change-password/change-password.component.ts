@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AuthService, UserModel, ConfirmPasswordValidator } from '../../auth';
-import { EmployeeService } from '../../auth/_services/employee.service';
+import { UserService } from '../../auth/_services/user.service';
 
 @Component({
   selector: 'app-change-password',
@@ -18,7 +18,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isLoading$: Observable<boolean>;
 
-  constructor(private userService: AuthService,public cdr:ChangeDetectorRef, private fb: FormBuilder,public toastr:ToastrService,private empService:EmployeeService) {
+  constructor(private userService: AuthService,public cdr:ChangeDetectorRef, private fb: FormBuilder,public toastr:ToastrService,private empService:UserService) {
     
     this.isLoading$ = this.userService.isLoadingSubject.asObservable();
   }
