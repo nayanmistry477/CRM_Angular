@@ -124,7 +124,7 @@ export class JobListComponent implements OnInit {
 
   getAllProducts() {
 
-    this.productpurchaseService.getAllProducts()
+    this.productService.getAllProducts()
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -191,7 +191,7 @@ export class JobListComponent implements OnInit {
     var valData = {
       productID: job.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.productpurchaseService.getAllPurchaseCount(valData)
     .subscribe(
       data => {
         this.cdr.markForCheck()

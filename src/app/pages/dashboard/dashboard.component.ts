@@ -609,7 +609,7 @@ export class DashboardComponent implements OnInit {
     var valData = {
       productID: this.listPro.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.proService.getAllPurchaseCount(valData)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -785,7 +785,7 @@ export class DashboardComponent implements OnInit {
             // console.log(this.invoiceData)
             this.isInvoice = true;
             this.getattachmentsByjobID(id)
-            this.getPaymentById(this.invoiceData.id)
+            this.getPaymentByInvoiceId(this.invoiceData.id)
            
             if(this.jobObj.statusStage == "closed"){
               this.isJobstatus = true;
@@ -892,11 +892,11 @@ export class DashboardComponent implements OnInit {
         });
   }
   public paymentList = [];
-  getPaymentById(id) {
+  getPaymentByInvoiceId(id) {
     var val = {
       id: id
     }
-    this.paymentService.getPaymentById(val)
+    this.paymentService.getPaymentByInvoiceId(val)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -1152,6 +1152,10 @@ export class DashboardComponent implements OnInit {
                     this.cdr.markForCheck();
                   }
                  
+                }else{
+                  this.updateJob('Invoice');
+                  this.isLoading$ = false;
+                  this.cdr.markForCheck();
                 }
               }
             } else {
@@ -3358,7 +3362,7 @@ export class DashboardComponent implements OnInit {
       productID: job.id,
       jobID: job.jobID
     }
-    this.productService.getAllPurchaseCountForUpdate(valData)
+    this.proService.getAllPurchaseCountForUpdate(valData)
       .subscribe(async data => {
 
           if (data.status == 0) {
@@ -3480,7 +3484,7 @@ export class DashboardComponent implements OnInit {
 
       }
 
-      this.productService.getAllPurchaseCountForUpdate(valData)
+      this.proService.getAllPurchaseCountForUpdate(valData)
         .subscribe(
           data => {
             if (data.status == 0) {

@@ -76,7 +76,7 @@ export class UserService extends TableService<any> implements OnDestroy {
   }
 
     // CREATE =>  POST: add a new user to the server
-    createUser(user) {
+   createUser(user) {
     // const httpHeaders = new HttpHeaders({
     //     Authorization: `Bearer ${this.token}`
     //   });
@@ -93,14 +93,6 @@ export class UserService extends TableService<any> implements OnDestroy {
       });
  
   }
-  updateCompanySettings(data){
-    const httpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
-    });
-    return this.http.post<any>(`${API_USERS_URL}/updateCompanySettings`,data, {
-      headers: httpHeaders,
-    });
-  }
   deleteUser(user) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
@@ -110,7 +102,6 @@ export class UserService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-
   getAllUsers() {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
@@ -120,6 +111,15 @@ export class UserService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
+  updateCompanySettings(data){
+    const httpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+    return this.http.post<any>(`${API_USERS_URL}/updateCompanySettings`,data, {
+      headers: httpHeaders,
+    });
+  }
+  
 
   getCompanyDetails(){
     const httpHeaders = new HttpHeaders({
@@ -146,8 +146,7 @@ export class UserService extends TableService<any> implements OnDestroy {
       });
       return this.http.post<any>(`${API_USERS_URL}/changePassword`,user, {
         headers: httpHeaders,
-      });
- 
+      }); 
   }
 
   recoveryPassword(user) {
@@ -156,8 +155,7 @@ export class UserService extends TableService<any> implements OnDestroy {
       });
       return this.http.post<any>(`${API_USERS_URL}/recoveryPassword`,user, {
         headers: httpHeaders,
-      });
- 
+      }); 
   }
   
   ngOnDestroy() {

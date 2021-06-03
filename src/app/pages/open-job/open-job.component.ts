@@ -29,6 +29,7 @@ import { Moment } from 'moment';
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
 import { PaymentService } from 'src/app/modules/auth/_services/payment.service';
 import { Router } from '@angular/router';
+import { ProductPurchaseService } from 'src/app/modules/auth/_services/product-purchase.service';
 
 declare var $: any;
 interface PaymentType {
@@ -188,6 +189,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     public jobStatusSService: JobStatusService,
     public userService: UserService,
     public productService: ProductService,
+    public productpurchaseService:ProductPurchaseService,
     public emailService: EmailSettingsService,
     private sanitizer: DomSanitizer,
     public http: HttpClient,
@@ -696,7 +698,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             this.invoiceData = data.result[0]; 
             this.isInvoice = true;
-            this.getPaymentById(this.invoiceData.id);
+            this.getPaymentByInvoiceId(this.invoiceData.id);
             this.getattachmentsByjobID(id);
             if (this.jobObj.discount == null || this.jobObj.discount == "") {
               this.jobObj.discount = 0;
@@ -765,7 +767,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
             this.invoiceData = data.result[0];
             // console.log(this.invoiceData)
             this.isInvoice = true;
-            this.getPaymentById(this.jobObj.id);
+            this.getPaymentByInvoiceId(this.jobObj.id);
 
             if (this.jobObj.discount == null || this.jobObj.discount == "") {
               this.jobObj.discount = 0;
@@ -866,11 +868,11 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
         });
   }
   public paymentList = [];
-  getPaymentById(id) {
+  getPaymentByInvoiceId(id) {
     var val = {
       id: id
     }
-    this.paymentService.getPaymentById(val)
+    this.paymentService.getPaymentByInvoiceId(val)
       .subscribe(
         data => { 
           if (data.status == 0) { 
@@ -1071,6 +1073,10 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.isLoading$ = false;
                     this.cdr.markForCheck();
                   }
+                }else{
+                  this.updateJob('Invoice');
+                  this.isLoading$ = false;
+                  this.cdr.markForCheck();
                 }
               }
             } else {
@@ -1078,7 +1084,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
               // this.getInvoiceByjobID(this.jobObj.id);
               this.updateJob('Invoice');
               this.isLoading$ = false;
-
+              this.cdr.markForCheck();
 
             }
           }
@@ -2434,7 +2440,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(error);
         });
   }
-  sendWorkSheet(job) {
+  generateWorkSheet(job) {
 
     var obj = job;
     var customer = job.customer.split(' ');
@@ -2453,7 +2459,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     obj.createdDate = moment(job.createdDate).format('DD/MMMM/YYYY');
     obj.time = moment(new Date(job.createdDate)).format('h:mm');
     console.log(obj)
-    this.emailService.sendWorkSheet(job)
+    this.emailService.generateWorkSheet(job)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -2478,7 +2484,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
         });
   }
 
-  sendJobSheet(job) {
+  generateJobSheet(job) {
 
     var obj = job;
     var customer = job.customer.split(' ');
@@ -2495,7 +2501,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     obj.technicianNotes = tmp1.textContent
     this.isMailSent = true;
     obj.createdDate = moment(job.createdDate).format('DD/MM/YYYY h:mm');
-    this.emailService.sendJobSheet(job)
+    this.emailService.generateJobSheet(job)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -2952,7 +2958,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
     var valData = {
       productID: this.listPro.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.productpurchaseService.getAllPurchaseCount(valData)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -3391,7 +3397,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
       productID: job.id,
       jobID: job.jobID
     }
-    this.productService.getAllPurchaseCountForUpdate(valData)
+    this.productpurchaseService.getAllPurchaseCountForUpdate(valData)
       .subscribe(async data => {
 
         if (data.status == 0) {
@@ -3514,7 +3520,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
       }
 
-      this.productService.getAllPurchaseCountForUpdate(valData)
+      this.productpurchaseService.getAllPurchaseCountForUpdate(valData)
         .subscribe(
           data => {
             if (data.status == 0) {
@@ -3724,6 +3730,7 @@ export class OpenJobComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isDelete$ = false;
             this.updateInvoice('DeleteItem')
             this.modalService.dismissAll()
+            this.jobService.fetch();
             this.cdr.markForCheck()
 
           }

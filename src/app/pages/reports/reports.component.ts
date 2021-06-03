@@ -774,7 +774,7 @@ filterJobStatus() {
         });
   }
   isMailSent:boolean = false;
-  sendWorkSheet(job) {
+  generateWorkSheet(job) {
 
     var obj = job;
     var customer = job.customer.split(' ');
@@ -793,7 +793,7 @@ filterJobStatus() {
     obj.createdDate = moment(job.createdDate).format('DD/MMMM/YYYY');
     obj.time = moment(new Date(job.createdDate)).format('h:mm');
     console.log(obj)
-    this.emailSettings.sendWorkSheet(job)
+    this.emailSettings.generateWorkSheet(job)
       .subscribe(
         data => {
           if (data.status == 0) {

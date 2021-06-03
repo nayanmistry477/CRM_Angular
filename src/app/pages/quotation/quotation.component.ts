@@ -2047,7 +2047,7 @@ export class QuotationComponent implements OnInit {
     quote.host = this.emailSettings.server;
     quote.isSSL = this.emailSettings.isSSL;
     quote.port = this.emailSettings.port;
-    quote.encryptiontype	 = this.emailSettings.encryptiontype;
+    quote.encryptiontype = this.emailSettings.encryptiontype;
     quote.email = quote.customerEmail;
     // quote.email = 'nayanmistry477@gmail.com' 
     quote.items = this.dataList;
@@ -2062,8 +2062,7 @@ export class QuotationComponent implements OnInit {
             this.isMailSent = false;
             this.cdr.markForCheck();
           } else {
-
-            // this.saleQty = data.result[0].saleQty;
+ 
             this.toastr.success(data.message)
             this.isMailSent = false;
             this.cdr.markForCheck();
@@ -2282,7 +2281,7 @@ export class QuotationComponent implements OnInit {
     console.log(this.list1)
     // alert('done') 
     this.isLoading$ = true;
-      this.quotationService.createProduct_ServiceFinalInvoice(this.list1)
+      this.InvoiceService.createProduct_ServiceFinalInvoice(this.list1)
         .subscribe(
           data => {
             // console.log(data.data.status)

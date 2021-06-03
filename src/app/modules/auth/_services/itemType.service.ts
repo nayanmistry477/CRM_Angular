@@ -82,7 +82,15 @@ export class ItemTypeService extends TableService<any> implements OnDestroy {
       }); 
  
   }
-  
+  getAllItemTypes() {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.get<any>(`${API_USERS_URL}/getAllItemTypes`, {
+        headers: httpHeaders,
+      }); 
+ 
+  } 
   createChecklist(itemType) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
@@ -111,15 +119,7 @@ export class ItemTypeService extends TableService<any> implements OnDestroy {
       }); 
  
   }
-  getAllItemTypes() {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.get<any>(`${API_USERS_URL}/getAllItemTypes`, {
-        headers: httpHeaders,
-      }); 
  
-  } 
   getCheckListByID(data) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`

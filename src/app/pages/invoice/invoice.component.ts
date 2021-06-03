@@ -17,6 +17,7 @@ import { ProductService } from 'src/app/modules/auth/_services/product.service';
 import { QuotationService } from 'src/app/modules/auth/_services/quotation.service';
 import { ServicesService } from 'src/app/modules/auth/_services/services.service';
 import { GroupingState, PaginatorState, SortState } from 'src/app/_metronic/shared/crud-table';
+import { ProductPurchaseService } from 'src/app/modules/auth/_services/product-purchase.service';
 interface Customer {
   id: string;
   name: string;
@@ -158,6 +159,7 @@ export class InvoiceComponent implements OnInit {
     public servicesService: ServicesService,
     public paymentService:PaymentService,
     public quotationService:QuotationService,
+    public productpurchaseService:ProductPurchaseService,
     private modalService: NgbModal, private cdr: ChangeDetectorRef) {
     this.modalService.dismissAll()
     
@@ -778,7 +780,7 @@ export class InvoiceComponent implements OnInit {
       productID: job.id,
       jobID: job.jobID
     }
-    this.productService.getAllPurchaseCountForUpdate(valData)
+    this.productpurchaseService.getAllPurchaseCountForUpdate(valData)
       .subscribe( async data => {
 
           if (data.status == 0) {
@@ -899,7 +901,7 @@ export class InvoiceComponent implements OnInit {
 
       }
 
-      this.productService.getAllPurchaseCountForUpdate(valData)
+      this.productpurchaseService.getAllPurchaseCountForUpdate(valData)
         .subscribe(
           data => {
             if (data.status == 0) {
@@ -1611,7 +1613,7 @@ deletePaymentObj:any={}
 
             this.invoiceData = data.result[0];
             this.cdr.markForCheck()
-            this.getPaymentById(this.invoiceData.id)
+            this.getPaymentByInvoiceId(this.invoiceData.id)
             this.InvoiceForm.controls['price'].setValue(this.invoiceData.subTotal);
             
             // console.log(this.invoiceData)
@@ -2589,11 +2591,11 @@ deletePaymentObj:any={}
   }
 
   public paymentList = [];
-  getPaymentById(id) {
+  getPaymentByInvoiceId(id) {
     var val = {
       id: id
     }
-    this.paymentService.getPaymentById(val)
+    this.paymentService.getPaymentByInvoiceId(val)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -2718,7 +2720,7 @@ deletePaymentObj:any={}
     var valData = {
       productID: this.listPro.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.productpurchaseService.getAllPurchaseCount(valData)
       .subscribe(
         data => {
           if (data.status == 0) {

@@ -83,7 +83,15 @@ export class SupplierService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-
+  getAllSuppliers() {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.get<any>(`${environment.apiUrl}/supplier/getAllSuppliers`, {
+        headers: httpHeaders,
+      }); 
+ 
+  } 
   ngOnDestroy() {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }

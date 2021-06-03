@@ -126,7 +126,7 @@ export class EmailSettingsService extends TableService<any> implements OnDestroy
 
     // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
   }
-  sendJobSheet(data) {
+  generateJobSheet(data) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
@@ -136,7 +136,7 @@ export class EmailSettingsService extends TableService<any> implements OnDestroy
 
     // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
   }
-  sendWorkSheet(data) {
+  generateWorkSheet(data) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });

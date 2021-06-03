@@ -28,6 +28,7 @@ import * as moment from "moment";
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
 import { PaymentService } from 'src/app/modules/auth/_services/payment.service';
 import { Router } from '@angular/router';
+import { ProductPurchaseService } from 'src/app/modules/auth/_services/product-purchase.service';
 
 declare var $: any;
 interface PaymentType {
@@ -170,6 +171,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
     public jobService: JobService,
+    public productpurchaseService:ProductPurchaseService,
     public itemTypeService: ItemTypeService,
     public brandService: BrandService,
     public ACCItemService: AccompanyingService,
@@ -551,7 +553,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     obj.createdDate = moment(job.createdDate).format('MMMM/DD/YYYY');
     obj.time = moment(new Date(job.createdDate)).format('h:mm');
     console.log(obj)
-    this.emailService.sendWorkSheet(job)
+    this.emailService.generateWorkSheet(job)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -599,7 +601,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
         });
   }
 
-  sendJobSheet(job) {
+  generateJobSheet(job) {
 
     var obj = job;
     var customer = job.customer.split(' ');
@@ -615,7 +617,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     tmp1.textContent || tmp1.innerText || "";
     obj.technicianNotes = tmp1.textContent
     this.isMailSent = true;
-    this.emailService.sendJobSheet(job)
+    this.emailService.generateJobSheet(job)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -663,7 +665,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
     var valData = {
       productID: this.listPro.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.productpurchaseService.getAllPurchaseCount(valData)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -832,7 +834,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
             this.invoiceData = data.result[0];
             //  console.log(this.invoiceData)
             this.isInvoice = true; 
-            this.getPaymentById(this.invoiceData.id)
+            this.getPaymentByInvoiceId(this.invoiceData.id)
             this.getattachmentsByjobID(id)
             if (this.jobObj.discount == null || this.jobObj.discount == "") {
               this.jobObj.discount = 0;
@@ -876,11 +878,11 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public paymentList = []
-  getPaymentById(id) {
+  getPaymentByInvoiceId(id) {
     var val = {
       id: id
     }
-    this.paymentService.getPaymentById(val)
+    this.paymentService.getPaymentByInvoiceId(val)
       .subscribe(
         data => {
           // console.log(data.data.status)
@@ -2982,7 +2984,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
       productID: job.id,
       jobID: job.jobID
     }
-    this.productService.getAllPurchaseCountForUpdate(valData)
+    this.productpurchaseService.getAllPurchaseCountForUpdate(valData)
       .subscribe(async data => {
 
           if (data.status == 0) {
@@ -3091,7 +3093,7 @@ export class ClosedJobComponent implements OnInit, AfterViewInit, OnDestroy {
         jobID: job.jobID 
       }
 
-      this.productService.getAllPurchaseCountForUpdate(valData)
+      this.productpurchaseService.getAllPurchaseCountForUpdate(valData)
         .subscribe(
           data => {
             if (data.status == 0) {

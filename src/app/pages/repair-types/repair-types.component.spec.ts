@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 import { RepairTypesComponent } from './repair-types.component';
 
@@ -8,6 +11,12 @@ describe('RepairTypesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        ToastrModule,
+        HttpClientTestingModule,
+      ],
       declarations: [ RepairTypesComponent ]
     })
     .compileComponents();

@@ -284,7 +284,7 @@ export class ProductPurchaseComponent implements OnInit {
       }
   }
   getAllSuppliers(){
-    this.productpurchaseService.getAllSuppliers()
+    this.supplierService.getAllSuppliers()
     .subscribe(
       data => { 
         if (data.status == 0) { 
@@ -323,7 +323,7 @@ export class ProductPurchaseComponent implements OnInit {
      
     getAllProducts() { 
 
-    this.productpurchaseService.getAllProducts()
+    this.productService.getAllProducts()
       .subscribe(
         data => { 
           if (data.status == 0) { 

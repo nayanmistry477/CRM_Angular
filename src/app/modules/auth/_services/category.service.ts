@@ -83,7 +83,15 @@ export class CategoryService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-
+  getAllCategories() {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.get<any>(`${API_USERS_URL}/getAllCategories`, {
+        headers: httpHeaders,
+      }); 
+ 
+  } 
   ngOnDestroy() {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }

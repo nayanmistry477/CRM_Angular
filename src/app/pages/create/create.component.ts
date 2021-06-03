@@ -30,6 +30,8 @@ import { element, promise } from 'protractor';
 import { DisclaimerService } from 'src/app/modules/auth/_services/disclaimer.service';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { TechnicianService } from 'src/app/modules/auth/_services/technicians.service';
+import { ProductPurchaseService } from 'src/app/modules/auth/_services/product-purchase.service';
+import { JobService } from 'src/app/modules/auth/_services/job.service';
 interface Discount {
   id: string;
   name: string;
@@ -345,8 +347,10 @@ export class CreateComponent implements OnInit {
     public ACCItemService: AccompanyingService,
     public storageLocationService: StorageService,
     public productService: ProductService,
+    public productpurchaseService:ProductPurchaseService,
     public jobStatusService: JobStatusService,
     public servicesService: ServicesService,
+    public jobService:JobService,
     private router: Router,
     private desclaimerService: DisclaimerService,
     public http: HttpClient,
@@ -831,7 +835,7 @@ export class CreateComponent implements OnInit {
     var valData = {
       productID: this.listPro.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.productpurchaseService.getAllPurchaseCount(valData)
       .subscribe(
         data => {
           if (data.status == 0) {
@@ -1008,7 +1012,7 @@ export class CreateComponent implements OnInit {
     var valData = {
       productID: job.id
     }
-    this.productService.getAllPurchaseCount(valData)
+    this.productpurchaseService.getAllPurchaseCount(valData)
       .subscribe(async data => {
           this.cdr.markForCheck()
           if (data.status == 0) {
@@ -1060,7 +1064,7 @@ export class CreateComponent implements OnInit {
         productID: job.id,
       }
 
-      this.productService.getAllPurchaseCount(valData)
+      this.productpurchaseService.getAllPurchaseCount(valData)
         .subscribe(
           data => {
             if (data.status == 0) {
@@ -2211,7 +2215,7 @@ export class CreateComponent implements OnInit {
         this.isLoading$ = true;
         //  console.log(this.step3FormGroup.value)
 
-        this.servicesService.createJobService(allData)
+        this.jobService.createJobService(allData)
           .subscribe(
             data => {
               // console.log(data.data.status)

@@ -228,7 +228,7 @@ addCategory(){
  }
  getAllCategories() { 
 
-  this.productService.getAllCategories()
+  this.categoryService.getAllCategories()
     .subscribe(
       data => { 
         if (data.status == 0) {  

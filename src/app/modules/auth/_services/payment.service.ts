@@ -66,11 +66,11 @@ export class PaymentService extends TableService<any> implements OnDestroy {
    
   
    
-  getPaymentById(id) {
+  getPaymentByInvoiceId(id) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
-      return this.http.post<any>(`${API_USERS_URL}/getPaymentById`,id, {
+      return this.http.post<any>(`${API_USERS_URL}/getPaymentByInvoiceId`,id, {
         headers: httpHeaders,
       }); 
  

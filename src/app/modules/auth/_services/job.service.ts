@@ -50,7 +50,16 @@ export class JobService extends TableService<any> implements OnDestroy {
 
     // CREATE =>  POST: add a new user to the server
  
-
+    createJobService(service) {
+      const httpHeaders = new HttpHeaders({
+          Authorization: `Bearer ${this.token}`
+        });
+        return this.http.post<any>(`${API_USERS_URL}/createJobService`,service, {
+          headers: httpHeaders,
+        });
+  
+      // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
+    }
 //   getAllStorages() {
 //     const httpHeaders = new HttpHeaders({
 //         Authorization: `Bearer ${this.token}`

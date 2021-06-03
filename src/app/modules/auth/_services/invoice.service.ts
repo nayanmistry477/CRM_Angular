@@ -86,6 +86,14 @@ export class InvoiceService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
+  createProduct_ServiceFinalInvoice(data) {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.post<any>(`${API_USERS_URL}/createProduct_ServiceFinalInvoice`,data, {
+        headers: httpHeaders,
+      });  
+  } 
   updateProduct_ServiceFinalInvoice(service) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`

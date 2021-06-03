@@ -78,28 +78,27 @@ export class ProductPurchaseService extends TableService<any> implements OnDestr
       }); 
  
   } 
-
-  getAllProducts() {
+ 
+ 
+  getAllPurchaseCount(id) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
-      return this.http.get<any>(`${environment.apiUrl}/product/getAllProducts`, {
+      return this.http.post<any>(`${environment.apiUrl}/productPurchase/getAllPurchaseCount`,id, {
         headers: httpHeaders,
       }); 
  
   } 
 
-  getAllSuppliers() {
+  getAllPurchaseCountForUpdate(id) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
-      return this.http.get<any>(`${environment.apiUrl}/supplier/getAllSuppliers`, {
+      return this.http.post<any>(`${environment.apiUrl}/productPurchase/getAllPurchaseCountforUpdate`,id, {
         headers: httpHeaders,
       }); 
  
   } 
- 
-
   
   getProductNotification(){
     const httpHeaders = new HttpHeaders({

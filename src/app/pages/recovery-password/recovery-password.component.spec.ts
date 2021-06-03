@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RecoveryPasswordComponent } from './recovery-password.component';
 
@@ -8,6 +9,10 @@ describe('RecoveryPasswordComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+      ],
       declarations: [ RecoveryPasswordComponent ]
     })
     .compileComponents();

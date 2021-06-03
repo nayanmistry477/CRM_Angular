@@ -104,12 +104,12 @@
             </td>
 
             <td *ngIf="job.statusStage == 'open'">
-              <a title="Send job Sheet" tooltip="Generate Job sheet" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="sendJobSheet(job)">
+              <a title="Send job Sheet" tooltip="Generate Job sheet" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="generateJobSheet(job)">
                 <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
                 class="svg-icon svg-icon-md svg-icon-primary">
               </span>  
               </a>
-              <a title="Send job Sheet" tooltip="Generate Work sheet" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="sendWorkSheet(job)">
+              <a title="Send job Sheet" tooltip="Generate Work sheet" class="btn btn-icon btn-light btn-hover-danger btn-sm" (click)="generateWorkSheet(job)">
                 <span [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'" cacheSVG="true"
                 class="svg-icon svg-icon-md svg-icon-primary">
               </span>  

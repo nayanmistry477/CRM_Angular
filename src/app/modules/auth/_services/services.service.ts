@@ -72,18 +72,7 @@ export class ServicesService extends TableService<any> implements OnDestroy {
         headers: httpHeaders,
       });
  
-  }
-
-  createProductList(service) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/createProductList`,service, {
-        headers: httpHeaders,
-      });
- 
-  }
-
+  } 
   deleteService(service) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
@@ -92,38 +81,7 @@ export class ServicesService extends TableService<any> implements OnDestroy {
         headers: httpHeaders,
       }); 
  
-  } 
-  deleteProductList(product) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/deleteProductList`,product, {
-        headers: httpHeaders,
-      }); 
- 
-  }
-
-  // createOnlyService(service) {
-  //   const httpHeaders = new HttpHeaders({
-  //       Authorization: `Bearer ${this.token}`
-  //     });
-  //     return this.http.post<any>(`${API_USERS_URL}/createOnlyService`,service, {
-  //       headers: httpHeaders,
-  //     });
-
-  //   // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
-  // }
-
-  createJobService(service) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/createJobService`,service, {
-        headers: httpHeaders,
-      });
-
-    // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
-  }
+  }   
 
   createProduct_ServiceFinal(service) {
     const httpHeaders = new HttpHeaders({
@@ -135,6 +93,15 @@ export class ServicesService extends TableService<any> implements OnDestroy {
 
     // return this.http.post(`${API_USERS_URL}/createCustomer`, user);
   }
+  updateProduct_ServiceFinal(service) {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.post<any>(`${API_USERS_URL}/updateProduct_ServiceFinal`,service, {
+        headers: httpHeaders,
+      }); 
+ 
+  } 
   getAllServices() {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
@@ -153,28 +120,7 @@ export class ServicesService extends TableService<any> implements OnDestroy {
         headers: httpHeaders,
       }); 
  
-  } 
-
-  // updateSalesService(service) {
-  //   const httpHeaders = new HttpHeaders({
-  //       Authorization: `Bearer ${this.token}`
-  //     });
-  //     return this.http.post<any>(`${API_USERS_URL}/updateSalesService`,service, {
-  //       headers: httpHeaders,
-  //     }); 
- 
-  // } 
-
-  updateProduct_ServiceFinal(service) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/updateProduct_ServiceFinal`,service, {
-        headers: httpHeaders,
-      }); 
- 
-  } 
-  
+  }   
   getServiceByServiceID(id) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`

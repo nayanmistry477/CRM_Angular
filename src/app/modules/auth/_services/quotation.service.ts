@@ -86,12 +86,28 @@ export class QuotationService extends TableService<any> implements OnDestroy {
       }); 
  
   } 
-  
-  getJobByQuoteID(id) {
+  getAllQuotation() {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
       });
-      return this.http.post<any>(`${API_USERS_URL}/getJobByQuoteID`,id, {
+      return this.http.get<any>(`${API_USERS_URL}/getAllQuotation`, {
+        headers: httpHeaders,
+      });  
+  } 
+  updateProduct_ServiceFinalQuote(data) {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.post<any>(`${API_USERS_URL}/updateProduct_ServiceFinalQuote`,data, {
+        headers: httpHeaders,
+      });  
+  } 
+
+  getProducts_ServiceByQuoteID(data) {
+    const httpHeaders = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`
+      });
+      return this.http.post<any>(`${API_USERS_URL}/getProducts_ServiceByQuoteID`,data, {
         headers: httpHeaders,
       });  
   } 
@@ -111,38 +127,9 @@ export class QuotationService extends TableService<any> implements OnDestroy {
         headers: httpHeaders,
       });  
   } 
-  getAllQuotation() {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.get<any>(`${API_USERS_URL}/getAllQuotation`, {
-        headers: httpHeaders,
-      });  
-  } 
-  updateProduct_ServiceFinalQuote(data) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/updateProduct_ServiceFinalQuote`,data, {
-        headers: httpHeaders,
-      });  
-  } 
-  createProduct_ServiceFinalInvoice(data) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/createProduct_ServiceFinalInvoice`,data, {
-        headers: httpHeaders,
-      });  
-  } 
-  getProducts_ServiceByQuoteID(data) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${API_USERS_URL}/getProducts_ServiceByQuoteID`,data, {
-        headers: httpHeaders,
-      });  
-  } 
+  
+
+
   deleteItem(data) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`

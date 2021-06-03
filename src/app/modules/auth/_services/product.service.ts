@@ -129,37 +129,9 @@ export class ProductService extends TableService<any> implements OnDestroy {
         headers: httpHeaders,
       }); 
  
-  } 
+  }  
 
-  getAllCategories() {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.get<any>(`${environment.apiUrl}/category/getAllCategories`, {
-        headers: httpHeaders,
-      }); 
- 
-  } 
 
-  getAllPurchaseCount(id) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${environment.apiUrl}/productPurchase/getAllPurchaseCount`,id, {
-        headers: httpHeaders,
-      }); 
- 
-  } 
-
-  getAllPurchaseCountForUpdate(id) {
-    const httpHeaders = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`
-      });
-      return this.http.post<any>(`${environment.apiUrl}/productPurchase/getAllPurchaseCountforUpdate`,id, {
-        headers: httpHeaders,
-      }); 
- 
-  } 
   getProductByProductID(id) {
     const httpHeaders = new HttpHeaders({
         Authorization: `Bearer ${this.token}`
